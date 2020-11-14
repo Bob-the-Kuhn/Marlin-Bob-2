@@ -133,8 +133,104 @@
   #define MOTHERBOARD BOARD_BTT_SKR_PRO_V1_1
 #endif
 
-// Name displayed in the LCD "Ready" message and Info menu
-#define CUSTOM_MACHINE_NAME "CNC / 3D Printer"
+
+//#define Bob_UBL
+#define Bob_CNC_max
+//#define Bob_CNC_temp
+
+
+#if ENABLED(Bob_UBL)
+
+  #define CUSTOM_MACHINE_NAME  Bob_UBL   // Name displayed in the LCD "Ready" message and Info menu
+
+  #define TEMP_SENSOR_0 51
+  #define TEMP_SENSOR_BED 1
+
+// Travel limits (mm) after homing, corresponding to endstop positions.
+  #define X_MIN_POS -50        // G28 sets X position to this value after homing
+  #define X_MAX_POS 400        // not used (homes towards other endstop)
+  #define Y_MIN_POS -178       // not used (homes towards other endstop)
+  #define Y_MAX_POS 431        // G28 sets Y position to this value after homing
+  #define Z_MIN_POS -500       // not used (homes towards other endstop)
+  #define Z_MAX_POS 299        // G28 sets Z position to this value after homing
+
+  #define BLTOUCH
+  #define Z_MIN_PROBE_ENDSTOP_INVERTING false   // BLTouch
+  #define NOZZLE_TO_PROBE_OFFSET { 32, 0, -2.9}
+
+  #define X_BED_SIZE 305
+  #define Y_BED_SIZE 260
+
+  #define MESH_INSET 0              // Set Mesh bounds as an inset region of the bed
+  #define GRID_MAX_POINTS_X 5       // Don't use more than 15 points per axis, implementation limited.
+
+#elif ENABLED(Bob_CNC_max)
+
+  #define CUSTOM_MACHINE_NAME  Bob_CNC_max  // Name displayed in the LCD "Ready" message and Info menu
+
+  #define TEMP_SENSOR_0 998
+  #define TEMP_SENSOR_BED 0
+
+// Travel limits (mm) after homing, corresponding to endstop positions.
+  #define X_MIN_POS 0         // G28 sets X position to this value after homing
+  #define X_MAX_POS 450       // not used (homes towards other endstop)
+  #define Y_MIN_POS 0         // not used (homes towards other endstop)
+  #define Y_MAX_POS 609       // G28 sets Y position to this value after homing
+  #define Z_MIN_POS -500      // not used (homes towards other endstop)
+  #define Z_MAX_POS 330       // G28 sets Z position to this value after homing
+
+  #define FIX_MOUNTED_PROBE
+  #define Z_MIN_PROBE_ENDSTOP_INVERTING true  // short end mill to ground
+  #define NOZZLE_TO_PROBE_OFFSET { 0, 0, 0}
+
+  #define X_BED_SIZE 305
+  #define Y_BED_SIZE 260
+
+  #define MESH_INSET 0              // Set Mesh bounds as an inset region of the bed
+  #define GRID_MAX_POINTS_X 5       // Don't use more than 15 points per axis, implementation limited.
+
+  #define SPINDLE_LASER_ENA_PIN  PE2
+  #define SPINDLE_LASER_PWM_PIN  SERVO0_PIN  //PA1
+
+
+#elif ENABLED(Bob_CNC_temp)   // Name displayed in the LCD "Ready" message and Info menu
+
+  #define CUSTOM_MACHINE_NAME  Bob_CNC_temp
+
+
+  #define TEMP_SENSOR_0 998
+  #define TEMP_SENSOR_BED 0
+
+  // Travel limits (mm) after homing, corresponding to endstop positions.
+  #define X_MIN_POS -198       // G28 sets X position to this value after homing
+  #define X_MAX_POS 252        // not used (homes towards other endstop)
+  #define Y_MIN_POS -349          // not used (homes towards other endstop)
+  #define Y_MAX_POS 260       // G28 sets Y position to this value after homing
+  #define Z_MIN_POS -500       // not used (homes towards other endstop)
+  #define Z_MAX_POS 330       // G28 sets Z position to this value after homing
+
+  #define FIX_MOUNTED_PROBE
+  #define Z_MIN_PROBE_ENDSTOP_INVERTING true  // short end mill to ground
+  #define NOZZLE_TO_PROBE_OFFSET { 0, 0, 0}
+
+  #define X_BED_SIZE 450
+  #define Y_BED_SIZE 609
+
+  #define MESH_INSET 0              // Set Mesh bounds as an inset region of the bed
+  #define GRID_MAX_POINTS_X 5       // Don't use more than 15 points per axis, implementation limited.
+
+  #define SPINDLE_LASER_ENA_PIN  PE2
+  #define SPINDLE_LASER_PWM_PIN  SERVO0_PIN  ///PA1
+
+#else
+  #error "printer name not defined in configuration.h"
+
+#endif
+
+
+
+
+
 
 // Printer's unique ID, used by some programs to differentiate between machines.
 // Choose your own or use a service like http://www.uuidgenerator.net/version4
@@ -408,7 +504,7 @@
  *   998 : Dummy Table that ALWAYS reads 25°C or the temperature defined below.
  *   999 : Dummy Table that ALWAYS reads 100°C or the temperature defined below.
  */
-#define TEMP_SENSOR_0 51
+//#define TEMP_SENSOR_0 51
 #define TEMP_SENSOR_1 0
 #define TEMP_SENSOR_2 0
 #define TEMP_SENSOR_3 0
@@ -416,7 +512,7 @@
 #define TEMP_SENSOR_5 0
 #define TEMP_SENSOR_6 0
 #define TEMP_SENSOR_7 0
-#define TEMP_SENSOR_BED 1
+//#define TEMP_SENSOR_BED 1
 #define TEMP_SENSOR_PROBE 0
 #define TEMP_SENSOR_CHAMBER 0
 
@@ -658,7 +754,7 @@
 #define X_MAX_ENDSTOP_INVERTING false // Set to true to invert the logic of the endstop.
 #define Y_MAX_ENDSTOP_INVERTING false // Set to true to invert the logic of the endstop.
 #define Z_MAX_ENDSTOP_INVERTING false // Set to true to invert the logic of the endstop.
-#define Z_MIN_PROBE_ENDSTOP_INVERTING false // Set to true to invert the logic of the probe.
+//#define Z_MIN_PROBE_ENDSTOP_INVERTING false // Set to true to invert the logic of the probe.
 
 /**
  * Stepper Drivers
@@ -892,7 +988,8 @@
 /**
  * The BLTouch probe uses a Hall effect sensor and emulates a servo.
  */
-#define BLTOUCH
+
+//#define BLTOUCH
 
 /**
  * Touch-MI Probe by hotends.fr
@@ -964,7 +1061,7 @@
  *
  * Specify a Probe position as { X, Y, Z }
  */
-#define NOZZLE_TO_PROBE_OFFSET { 32, 0, -2.9}
+//#define NOZZLE_TO_PROBE_OFFSET { 32, 0, -2.9}
 
 // Most probes should stay away from the edges of the bed, but
 // with NOZZLE_AS_PROBE this can be negative for a wider probing area.
@@ -1107,16 +1204,18 @@
 // @section machine
 
 // The size of the print bed
-#define X_BED_SIZE 305
-#define Y_BED_SIZE 260
+//#define X_BED_SIZE 305
+//#define Y_BED_SIZE 260
+
 
 // Travel limits (mm) after homing, corresponding to endstop positions.
-  #define X_MIN_POS -50        // G28 sets X position to this value after homing
-  #define X_MAX_POS 400        // not used (homes towards other endstop)
-  #define Y_MIN_POS -178       // not used (homes towards other endstop)
-  #define Y_MAX_POS 431        // G28 sets Y position to this value after homing
-  #define Z_MIN_POS -500       // not used (homes towards other endstop)
-  #define Z_MAX_POS 299        // G28 sets Z position to this value after homing
+//#define X_MIN_POS -50        // G28 sets X position to this value after homing
+//#define X_MAX_POS 400        // not used (homes towards other endstop)
+//#define Y_MIN_POS -178       // not used (homes towards other endstop)
+//#define Y_MAX_POS 431        // G28 sets Y position to this value after homing
+//#define Z_MIN_POS -500       // not used (homes towards other endstop)
+//#define Z_MAX_POS 299        // G28 sets Z position to this value after homing
+
 
 /**
  * Software Endstops
@@ -1251,7 +1350,7 @@
   /**
    * Enable the G26 Mesh Validation Pattern tool.
    */
-  //#define G26_MESH_VALIDATION
+   #define G26_MESH_VALIDATION
   #if ENABLED(G26_MESH_VALIDATION)
     #define MESH_TEST_NOZZLE_SIZE    0.4  // (mm) Diameter of primary nozzle.
     #define MESH_TEST_LAYER_HEIGHT   0.15  // (mm) Default layer height for the G26 Mesh Validation Tool.
@@ -1298,8 +1397,8 @@
 
   //#define MESH_EDIT_GFX_OVERLAY   // Display a graphics overlay while editing the mesh
 
-  #define MESH_INSET 0              // Set Mesh bounds as an inset region of the bed
-  #define GRID_MAX_POINTS_X 5       // Don't use more than 15 points per axis, implementation limited.
+//  #define MESH_INSET 0              // Set Mesh bounds as an inset region of the bed
+//  #define GRID_MAX_POINTS_X 5       // Don't use more than 15 points per axis, implementation limited.
   #define GRID_MAX_POINTS_Y GRID_MAX_POINTS_X
 
   #define UBL_MESH_EDIT_MOVES_Z     // Sophisticated users prefer no movement of nozzle
