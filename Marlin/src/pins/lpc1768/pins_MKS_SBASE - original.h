@@ -42,24 +42,23 @@
 //
 // Servos
 //
-//#define SERVO0_PIN         P1_23   // J8-3 (low jitter)
-//#define SERVO1_PIN         P2_12   // J8-4
+#define SERVO0_PIN                         P1_23  // J8-3 (low jitter)
+#define SERVO1_PIN                         P2_12  // J8-4
 #define SERVO2_PIN                         P2_11  // J8-5
 #define SERVO3_PIN                         P4_28  // J8-6
 
 //
 // Limit Switches - Not Interrupt Capable
 //
-//#define X_MIN_PIN          P1_24   // 10k pullup to 3.3V, 1K series
-#define X_MAX_PIN          P1_25   // 10k pullup to 3.3V, 1K series
-//#define X_MAX_PIN          P1_26   // 10k pullup to 3.3V, 1K series
-//#define Y_MIN_PIN          P1_26   // 10k pullup to 3.3V, 1K series
-#define Y_MAX_PIN          P1_27   // 10k pullup to 3.3V, 1K series
-//#define Z_MIN_PIN          P1_28   // The original Mks Sbase DIO19 has a 10k pullup to 3.3V or 5V, 1K series, so when using a Zprobe we must use DIO41 (J8 P1.22)
-#define Z_MAX_PIN          P1_29   // 10k pullup to 3.3V, 1K series
+#define X_MIN_PIN                          P1_24  // 10k pullup to 3.3V, 1K series
+#define X_MAX_PIN                          P1_25  // 10k pullup to 3.3V, 1K series
+#define Y_MIN_PIN                          P1_26  // 10k pullup to 3.3V, 1K series
+#define Y_MAX_PIN                          P1_27  // 10k pullup to 3.3V, 1K series
+#define Z_MIN_PIN                          P1_28  // The original Mks Sbase DIO19 has a 10k pullup to 3.3V or 5V, 1K series, so when using a Zprobe we must use DIO41 (J8 P1.22)
+#define Z_MAX_PIN                          P1_29  // 10k pullup to 3.3V, 1K series
 
 #ifndef Z_MIN_PROBE_PIN
-  #define Z_MIN_PROBE_PIN  P1_23   // Connector J8
+  #define Z_MIN_PROBE_PIN                  P4_28  // Connector J8
 #endif
 
 //
@@ -73,44 +72,26 @@
 #define Y_DIR_PIN                          P0_11
 #define Y_ENABLE_PIN                       P0_10
 
-//#define Z_STEP_PIN         P2_02
-//#define Z_DIR_PIN          P0_20
-//#define Z_ENABLE_PIN       P0_19
+#define Z_STEP_PIN                         P2_02
+#define Z_DIR_PIN                          P0_20
+#define Z_ENABLE_PIN                       P0_19
 
-//#define E0_STEP_PIN        P2_03
-//#define E0_DIR_PIN         P0_22
-//#define E0_ENABLE_PIN      P0_21
-//
-//#define E1_STEP_PIN        P2_08
-//#define E1_DIR_PIN         P2_13
-//#define E1_ENABLE_PIN      P4_29
+#define E0_STEP_PIN                        P2_03
+#define E0_DIR_PIN                         P0_22
+#define E0_ENABLE_PIN                      P0_21
 
-
-#define Z_STEP_PIN         P2_03  // switch Z & E0
-#define Z_DIR_PIN          P0_22  // switch Z & E0
-#define Z_ENABLE_PIN       P0_21  // switch Z & E0
-
-#define E1_STEP_PIN        P2_02  //
-#define E1_DIR_PIN         P0_20  //
-#define E1_ENABLE_PIN      P0_19  //
-
-
-#define E0_STEP_PIN        P2_08  // reversed E0 & E1 (E0 driver died)
-#define E0_DIR_PIN         P2_13  // reversed E0 & E1 (E0 driver died)
-#define E0_ENABLE_PIN      P4_29  // reversed E0 & E1 (E0 driver died)
-
-//#define E1_STEP_PIN        P2_03  // reversed E0 & E1 (E0 driver died)
-//#define E1_DIR_PIN         P0_22  // reversed E0 & E1 (E0 driver died)
-//#define E1_ENABLE_PIN      P0_21  // reversed E0 & E1 (E0 driver died)
+#define E1_STEP_PIN                        P2_08
+#define E1_DIR_PIN                         P2_13
+#define E1_ENABLE_PIN                      P4_29
 
 //
 // Temperature Sensors
 // 3.3V max when defined as an analog input
 //
-#define TEMP_BED_PIN        P0_24_A1   // A1 (TH2)
-#define TEMP_0_PIN          P0_23_A0   // A0 (TH1)
-#define TEMP_CHAMBER_PIN    P0_25_A2   // A2 (TH3)
-#define TEMP_2_PIN          P0_26_A3   // A3 (TH4)
+#define TEMP_BED_PIN                    P0_23_A0  // A0 (TH1)
+#define TEMP_0_PIN                      P0_24_A1  // A1 (TH2)
+#define TEMP_1_PIN                      P0_25_A2  // A2 (TH3)
+#define TEMP_2_PIN                      P0_26_A3  // A3 (TH4)
 
 //
 // Heaters / Fans
@@ -118,7 +99,6 @@
 #define HEATER_BED_PIN                     P2_05
 #define HEATER_0_PIN                       P2_07
 #define HEATER_1_PIN                       P2_06
-#define HEATER_CHAMBER_PIN P1_22
 #ifndef FAN_PIN
   #define FAN_PIN                          P2_04
 #endif
@@ -163,12 +143,6 @@
   #define KILL_PIN                         P1_29  // Z+
   #define KILL_PIN_STATE                    HIGH
 #endif
-
-
-#define FIL_RUNOUT_PIN     P0_17   // Filament rotary detector
-
-#define M672_MOD_PIN           P2_11   // X_MIN_PIN  (Z-probe connector MOD pin)
-#define SMART_EFFECTOR_MOD_PIN  M672_MOD_PIN
 
 //
 // Ethernet pins
