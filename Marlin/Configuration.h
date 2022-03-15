@@ -761,7 +761,7 @@
 #define THERMAL_PROTECTION_HOTENDS // Enable thermal protection for all extruders
 #define THERMAL_PROTECTION_BED     // Enable thermal protection for the heated bed
 //#define THERMAL_PROTECTION_CHAMBER // Enable thermal protection for the heated chamber
-#define THERMAL_PROTECTION_COOLER  // Enable thermal protection for the laser cooling
+//#define THERMAL_PROTECTION_COOLER  // Enable thermal protection for the laser cooling
 
 //===========================================================================
 //============================= Mechanical Settings =========================
@@ -824,17 +824,17 @@
   // Distance between bed and nozzle Z home position
   //#define DELTA_HEIGHT 486.04             // (mm) Get this value from G33 auto calibrate
   //#define DELTA_HEIGHT 477.658            // used manual Z moves to determine this 29 AUG 2021
-  #define DELTA_HEIGHT 485.75               // (mm) Get this value from G33 auto calibrate
+  #define DELTA_HEIGHT 485.81               // (mm) Get this value from G33 auto calibrate
 
-  #define DELTA_ENDSTOP_ADJ { -0.51 , +0.00, -0.35} // Get these values from G33 auto calibrate
+  #define DELTA_ENDSTOP_ADJ { -0.71 , +0.00, -0.67} // Get these values from G33 auto calibrate
 
   // Horizontal distance bridged by diagonal push rods when effector is centered.
-  #define DELTA_RADIUS 166.25            // (mm) Get this value from G33 auto calibrate
+  #define DELTA_RADIUS 166.20            // (mm) Get this value from G33 auto calibrate
 
   // Trim adjustments for individual towers
   // tower angle corrections for X and Y tower / rotate XYZ so Z tower angle = 0
   // measured in degrees anticlockwise looking from above the printer
-  #define DELTA_TOWER_ANGLE_TRIM { -0.06, +0.07, -0.01  } // Get these values from G33 auto calibrate
+  #define DELTA_TOWER_ANGLE_TRIM { -0.09, +0.05, +0.04  } // Get these values from G33 auto calibrate
 
   // Delta radius and diagonal rod adjustments (mm)
   //#define DELTA_RADIUS_TRIM_TOWER { 0.0, 0.0, 0.0 }
@@ -842,9 +842,11 @@
 
 #endif
 
-// Recv: .Height:  Ex:-0.51  Ey:+0.00  Ez:-0.35  Radius:166.25
-// Recv: .               Tx:-0.06  Ty:+0.07  Tz:-0.01
-// aug 29 2021
+
+// .Height:485.81  Ex:-0.71  Ey:+0.00  Ez:-0.67  Radius:166.20
+// .               Tx:-0.09  Ty:+0.05  Tz:+0.04
+// 24 JAN 2022
+
 
 //#define MARKFORGED_YX
 
@@ -1606,7 +1608,7 @@
   // After a runout is detected, continue printing this length of filament
   // before executing the runout script. Useful for a sensor at the end of
   // a feed tube. Requires 4 bytes SRAM per sensor, plus 4 bytes overhead.
-  #define FILAMENT_RUNOUT_DISTANCE_MM 7
+  #define FILAMENT_RUNOUT_DISTANCE_MM 10  // 7 was giving false errors
 
   #ifdef FILAMENT_RUNOUT_DISTANCE_MM
     // Enable this option to use an encoder disc that toggles the runout pin
@@ -1725,7 +1727,7 @@
 #if EITHER(AUTO_BED_LEVELING_LINEAR, AUTO_BED_LEVELING_BILINEAR)
 
   // Set the number of grid points per dimension.
-  #define GRID_MAX_POINTS_X 3
+  #define GRID_MAX_POINTS_X 5
   #define GRID_MAX_POINTS_Y GRID_MAX_POINTS_X
 
   // Probe along the Y axis, advancing X after each column
