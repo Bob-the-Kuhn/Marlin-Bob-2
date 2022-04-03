@@ -23,7 +23,7 @@
 
 /**
  * Conditionals_adv.h
- * Defines that depend on advanced configuration.
+ * Conditionals set before pins.h and which depend on Configuration_adv.h.
  */
 
 #ifndef AXIS_RELATIVE_MODES
@@ -118,9 +118,9 @@
 
 // Temperature sensor IDs
 #define HID_REDUNDANT -6
-#define HID_COOLER    -5
-#define HID_PROBE     -4
-#define HID_BOARD     -3
+#define HID_BOARD     -5
+#define HID_COOLER    -4
+#define HID_PROBE     -3
 #define HID_CHAMBER   -2
 #define HID_BED       -1
 #define HID_E0         0
@@ -587,6 +587,10 @@
   #define HAS_PRINT_PROGRESS 1
 #endif
 
+#if STATUS_MESSAGE_TIMEOUT_SEC > 0
+  #define HAS_STATUS_MESSAGE_TIMEOUT 1
+#endif
+
 #if ENABLED(SDSUPPORT) && SD_PROCEDURE_DEPTH
   #define HAS_MEDIA_SUBCALLS 1
 #endif
@@ -618,6 +622,8 @@
 
 #if ANY(BLINKM, RGB_LED, RGBW_LED, PCA9632, PCA9533, NEOPIXEL_LED)
   #define HAS_COLOR_LEDS 1
+#else
+  #undef LED_POWEROFF_TIMEOUT
 #endif
 #if ALL(HAS_RESUME_CONTINUE, PRINTER_EVENT_LEDS, SDSUPPORT)
   #define HAS_LEDS_OFF_FLAG 1
@@ -628,7 +634,8 @@
 #endif
 
 #if ENABLED(Z_STEPPER_AUTO_ALIGN)
-  #if ENABLED(Z_STEPPER_ALIGN_KNOWN_STEPPER_POSITIONS)
+  #ifdef Z_STEPPER_ALIGN_STEPPER_XY
+    #define HAS_Z_STEPPER_ALIGN_STEPPER_XY 1
     #undef Z_STEPPER_ALIGN_AMP
   #endif
   #ifndef Z_STEPPER_ALIGN_AMP
@@ -738,9 +745,6 @@
 #endif
 
 #if EITHER(FYSETC_MINI_12864_2_1, FYSETC_242_OLED_12864)
-  #define LED_CONTROL_MENU
-  #define LED_USER_PRESET_STARTUP
-  #define LED_COLOR_PRESETS
   #ifndef LED_USER_PRESET_GREEN
     #define LED_USER_PRESET_GREEN      128
   #endif
@@ -910,30 +914,45 @@
 #endif
 
 // Remove unused STEALTHCHOP flags
-#if LINEAR_AXES < 6
-  #undef STEALTHCHOP_K
-  #undef CALIBRATION_MEASURE_KMIN
-  #undef CALIBRATION_MEASURE_KMAX
-  #if LINEAR_AXES < 5
-    #undef STEALTHCHOP_J
-    #undef CALIBRATION_MEASURE_JMIN
-    #undef CALIBRATION_MEASURE_JMAX
-    #if LINEAR_AXES < 4
-      #undef STEALTHCHOP_I
-      #undef CALIBRATION_MEASURE_IMIN
-      #undef CALIBRATION_MEASURE_IMAX
-      #if LINEAR_AXES < 3
-        #undef Z_IDLE_HEIGHT
-        #undef STEALTHCHOP_Z
-        #undef Z_PROBE_SLED
-        #undef Z_SAFE_HOMING
-        #undef HOME_Z_FIRST
-        #undef HOMING_Z_WITH_PROBE
-        #undef ENABLE_LEVELING_FADE_HEIGHT
-        #undef NUM_Z_STEPPER_DRIVERS
-        #undef CNC_WORKSPACE_PLANES
-        #if LINEAR_AXES < 2
-          #undef STEALTHCHOP_Y
+#if NUM_AXES < 9
+  #undef STEALTHCHOP_W
+  #undef CALIBRATION_MEASURE_WMIN
+  #undef CALIBRATION_MEASURE_WMAX
+  #if NUM_AXES < 8
+    #undef STEALTHCHOP_V
+    #undef CALIBRATION_MEASURE_VMIN
+    #undef CALIBRATION_MEASURE_VMAX
+    #if NUM_AXES < 7
+      #undef STEALTHCHOP_U
+      #undef CALIBRATION_MEASURE_UMIN
+      #undef CALIBRATION_MEASURE_UMAX
+      #if NUM_AXES < 6
+        #undef STEALTHCHOP_K
+        #undef CALIBRATION_MEASURE_KMIN
+        #undef CALIBRATION_MEASURE_KMAX
+        #if NUM_AXES < 5
+          #undef STEALTHCHOP_J
+          #undef CALIBRATION_MEASURE_JMIN
+          #undef CALIBRATION_MEASURE_JMAX
+          #if NUM_AXES < 4
+            #undef STEALTHCHOP_I
+            #undef CALIBRATION_MEASURE_IMIN
+            #undef CALIBRATION_MEASURE_IMAX
+            #if NUM_AXES < 3
+              #undef Z_IDLE_HEIGHT
+              #undef STEALTHCHOP_Z
+              #undef Z_PROBE_SLED
+              #undef Z_SAFE_HOMING
+              #undef HOME_Z_FIRST
+              #undef HOMING_Z_WITH_PROBE
+              #undef ENABLE_LEVELING_FADE_HEIGHT
+              #undef NUM_Z_STEPPER_DRIVERS
+              #undef CNC_WORKSPACE_PLANES
+              #if NUM_AXES < 2
+                #undef STEALTHCHOP_Y
+              #endif
+            #endif
+          #endif
         #endif
       #endif
     #endif
@@ -981,8 +1000,13 @@
   #endif
 #endif
 
+// Flags for Case Light having a brightness property
+#if ENABLED(CASE_LIGHT_ENABLE) && (NONE(CASE_LIGHT_NO_BRIGHTNESS, CASE_LIGHT_IS_COLOR_LED) || ENABLED(CASE_LIGHT_USE_NEOPIXEL))
+  #define CASELIGHT_USES_BRIGHTNESS 1
+#endif
+
 // Flag whether least_squares_fit.cpp is used
-#if ANY(AUTO_BED_LEVELING_UBL, AUTO_BED_LEVELING_LINEAR, Z_STEPPER_ALIGN_KNOWN_STEPPER_POSITIONS)
+#if ANY(AUTO_BED_LEVELING_UBL, AUTO_BED_LEVELING_LINEAR, HAS_Z_STEPPER_ALIGN_STEPPER_XY)
   #define NEED_LSF 1
 #endif
 

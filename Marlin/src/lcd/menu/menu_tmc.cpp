@@ -26,7 +26,7 @@
 
 #include "../../inc/MarlinConfigPre.h"
 
-#if HAS_LCD_MENU && HAS_TRINAMIC_CONFIG
+#if HAS_MARLINUI_MENU && HAS_TRINAMIC_CONFIG
 
 #include "menu_item.h"
 #include "../../module/stepper/indirection.h"
@@ -134,6 +134,9 @@ void menu_tmc_current() {
     TERN_( I_SENSORLESS, TMC_EDIT_STORED_SGT(I));
     TERN_( J_SENSORLESS, TMC_EDIT_STORED_SGT(J));
     TERN_( K_SENSORLESS, TMC_EDIT_STORED_SGT(K));
+    TERN_( U_SENSORLESS, TMC_EDIT_STORED_SGT(U));
+    TERN_( V_SENSORLESS, TMC_EDIT_STORED_SGT(V));
+    TERN_( W_SENSORLESS, TMC_EDIT_STORED_SGT(W));
     END_MENU();
   }
 
