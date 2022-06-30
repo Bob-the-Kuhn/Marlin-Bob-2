@@ -697,6 +697,9 @@
   #include "stm32f4/pins_ARTILLERY_RUBY.h"      // STM32F4                                env:Artillery_Ruby
 #elif MB(CREALITY_V24S1_301F4)
   #include "stm32f4/pins_CREALITY_V24S1_301F4.h" // STM32F4                               env:STM32F401RC_creality env:STM32F401RC_creality_jlink env:STM32F401RC_creality_stlink
+#elif MB(NUCLEO_F429ZI)
+  #include "stm32f4/pins_NUCLEO_F429ZI.h"        // STM32F4                               env:BIGTREE_SKR_2_F429 env:BIGTREE_SKR_2_F429_USB env:BIGTREE_SKR_2_F429_USB_debug
+//  #include "stm32f4/pins_NUCLEO_F429ZI.h"        // STM32F4                               env:NUCLEO_F429ZI_F429 env:NUCLEO_F429ZI_F429_USB env:NUCLEO_F429ZI_F429_USB_debug
 
 //
 // ARM Cortex M7

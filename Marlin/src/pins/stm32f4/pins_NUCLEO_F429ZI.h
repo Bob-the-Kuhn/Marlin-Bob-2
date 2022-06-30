@@ -25,7 +25,22 @@
 
 #include "env_validate.h"
 
-
+/**
+ * reserved pins
+ *   used by trace/JTAG/SWD interfaces
+ *
+ *
+ *	Trace Clock   PE2
+ *	Trace D1	    PE4
+ *	Trace D2	    PE5
+ *	Trace D3	    PE6
+ *	Trace D0	    PE3
+ *
+ *  JTMS-SWDIO    PA13
+ *  JTCK-SWCLK    PA14
+ *  JTDI          PA15
+ *  JTDO/TRACESWO PB3
+ */
 
 // Use one of these or SDCard-based Emulation will be used
 #if NO_EEPROM_SELECTED
@@ -175,7 +190,7 @@
   #define Y_CS_PIN                          PD3
 #endif
 
-#define Z_STEP_PIN                          PA15
+#define Z_STEP_PIN                          PB12  // was PA15
 #define Z_DIR_PIN                           PA8
 #define Z_ENABLE_PIN                        PD1
 #ifndef Z_CS_PIN
@@ -223,7 +238,7 @@
 // Heaters / Fans
 //
 #ifndef HEATER_0_PIN
-  #define HEATER_0_PIN                      PB3   // Heater0
+  #define HEATER_0_PIN                      PB13  // was PB3   // Heater0
 #endif
 #ifndef HEATER_1_PIN
   #define HEATER_1_PIN                      PB4   // Heater1
@@ -259,7 +274,7 @@
     #define TMC_SW_MOSI                     PE14
   #endif
   #ifndef TMC_SW_MISO
-    #define TMC_SW_MISO                     PA14
+    #define TMC_SW_MISO                     PB14  // was PA14
   #endif
   #ifndef TMC_SW_SCK
     #define TMC_SW_SCK                      PE15
