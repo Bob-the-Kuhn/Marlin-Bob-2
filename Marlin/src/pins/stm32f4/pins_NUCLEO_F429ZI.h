@@ -42,6 +42,18 @@
  *  JTDO/TRACESWO PB3
  */
 
+// Nucleo resources
+
+#define GREEN_LED PB0
+#define RED_RED   PB14
+#define BLUE_LED  PB7
+
+#define USER_BUTTON			PC13  // normally open, pulled down
+
+#define LED_PIN   GREEN_LED
+
+
+
 // Use one of these or SDCard-based Emulation will be used
 #if NO_EEPROM_SELECTED
   //#define SRAM_EEPROM_EMULATION                 // Use BackSRAM-based EEPROM emulation
