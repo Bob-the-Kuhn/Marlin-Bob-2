@@ -52,6 +52,19 @@
 
 #define LED_PIN   GREEN_LED
 
+//
+//  The only real (tested) assignments are for:
+//    LED_PIN
+//    trace connector
+//    onboard SD card
+//    EXP1 & EXP2
+//
+
+
+
+#define BOARD_INFO_NAME "NUCLEO_F429ZI"
+
+
 
 
 // Use one of these or SDCard-based Emulation will be used
@@ -398,7 +411,21 @@
   #define SD_MOSI_PIN                EXP2_06_PIN
   #define SD_DETECT_PIN              EXP2_07_PIN
 #elif SD_CONNECTION_IS(ONBOARD)
+  #define SD_DETECT_PIN              PG2  //CN8 14
+
   #define SDIO_SUPPORT                            // Use SDIO for onboard SD
+  #if DISABLED(SDIO_SUPPORT)
+    #define SOFTWARE_SPI                          // Use soft SPI for onboard SD
+    #define SDSS                     PC11 // CN8 8   SDIO-DA3
+    #define SD_SS_PIN                SDSS
+    #define SD_SCK_PIN               PC12 // CN8 10  SDIO-CK
+    #define SD_MISO_PIN              PC8 	// CN8 2   SDIO-DA0
+    #define SD_MOSI_PIN
+    //                               PC9  // CN8 4   SDIO-DA1
+    //                               PC10 // CN8 6   SDIO-DA2
+
+
+  #endif
 #elif SD_CONNECTION_IS(CUSTOM_CABLE)
   #error "No custom SD drive cable defined for this board."
 #endif
