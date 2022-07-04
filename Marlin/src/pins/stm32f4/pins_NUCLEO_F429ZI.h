@@ -30,11 +30,19 @@
  *   used by trace/JTAG/SWD interfaces
  *
  *
- *	Trace Clock   PE2
- *	Trace D1	    PE4
- *	Trace D2	    PE5
- *	Trace D3	    PE6
- *	Trace D0	    PE3
+ *	Trace Clock   PE2  CN9 14
+ *	Trace D1	    PE4  CN9 16
+ *	Trace D2	    PE5  CN9 18
+ *	Trace D3	    PE6  CN9 20
+ *	Trace D0	    PE3  CN9 22
+
+
+
+
+
+
+
+
  *
  *  JTMS-SWDIO    PA13
  *  JTCK-SWCLK    PA14
@@ -94,7 +102,7 @@
 //
 #define X_DIAG_PIN                          PC1   // X-STOP
 #define Y_DIAG_PIN                          PC3   // Y-STOP
-#define Z_DIAG_PIN                          PC0   // Z-STOP
+#define Z_DIAG_PIN                          PA3  //  was PC0   // Z-STOP
 #define E0_DIAG_PIN                         PC2   // E0DET
 #define E1_DIAG_PIN                         PA0   // E1DET
 
@@ -146,14 +154,14 @@
   #endif
 #elif ENABLED(Z_MULTI_ENDSTOPS)
   #ifndef Z_MIN_PIN
-    #define Z_MIN_PIN                       PC0   // Z-STOP
+    #define Z_MIN_PIN                       PA3  //  was PC0   // Z-STOP
   #endif
   #ifndef Z_MAX_PIN
     #define Z_MAX_PIN                       PC15  // PWRDET
   #endif
 #else
   #ifndef Z_STOP_PIN
-    #define Z_STOP_PIN                      PC0   // Z-STOP
+    #define Z_STOP_PIN                      PA3  //  was PC0   // Z-STOP
   #endif
 #endif
 
@@ -210,7 +218,7 @@
 
 #define Y_STEP_PIN                          PD5
 #define Y_DIR_PIN                           PD4
-#define Y_ENABLE_PIN                        PD6
+#define Y_ENABLE_PIN                        PB11  // was PD6
 #ifndef Y_CS_PIN
   #define Y_CS_PIN                          PD3
 #endif
@@ -245,7 +253,7 @@
   #define TEMP_0_PIN                        PA2   // TH0
 #endif
 #ifndef TEMP_1_PIN
-  #define TEMP_1_PIN                        PA3   // TH1
+  //#define TEMP_1_PIN                        PA3   // TH1
 #endif
 #ifndef TEMP_BED_PIN
   #define TEMP_BED_PIN                      PA1   // TB
@@ -390,7 +398,7 @@
 
 //      EXP2_10_PIN                         N/C
 //      EXP2_09_PIN                         GND   //  lots
-#define EXP2_08_PIN                         -1    //  CN8   5 or CN11 14  NRST
+#define EXP2_08_PIN                         NRST  //  CN8   5 or CN11 14
 #define EXP2_07_PIN                         PC4   //  CN9 9 ? or CN12 34
 #define EXP2_06_PIN                         PA7   //  CN7 14? or CN12 15
 #define EXP2_05_PIN                         PB2   //  CN10 15 or CN12 22
@@ -404,23 +412,25 @@
 // Must use soft SPI because Marlin's default hardware SPI is tied to LCD's EXP2
 //
 #if SD_CONNECTION_IS(LCD)
-  #define SDSS                       EXP2_04_PIN
+//  #define SOFTWARE_SPI                          // try soft SPI for LCD SD
+  #define SDSS                       EXP2_04_PIN  // PA4   //  CN7  17
   #define SD_SS_PIN                         SDSS
-  #define SD_SCK_PIN                 EXP2_02_PIN
-  #define SD_MISO_PIN                EXP2_01_PIN
-  #define SD_MOSI_PIN                EXP2_06_PIN
-  #define SD_DETECT_PIN              EXP2_07_PIN
+  #define SD_SCK_PIN                 EXP2_02_PIN  // PA5   //  CN7  10
+  #define SD_MISO_PIN                EXP2_01_PIN  // PA6   //  CN7  12
+  #define SD_MOSI_PIN                EXP2_06_PIN  // PA7   //  CN7 14
+  #define SD_DETECT_PIN              EXP2_07_PIN  // PC4   //  CN9 9
+  #define SOFTWARE_SPI
 #elif SD_CONNECTION_IS(ONBOARD)
-  #define SD_DETECT_PIN              PG2  //CN8 14
+  #define SD_DETECT_PIN              PC0// CN10 3   PG2  //CN8 14
 
-  #define SDIO_SUPPORT                            // Use SDIO for onboard SD
+//  #define SDIO_SUPPORT                            // Use SDIO for onboard SD
   #if DISABLED(SDIO_SUPPORT)
     #define SOFTWARE_SPI                          // Use soft SPI for onboard SD
     #define SDSS                     PC11 // CN8 8   SDIO-DA3
     #define SD_SS_PIN                SDSS
     #define SD_SCK_PIN               PC12 // CN8 10  SDIO-CK
     #define SD_MISO_PIN              PC8 	// CN8 2   SDIO-DA0
-    #define SD_MOSI_PIN
+    #define SD_MOSI_PIN              PD2  // CN8 12  SDIO-CMD
     //                               PC9  // CN8 4   SDIO-DA1
     //                               PC10 // CN8 6   SDIO-DA2
 
