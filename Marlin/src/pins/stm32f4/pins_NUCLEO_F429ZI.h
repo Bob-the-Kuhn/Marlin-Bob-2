@@ -218,7 +218,7 @@
 
 #define Y_STEP_PIN                          PD5
 #define Y_DIR_PIN                           PD4
-#define Y_ENABLE_PIN                        PB11  // was PD6
+#define Y_ENABLE_PIN                        PC14  // was PD6
 #ifndef Y_CS_PIN
   #define Y_CS_PIN                          PD3
 #endif
@@ -310,7 +310,7 @@
     #define TMC_SW_MISO                     PB14  // was PA14
   #endif
   #ifndef TMC_SW_SCK
-    #define TMC_SW_SCK                      PE15
+ //   #define TMC_SW_SCK                      PE15
   #endif
 #endif
 
@@ -385,39 +385,40 @@
  *                 EXP1                                     EXP2
  */
 
-//      EXP1_10_PIN                         +5V   //  CN8   9 or CN11 18
+//      EXP1_10_PIN                         +5V   //  CN8   9
 //      EXP1_09_PIN                         GND   //  lots
-#define EXP1_08_PIN                         PE13  //  CN10 10 or CN12 55
-#define EXP1_07_PIN                         PE12  //  CN10 26 or CN12 49
-#define EXP1_06_PIN                         PE11  //  CN10  6 or CN12 56
-#define EXP1_05_PIN                         PE10  //  CN10 24 or CN12 47
-#define EXP1_04_PIN                         PE9   //  CN10  4 or CN12 52
-#define EXP1_03_PIN                         PB1   //  CN10  7 or CN12 24
-#define EXP1_02_PIN                         PB0   //  CN10 31 or CN11 34
-#define EXP1_01_PIN                         PC5   //  CN9 11? or CN12  6
+#define EXP1_08_PIN                         PE13  //  CN10 10
+#define EXP1_07_PIN                         PE12  //  CN10 26
+#define EXP1_06_PIN                         PE11  //  CN10  6
+#define EXP1_05_PIN                         PE10  //  CN10 24
+#define EXP1_04_PIN                         PE9   //  CN10  4
+#define EXP1_03_PIN                         PB1   //  CN10  7
+#define EXP1_02_PIN                         PB0   //  CN10 31
+#define EXP1_01_PIN                         PC5   //  CN9  11 check Nucleo jumper(s)
 
 //      EXP2_10_PIN                         N/C
 //      EXP2_09_PIN                         GND   //  lots
-#define EXP2_08_PIN                         NRST  //  CN8   5 or CN11 14
-#define EXP2_07_PIN                         PC4   //  CN9 9 ? or CN12 34
-#define EXP2_06_PIN                         PA7   //  CN7 14? or CN12 15
-#define EXP2_05_PIN                         PB2   //  CN10 15 or CN12 22
-#define EXP2_04_PIN                         PA4   //  CN7  17 or CN11 32
-#define EXP2_03_PIN                         PE7   //  CN10 20 or CN12 44
-#define EXP2_02_PIN                         PA5   //  CN7  10 or CN12 11
-#define EXP2_01_PIN                         PA6   //  CN7  12 or CN12 13
+#define EXP2_08_PIN                         NRST  //  CN8   5
+#define EXP2_07_PIN                         PC4   //  CN9   9 check Nucleo jumper(s)
+#define EXP2_06_PIN                         PE15  //  CN10 30
+#define EXP2_05_PIN                         PB2   //  CN10 15
+#define EXP2_04_PIN                         PA4   //  CN7  17
+#define EXP2_03_PIN                         PE7   //  CN10 20
+#define EXP2_02_PIN                         PB10  //  CN10 32
+#define EXP2_01_PIN                         PB11  //  CN10 34
 
 //
 // Onboard SD card
 // Must use soft SPI because Marlin's default hardware SPI is tied to LCD's EXP2
 //
 #if SD_CONNECTION_IS(LCD)
-//  #define SOFTWARE_SPI                          // try soft SPI for LCD SD
+  #define SOFTWARE_SPI                            // use soft SPI for LCD SD (unable to get hard SPI PA5, PA6 & PA7 to work)
   #define SDSS                       EXP2_04_PIN  // PA4   //  CN7  17
   #define SD_SS_PIN                         SDSS
-  #define SD_SCK_PIN                 EXP2_02_PIN  // PA5   //  CN7  10
-  #define SD_MISO_PIN                EXP2_01_PIN  // PA6   //  CN7  12
-  #define SD_MOSI_PIN                EXP2_06_PIN  // PA7   //  CN7 14
+  #define SD_SCK_PIN                 EXP2_02_PIN  // PB10  CN10  32
+  #define SD_MISO_PIN                EXP2_01_PIN  // PB11  CN10  34
+  #define SD_MOSI_PIN                EXP2_06_PIN  // PE15  CN10  30
+
   #define SD_DETECT_PIN              EXP2_07_PIN  // PC4   //  CN9 9
   #define SOFTWARE_SPI
 #elif SD_CONNECTION_IS(ONBOARD)
