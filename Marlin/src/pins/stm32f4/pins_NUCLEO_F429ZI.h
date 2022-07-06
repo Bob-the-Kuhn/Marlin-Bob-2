@@ -422,7 +422,7 @@
   #define SD_DETECT_PIN              EXP2_07_PIN  // PC4   //  CN9 9
   #define SOFTWARE_SPI
 #elif SD_CONNECTION_IS(ONBOARD)
-  #define SD_DETECT_PIN              PC0// CN10 3   PG2  //CN8 14
+  #define SD_DETECT_PIN              PC0 // CN9 3
 
 //  #define SDIO_SUPPORT                            // Use SDIO for onboard SD
   #if DISABLED(SDIO_SUPPORT)
