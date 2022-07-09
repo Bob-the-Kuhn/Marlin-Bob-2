@@ -104,7 +104,7 @@
 #define Y_DIAG_PIN                          PC3   // Y-STOP
 #define Z_DIAG_PIN                          PA3  //  was PC0   // Z-STOP
 #define E0_DIAG_PIN                         PC2   // E0DET
-#define E1_DIAG_PIN                         PA4   // E1DET
+#define E1_DIAG_PIN                         PA0   // E1DET
 
 //
 // Limit Switches
@@ -130,16 +130,16 @@
 #ifdef Y_STALL_SENSITIVITY
   #define Y_STOP_PIN                  Y_DIAG_PIN
   #if Y_HOME_TO_MIN
-    #define Y_MAX_PIN                       PA4   // E1DET
+    #define Y_MAX_PIN                       PA0   // E1DET
   #else
-    #define Y_MIN_PIN                       PA4   // E1DET
+    #define Y_MIN_PIN                       PA0   // E1DET
   #endif
 #elif ENABLED(Y_DUAL_ENDSTOPS)
   #ifndef Y_MIN_PIN
     #define Y_MIN_PIN                       PC3   // Y-STOP
   #endif
   #ifndef Y_MAX_PIN
-    #define Y_MAX_PIN                       PA4   // E1DET
+    #define Y_MAX_PIN                       PA0   // E1DET
   #endif
 #else
   #define Y_STOP_PIN                        PC3   // Y-STOP
@@ -185,7 +185,7 @@
 // Filament Runout Sensor
 //
 #define FIL_RUNOUT_PIN                      PC2   // E0DET
-#define FIL_RUNOUT2_PIN                     PA4   // E1DET
+#define FIL_RUNOUT2_PIN                     PA0   // E1DET
 
 //
 // Power Supply Control
@@ -213,7 +213,7 @@
 #define X_DIR_PIN                           PE1
 #define X_ENABLE_PIN                        PD13  // was PE3
 #ifndef X_CS_PIN
-  #define X_CS_PIN                          PC0
+  #define X_CS_PIN                          PE0
 #endif
 
 #define Y_STEP_PIN                          PD5
@@ -288,11 +288,11 @@
     #define SPINDLE_LASER_PWM_PIN           PB5
   #endif
   #ifndef SPINDLE_LASER_ENA_PIN
-    #define SPINDLE_LASER_ENA_PIN           PC4
+    #define SPINDLE_LASER_ENA_PIN           PB6
   #endif
 #else
   #ifndef FAN1_PIN
-    #define FAN1_PIN                        PC4   // Fan1
+    #define FAN1_PIN                        PB6   // Fan1
   #endif
   #ifndef FAN2_PIN
     #define FAN2_PIN                        PB5   // Fan2
@@ -336,7 +336,7 @@
   //
   // Software serial
   //
-  #define X_SERIAL_TX_PIN                   PC0
+  #define X_SERIAL_TX_PIN                   PE0
   #define X_SERIAL_RX_PIN        X_SERIAL_TX_PIN
 
   #define Y_SERIAL_TX_PIN                   PD3
@@ -394,16 +394,15 @@
 #define EXP1_04_PIN                         PE9   //  CN10  4
 #define EXP1_03_PIN                         PB1   //  CN10  7
 #define EXP1_02_PIN                         PB0   //  CN10 31
-#define EXP1_01_PIN                         PC2   //  CN10  9
-
+#define EXP1_01_PIN                         PC5   //  CN9  11 check Nucleo jumper(s)
 
 //      EXP2_10_PIN                         N/C
 //      EXP2_09_PIN                         GND   //  lots
 #define EXP2_08_PIN                         NRST  //  CN8   5
-#define EXP2_07_PIN                         PB6   //  CN10 13
+#define EXP2_07_PIN                         PC4   //  CN9   9 check Nucleo jumper(s)
 #define EXP2_06_PIN                         PE15  //  CN10 30
 #define EXP2_05_PIN                         PB2   //  CN10 15
-#define EXP2_04_PIN                         PA0   //  CN10 29
+#define EXP2_04_PIN                         PA4   //  CN7  17
 #define EXP2_03_PIN                         PE7   //  CN10 20
 #define EXP2_02_PIN                         PB10  //  CN10 32
 #define EXP2_01_PIN                         PB11  //  CN10 34
@@ -414,16 +413,16 @@
 //
 #if SD_CONNECTION_IS(LCD)
   #define SOFTWARE_SPI                            // use soft SPI for LCD SD (unable to get hard SPI PA5, PA6 & PA7 to work)
-  #define SDSS                       EXP2_04_PIN  // PA0	  //  CN10 29
+  #define SDSS                       EXP2_04_PIN  // PA4   //  CN7  17
   #define SD_SS_PIN                         SDSS
   #define SD_SCK_PIN                 EXP2_02_PIN  // PB10  CN10  32
   #define SD_MISO_PIN                EXP2_01_PIN  // PB11  CN10  34
   #define SD_MOSI_PIN                EXP2_06_PIN  // PE15  CN10  30
 
-  #define SD_DETECT_PIN              EXP2_07_PIN  // PB6   //  CN10 13
+  #define SD_DETECT_PIN              EXP2_07_PIN  // PC4   //  CN9 9
   #define SOFTWARE_SPI
 #elif SD_CONNECTION_IS(ONBOARD)
-  #define SD_DETECT_PIN              PE0          // CN10 33
+  #define SD_DETECT_PIN              PC0 // CN9 3
 
 //  #define SDIO_SUPPORT                            // Use SDIO for onboard SD
   #if DISABLED(SDIO_SUPPORT)
