@@ -365,46 +365,46 @@
 /**
  *  RepRap full graphics layout (180 degrees from BTT and MKS)
  *                ------                                   ------
- * (BEEPER) PC5  |1   2| PB0  (BTN_ENC)  (MISO)      PA6 |1   2| PA5 (SCK)
- * (LCD_EN) PB1  |3   4| PE9  (LCD_RS)   (BTN_EN1)   PE7 |3   4| PA4 (SD_SS)
- * (LCD_D4) PE10 |5   6  PE11 (LCD_D5)   (BTN_EN2)   PB2 |5   6  PA7 (MOSI)
- * (LCD_D6) PE12 |7   8| PE13 (LCD_D7)   (SD_DETECT) PC4 |7   8| RESET
- *           GND |9  10| 5V                          GND |9  10| --
+ * (BEEPER) PC2  |1   2| PB0  (BTN_ENC)  (MISO)      PB11 |1   2| PB10 (SCK)
+ * (LCD_EN) PB1  |3   4| PE9  (LCD_RS)   (BTN_EN1)   PE7  |3   4| PA0  (SD_SS)
+ * (LCD_D4) PE10 |5   6  PE11 (LCD_D5)   (BTN_EN2)   PB2  |5   6  PE15 (MOSI)
+ * (LCD_D6) PE12 |7   8| PE13 (LCD_D7)   (SD_DETECT) PB6  |7   8| RESET
+ *           GND |9  10| 5V                          GND  |9  10| --
  *                ------                                   ------
  *                 EXP1                                     EXP2
  */
 
  /**
- *                ------                                   ------
- * (BEEPER) PC5  |10  9 | PB0  (BTN_ENC)  (MISO)      PA6 |10  9 | PA5 (SCK)
- * (LCD_EN) PB1  | 8  7 | PE9  (LCD_RS)   (BTN_EN1)   PE7 | 8  7 | PA4 (SD_SS)
- * (LCD_D4) PE10 | 6  5   PE11 (LCD_D5)   (BTN_EN2)   PB2 | 6  5   PA7 (MOSI)
- * (LCD_D6) PE12 | 4  3 | PE13 (LCD_D7)   (SD_DETECT) PC4 | 4  3 | RESET
- *           GND | 2  1 | 5V                          GND | 2  1 | --
- *                ------                                   ------
- *                 EXP1                                     EXP2
+ *                ------                                    ------
+ * (BEEPER) PC2  |10  9 | PB0  (BTN_ENC)  (MISO)      PB11 |10  9 | PB10 (SCK)
+ * (LCD_EN) PB1  | 8  7 | PE9  (LCD_RS)   (BTN_EN1)   PE7  | 8  7 | PA0  (SD_SS)
+ * (LCD_D4) PE10 | 6  5   PE11 (LCD_D5)   (BTN_EN2)   PB2  | 6  5 | PE15 (MOSI)
+ * (LCD_D6) PE12 | 4  3 | PE13 (LCD_D7)   (SD_DETECT) PB6  | 4  3 | RESET
+ *           GND | 2  1 | 5V                          GND  | 2  1 | --
+ *                ------                                    ------
+ *                 EXP1                                      EXP2
  */
 
 //      EXP1_10_PIN                         +5V   //  CN8   9
 //      EXP1_09_PIN                         GND   //  lots
 #define EXP1_08_PIN                         PE13  //  CN10 10
-#define EXP1_07_PIN                         PE12  //  CN10 26
+#define EXP1_07_PIN                         PB6   //  CN10 13
 #define EXP1_06_PIN                         PE11  //  CN10  6
-#define EXP1_05_PIN                         PE10  //  CN10 24
+#define EXP1_05_PIN                         PB2   //  CN10 15
 #define EXP1_04_PIN                         PE9   //  CN10  4
 #define EXP1_03_PIN                         PB1   //  CN10  7
-#define EXP1_02_PIN                         PB0   //  CN10 31
+#define EXP1_02_PIN                         PE7   //  CN10 20
 #define EXP1_01_PIN                         PC2   //  CN10  9
 
 
 //      EXP2_10_PIN                         N/C
 //      EXP2_09_PIN                         GND   //  lots
 #define EXP2_08_PIN                         NRST  //  CN8   5
-#define EXP2_07_PIN                         PB6   //  CN10 13
+#define EXP2_07_PIN                         PE12  //  CN10 26
 #define EXP2_06_PIN                         PE15  //  CN10 30
-#define EXP2_05_PIN                         PB2   //  CN10 15
+#define EXP2_05_PIN                         PE10  //  CN10 24
 #define EXP2_04_PIN                         PA0   //  CN10 29
-#define EXP2_03_PIN                         PE7   //  CN10 20
+#define EXP2_03_PIN                         PB0   //  CN10 31
 #define EXP2_02_PIN                         PB10  //  CN10 32
 #define EXP2_01_PIN                         PB11  //  CN10 34
 
