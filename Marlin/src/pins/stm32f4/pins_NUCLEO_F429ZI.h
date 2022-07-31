@@ -425,7 +425,7 @@
 #elif SD_CONNECTION_IS(ONBOARD)
   #define SD_DETECT_PIN              PE0          // CN10 33
 
-//  #define SDIO_SUPPORT                            // Use SDIO for onboard SD
+  #define SDIO_SUPPORT                            // Use SDIO for onboard SD
   #if DISABLED(SDIO_SUPPORT)
     #define SOFTWARE_SPI                          // Use soft SPI for onboard SD
     #define SDSS                     PC11 // CN8 8   SDIO-DA3
