@@ -87,7 +87,7 @@
 
 // Choose the name from boards.h that matches your setup
 #ifndef MOTHERBOARD
-  #define MOTHERBOARD BOARD_AC_TRI_F1_V1
+  #define MOTHERBOARD BOARD_TRIGORILLA_V006
 #endif
 
 /**

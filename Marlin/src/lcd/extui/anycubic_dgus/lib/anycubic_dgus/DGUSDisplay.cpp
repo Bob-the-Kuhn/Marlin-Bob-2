@@ -201,8 +201,7 @@ void DGUSDisplay::ProcessRx() {
         |           Command          DataLen (in Words) */
         if (command == DGUS_CMD_READVAR) {
           const uint16_t vp = tmp[0] << 8 | tmp[1];
-          const uint8_t dlen = tmp[2] << 1;  // Convert to Bytes. (Display works with words)
-          DEBUG_ECHOPGM(" vp=", vp, " dlen=", dlen);
+          DEBUG_ECHOPGM(" vp=", vp, " dlen=", const uint8_t tmp[2] << 1);
           DGUS_VP_Variable ramcopy;
           if (populate_VPVar(vp, &ramcopy)) {
             if (ramcopy.set_by_display_handler)

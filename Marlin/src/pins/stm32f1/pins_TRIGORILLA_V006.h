@@ -23,8 +23,8 @@
 
 #include "env_validate.h"
 
-#define BOARD_INFO_NAME      "AC_TRI_F1"
-#define DEFAULT_MACHINE_NAME "STM32F103RET6"
+#define BOARD_INFO_NAME      "TRIGORILLA_V006"
+#define DEFAULT_MACHINE_NAME "GD32F103"
 
 #define BOARD_NO_NATIVE_USB
 
