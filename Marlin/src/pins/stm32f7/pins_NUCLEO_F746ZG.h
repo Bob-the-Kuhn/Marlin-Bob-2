@@ -174,9 +174,9 @@
 #define SD_DETECT_PIN                       PG2
 // SDIO for external SD Card
 
-//#define ONBOARD_SDIO
-//#define SDIO_CLOCK                       4500000
-//#define SDIO_READ_RETRIES                     16
+#define ONBOARD_SDIO
+#define SDIO_CLOCK                          4800000
+#define SDIO_READ_RETRIES                   16
 #define SDIO_D0_PIN                         PC8
 #define SDIO_D1_PIN                         PC9
 #define SDIO_D2_PIN                         PC10

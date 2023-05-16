@@ -68,6 +68,8 @@
 // Choose the name from boards.h that matches your setup
 #ifndef MOTHERBOARD
   #define MOTHERBOARD BOARD_NUCLEO_F746ZG
+
+//  #define MOTHERBOARD BOARD_BTT_SKR_V3_0_EZ
 #endif
 
 /**

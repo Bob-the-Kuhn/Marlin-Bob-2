@@ -42,6 +42,7 @@
   #include <stm32f4xx_hal_gpio.h>
   #include <stm32f4xx_hal_sd.h>
 #elif defined(STM32F7xx)
+  #define SDIO_FOR_STM32F7
   #include <stm32f7xx_hal_rcc.h>
   #include <stm32f7xx_hal_dma.h>
   #include <stm32f7xx_hal_gpio.h>
@@ -87,7 +88,7 @@ static uint32_t clock_to_divider(uint32_t clk) {
 // Start the SDIO clock
 void HAL_SD_MspInit(SD_HandleTypeDef *hsd) {
   UNUSED(hsd);
-  #ifdef SDIO_FOR_STM32H7
+  #if (defined(SDIO_FOR_STM32H7) || defined(SDIO_FOR_STM32F7))
     pinmap_pinout(PC_12, PinMap_SD);
     pinmap_pinout(PD_2,  PinMap_SD);
     pinmap_pinout(PC_8,  PinMap_SD);
@@ -103,7 +104,7 @@ void HAL_SD_MspInit(SD_HandleTypeDef *hsd) {
   #endif
 }
 
-#ifdef SDIO_FOR_STM32H7
+#if (defined(SDIO_FOR_STM32H7) || defined(SDIO_FOR_STM32F7))
 
   #define SD_TIMEOUT              1000 // ms
 
@@ -155,6 +156,8 @@ void HAL_SD_MspInit(SD_HandleTypeDef *hsd) {
   #ifdef STM32F1xx
     #define DMA_IRQ_HANDLER DMA2_Channel4_5_IRQHandler
   #elif defined(STM32F4xx)
+    #define DMA_IRQ_HANDLER DMA2_Stream3_IRQHandler
+  #elif defined(STM32F7xx)
     #define DMA_IRQ_HANDLER DMA2_Stream3_IRQHandler
   #else
     #error "Unknown STM32 architecture."
@@ -380,7 +383,7 @@ void HAL_SD_MspInit(SD_HandleTypeDef *hsd) {
  * @return true on success
  */
 bool SDIO_ReadBlock(uint32_t block, uint8_t *dst) {
-  #ifdef SDIO_FOR_STM32H7
+  #if (defined(SDIO_FOR_STM32H7) || defined(SDIO_FOR_STM32F7))
 
     uint32_t timeout = HAL_GetTick() + SD_TIMEOUT;
 
@@ -415,16 +418,24 @@ bool SDIO_ReadBlock(uint32_t block, uint8_t *dst) {
  *
  * @return true on success
  */
-bool SDIO_WriteBlock(uint32_t block, const uint8_t *src) {
-  #ifdef SDIO_FOR_STM32H7
 
+#ifdef SDIO_FOR_STM32F7
+  HAL_StatusTypeDef HAL_SD_WriteBlocks_DMA(SD_HandleTypeDef *hsd, uint8_t *pData, uint32_t BlockAdd, uint32_t NumberOfBlocks);
+#endif
+
+bool SDIO_WriteBlock(uint32_t block, const uint8_t *src) {
+  #if (defined(SDIO_FOR_STM32H7) || defined(SDIO_FOR_STM32F7))
+    SD_HandleTypeDef temp;
+    uint8_t buf[512]= {0};
+    //memcpy (buf, src, 512);
     uint32_t timeout = HAL_GetTick() + SD_TIMEOUT;
 
-    while (HAL_SD_GetCardState(&hsd) != HAL_SD_CARD_TRANSFER)
+    while (HAL_SD_GetCardState(&temp) != HAL_SD_CARD_TRANSFER)
       if (HAL_GetTick() >= timeout) return false;
 
     waitingTxCplt = 1;
-    if (HAL_SD_WriteBlocks_DMA(&hsd, (uint8_t*)src, block, 1) != HAL_OK)
+   // const_cast<uint8_t *>(src)    undefined reference
+  if (HAL_SD_WriteBlocks_DMA(&temp,(uint8_t *) src, block, 1) != HAL_OK)
       return false;
 
     timeout = HAL_GetTick() + SD_TIMEOUT;
