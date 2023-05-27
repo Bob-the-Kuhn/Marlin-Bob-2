@@ -65,9 +65,12 @@
   #define SDIO_CLOCK 18000000 // 18 MHz
 #endif
 
-SD_HandleTypeDef hsd;  // SDIO structure
+SD_HandleTypeDef hsd = {0};  // SDIO structure
 
 static uint32_t clock_to_divider(uint32_t clk) {
+  #ifdef SDIO__MAX_CLOCK
+	return SDIO__MAX_CLOCK;
+  #endif
   #ifdef SDIO_FOR_STM32H7
     // SDMMC_CK frequency = sdmmc_ker_ck / [2 * CLKDIV].
     uint32_t sdmmc_clk = HAL_RCCEx_GetPeriphCLKFreq(RCC_PERIPHCLK_SDMMC);
@@ -140,7 +143,7 @@ void HAL_SD_MspInit(SD_HandleTypeDef *hsd) {
     return (sd_state == HAL_OK);
   }
 
-#else // !SDIO_FOR_STM32H7
+#else // !SDIO_FOR_STM32H7 or F7
 
   #define SD_TIMEOUT               500 // ms
 
@@ -371,7 +374,7 @@ void HAL_SD_MspInit(SD_HandleTypeDef *hsd) {
     return true;
   }
 
-#endif // !SDIO_FOR_STM32H7
+#endif // !SDIO_FOR_STM32H7 or F7
 
 /**
  * @brief Read a block

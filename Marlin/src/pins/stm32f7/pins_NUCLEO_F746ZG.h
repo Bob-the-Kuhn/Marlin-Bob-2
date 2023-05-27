@@ -176,11 +176,12 @@
 
 #define ONBOARD_SDIO
 #define SDIO_CLOCK                          4800000
+#define SDIO__MAX_CLOCK                     118
 #define SDIO_READ_RETRIES                   16
 #define SDIO_D0_PIN                         PC8
-#define SDIO_D1_PIN                         PC9
-#define SDIO_D2_PIN                         PC10
-#define SDIO_D3_PIN                         PC11
+//#define SDIO_D1_PIN                         PC9
+//#define SDIO_D2_PIN                         PC10
+//#define SDIO_D3_PIN                         PC11
 #define SDIO_CK_PIN                         PC12
 #define SDIO_CMD_PIN                        PD2
 
@@ -192,7 +193,15 @@
 #define SD_SS_PIN                           PD14 //SPI1
 #define SDSS                                PD14
 
-#define LED_PIN                         LED_BLUE
+#define LD1_PIN                          PB0  // green
+//define LD1_PIN                          PA5  // green
+#define LD2_PIN                          PB7  // blue
+#define LD3_PIN                          PB14  // red
+//#define LED_BLUE                         LD2_PIN   // already defined in JSON for nucleo_F746ZG
+#define LED_PIN                          LED_BLUE
+
+
+
 
 //
 // LCD / Controller
@@ -211,3 +220,13 @@
   #define BOARD_ST7920_DELAY_2                63
   #define BOARD_ST7920_DELAY_3               780
 #endif
+
+// init ITCM ram or else callbacks don't register correctly
+#define BOARD_PREINIT() do { \
+                           uint32_t *i; \
+							i = 0; \
+							for (uint32_t count = 0; count < 0x0fff; count++) { \
+							  *(i + count) = 0;\
+							  } \
+							}while(0)
+
