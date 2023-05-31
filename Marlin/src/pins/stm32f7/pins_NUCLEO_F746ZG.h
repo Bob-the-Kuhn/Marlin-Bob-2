@@ -175,6 +175,7 @@
 // SDIO for external SD Card
 
 #define ONBOARD_SDIO
+#define SDIO_POLLING                                   // use polling mode rather than DMA
 #define SDIO_CLOCK                          4800000
 #define SDIO__MAX_CLOCK                     118
 #define SDIO_READ_RETRIES                   16
