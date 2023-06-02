@@ -1159,6 +1159,15 @@ void setup() {
       while (!MYSERIAL3.connected() && PENDING(millis(), serial_connect_timeout)) { /*nada*/ }
     #endif
   #endif
+
+  char msg[64];
+  sprintf(msg, "\nSYSCLK_Frequency %09lu\n", HAL_RCC_GetSysClockFreq());
+  SERIAL_ECHO(msg);
+  sprintf(msg, "HCLK_Frequency   %09lu\n", HAL_RCC_GetHCLKFreq());
+  SERIAL_ECHO(msg);
+
+
+
   SERIAL_ECHOLNPGM("start");
 
   // Set up these pins early to prevent suicide
