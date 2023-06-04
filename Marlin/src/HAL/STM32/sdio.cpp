@@ -375,7 +375,7 @@ void HAL_SD_MspInit(SD_HandleTypeDef *hsd) {
   }
 
 #endif // !SDIO_FOR_STM32H7 or F7
-
+HAL_StatusTypeDef temp_status2;
 /**
  * @brief Read a block
  * @details Read a block from media with SDIO
@@ -394,12 +394,18 @@ bool SDIO_ReadBlock(uint32_t block, uint8_t *dst) {
       if (HAL_GetTick() >= timeout) return false;
 
     waitingRxCplt = 1;
-    if (HAL_SD_ReadBlocks_DMA(&hsd, (uint8_t*)dst, block, 1) != HAL_OK)
+//    if (HAL_SD_ReadBlocks_DMA(&hsd, (uint8_t*)dst, block, 1) != HAL_OK)
+temp_status2 = HAL_SD_ReadBlocks(&hsd, (uint8_t*)dst, block, 1, SD_TIMEOUT);
+    if (temp_status2 != HAL_OK)
+
       return false;
 
-    timeout = HAL_GetTick() + SD_TIMEOUT;
-    while (waitingRxCplt)
-      if (HAL_GetTick() >= timeout) return false;
+//    timeout = HAL_GetTick() + SD_TIMEOUT;
+//    while (waitingRxCplt)
+//      if (HAL_GetTick() >= timeout) {
+//        temp_status2 = HAL_TIMEOUT;
+//        return false;
+//      }
 
     return true;
 

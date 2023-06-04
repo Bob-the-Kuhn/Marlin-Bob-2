@@ -138,10 +138,26 @@ bool SdVolume::cacheFlush() {
   return true;
 }
 
+#include "C:\Users\bobku\Documents\GitHub\Marlin-Bob-2\Marlin\src\core\serial.h"
+extern HAL_StatusTypeDef temp_status2;
 bool SdVolume::cacheRawBlock(const uint32_t blockNumber, const bool dirty) {
   if (cacheBlockNumber_ != blockNumber) {
     if (!cacheFlush()) return false;
-    if (!sdCard_->readBlock(blockNumber, cacheBuffer_.data)) return false;
+    //uint8_t *pointer;
+    //pointer = &cacheBuffer_.data;
+    bool temp_status = !sdCard_->readBlock(blockNumber, cacheBuffer_.data);
+    SERIAL_ECHOLNPGM("read BLOCK : ", blockNumber);
+    SERIAL_ECHOPGM("DATA:");
+    for (uint8_t count = 0; count < 8; count++) {
+    SERIAL_ECHOPGM(" ", cacheBuffer_.data[count]);
+    }
+
+//   if (!sdCard_->readBlock(blockNumber, cacheBuffer_.data)) return false;
+    if (temp_status) {
+      SERIAL_ECHOLNPGM("  FAILURE: ", temp_status2);
+      return false;
+    }
+    SERIAL_ECHOLNPGM("  SUCCESS\n");
     cacheBlockNumber_ = blockNumber;
   }
   if (dirty) cacheDirty_ = true;

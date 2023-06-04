@@ -81,16 +81,16 @@
  *                                                      AVDD | · · | PF13 (BTN_EN1)
  *                 _CN9_                                AGND | · · | PE9  (BTN_EN2)
  *   (TEMP_0) PA3 | · · | PD7                            GND | · · | PE11 (BTN_ENC)
- * (TEMP_BED) PC0 | · · | PD6                            PB1 | · · | PF14
+ * (TEMP_BED) PC0 | · · | PD6                   (E_STEP) PB1 | · · | PF14 (E_EN)
  *            PC3 | · · | PD5                            PC2 | · · | PE13
- *            PF3 | · · | PD4                            PF4 | · · | PF15
- *            PF5 | · · | PD3                   (E_STEP) PB6 | · · | PG14 (E_EN)
- *           PF10 | · · | GND                    (E_DIR) PB2 | · · | PG9  (E_CS)
+ *  (Y_STEP)  PF3 | · · | PD4 (Y_EN)                     PF4 | · · | PF15
+ *   (Y_DIR)  PF5 | · · | PD3 (Y_CS)                     PB6 | · · | PG14
+ *           PF10 | · · | GND                            PB2 | · · | PG9
  *             -- | · · | PE2                            GND | · · | PE8
- *            PA7 | · · | PE4                           PD13 | · · | PE7
+ *            PA7 | · · | PE4                   (E_DIR) PD13 | · · | PE7  (E_CS)
  *            PF2 | · · | PE5                           PD12 | · · | GND
- *   (Y_STEP) PF1 | · · | PE6 (Y_EN)           (Z_STEP) PD11 | · · | PE10 (Z_EN)
- *    (Y_DIR) PF0 | · · | PE3 (Y_CS)             (Z_DIR) PE2 | · · | PE12 (Z_CS)
+ *            PF1 | · · | PE6                  (Z_STEP) PD11 | · · | PE10 (Z_EN)
+ *            PF0 | · · | PE3                    (Z_DIR) PE2 | · · | PE12 (Z_CS)
  *            GND | · · | PF8                            GND | · · | PE14
  *    (Z_MAX) PD0 | · · | PF7 (X_MIN)                    PA0 | · · | PE15
  *    (Z_MIN) PD1 | · · | PF9 (X_MAX)                    PB0 | · · | PB10 (FAN)
@@ -113,9 +113,9 @@
 #define X_ENABLE_PIN                        PB8
 #define X_CS_PIN                            PB9
 
-#define Y_STEP_PIN                          PF1
-#define Y_DIR_PIN                           PF0
-#define Y_ENABLE_PIN                        PE6
+#define Y_STEP_PIN                          PF3
+#define Y_DIR_PIN                           PF5
+#define Y_ENABLE_PIN                        PD4
 #define Y_CS_PIN                            PE3
 
 #define Z_STEP_PIN                          PD11
@@ -123,10 +123,10 @@
 #define Z_ENABLE_PIN                        PE10
 #define Z_CS_PIN                            PE12
 
-#define E0_STEP_PIN                         PB6
-#define E0_DIR_PIN                          PB2
-#define E0_ENABLE_PIN                       PG14
-#define E0_CS_PIN                           PG9
+#define E0_STEP_PIN                         PB1
+#define E0_DIR_PIN                          PD13
+#define E0_ENABLE_PIN                       PF14
+#define E0_CS_PIN                           PE7
 
 #if HAS_TMC_UART
   #define X_SERIAL_TX_PIN                   PB9
@@ -171,27 +171,23 @@
 
 //SD card
 
-#define SD_DETECT_PIN                       PG2
+#if SD_CONNECTION_IS(ONBOARD)
+  #define SD_DETECT_PIN                       PG2
 // SDIO for external SD Card
 
-#define ONBOARD_SDIO
-#define SDIO_CLOCK                          4800000
-#define SDIO__MAX_CLOCK                     118
-#define SDIO_READ_RETRIES                   16
-#define SDIO_D0_PIN                         PC8
-//#define SDIO_D1_PIN                         PC9
-//#define SDIO_D2_PIN                         PC10
-//#define SDIO_D3_PIN                         PC11
-#define SDIO_CK_PIN                         PC12
-#define SDIO_CMD_PIN                        PD2
+  #define ONBOARD_SDIO
+  #define SDIO_CLOCK                          4800000
+  #define SDIO__MAX_CLOCK                     118
+  #define SDIO_READ_RETRIES                   16
+  #define SDIO_D0_PIN                         PC8
+  //#define SDIO_D1_PIN                         PC9
+  //#define SDIO_D2_PIN                         PC10
+  //#define SDIO_D3_PIN                         PC11
+  #define SDIO_CK_PIN                         PC12
+  #define SDIO_CMD_PIN                        PD2
+#endif
 
 
-// SPI for external SD Card (Not entirely sure this will work)
-#define SD_SCK_PIN                          PA5  //SPI1
-#define SD_MISO_PIN                         PA6  //SPI1
-#define SD_MOSI_PIN                         PA7  //SPI1
-#define SD_SS_PIN                           PD14 //SPI1
-#define SDSS                                PD14
 
 #define LD1_PIN                          PB0  // green
 //define LD1_PIN                          PA5  // green
@@ -206,27 +202,252 @@
 //
 // LCD / Controller
 //
-#if IS_RRD_FG_SC
-  #define BEEPER_PIN                        PC7   // LCD_BEEPER
-  #define BTN_ENC                           PE11  // BTN_ENC
-  #define SD_DETECT_PIN                     PD14
-  #define LCD_PINS_RS                       PF12  // LCD_RS
-  #define LCD_PINS_EN                       PD15  // LCD_EN
-  #define LCD_PINS_D4                       PB13  // LCD_D4
-  #define BTN_EN1                           PF13  // BTN_EN1
-  #define BTN_EN2                           PE9   // BTN_EN2
 
-  #define BOARD_ST7920_DELAY_1               125
-  #define BOARD_ST7920_DELAY_2                63
-  #define BOARD_ST7920_DELAY_3               780
+/**
+ *
+ *    CN10  EXP1  CN10
+ *         ______
+ * PC2  9  |1  2| 10  PE13
+ * PF4 11  |3  4| 12  PF15
+ * PB6 13  |5  6| 14  PG14
+ * PB2 15  |7  8| 16  PG9
+ * GND 17  |9 10| 18  5V    * -  custom cable needed - 5V pin must be split out
+ *         ￣￣￣￣
+ *
+ *     CN9  EXP2  CN9
+ *         ______
+ * PA7 15  |1  2| 16  PE4
+ * PF2 17  |3  4| 18  PE5
+ * PF1 19  |5  6| 20  PE6
+ * PF0 21  |7  8| 22  PE3
+ * GND 23  |9 10| 24  PF8
+ *         ￣￣￣￣
+ */
+
+#define EXP1_01_PIN                          PC2
+#define EXP1_02_PIN                          PE13
+#define EXP1_03_PIN                          PF4
+#define EXP1_04_PIN                          PF15
+#define EXP1_05_PIN                          PB6
+#define EXP1_06_PIN                          PG14
+#define EXP1_07_PIN                          PB2
+#define EXP1_08_PIN                          PG9
+//#define EXP1_09_PIN                        GND
+//#define EXP1_10_PIN                        +5V
+
+#define EXP2_01_PIN                          PA7
+#define EXP2_02_PIN                          PE4
+#define EXP2_03_PIN                          PF2
+#define EXP2_04_PIN                          PE5
+#define EXP2_05_PIN                          PF1
+#define EXP2_06_PIN                          PE6
+#define EXP2_07_PIN                          PF0
+#define EXP2_08_PIN                          PE3
+//#define EXP2_09_PIN                        GND
+//#define EXP2_10_PIN                        PF8
+
+//
+// MicroSD card
+//
+
+#if SD_CONNECTION_IS(LCD)
+  #define SD_MOSI_PIN                EXP2_06_PIN
+  #define SD_MISO_PIN                EXP2_01_PIN
+  #define SD_SCK_PIN                 EXP2_02_PIN
+  #define SDSS                       EXP2_04_PIN
+  #define SD_DETECT_PIN              EXP2_07_PIN
+  #define FORCE_SOFT_SPI
+  //#define SOFTWARE_SPI                            // Use soft SPI for LCD's SD
 #endif
+
+#if 0
+#if ENABLED(REPRAP_DISCOUNT_FULL_GRAPHIC_SMART_CONTROLLER)
+  #define LCDSCREEN_NAME "Reprap LCD12864"
+  // Use EXP1 & EXP2 connector
+  //#define LCD_PINS_RS                         EXP1_04_PIN // ST7920_CS_PIN  LCD_PIN_RS
+  //#define LCD_PINS_EN                         EXP1_03_PIN // ST7920_DAT_PIN LCD_PIN_ENA
+  //#define LCD_PINS_D4                         EXP1_05_PIN  // ST7920_CLK_PIN LCD_PIN_R/W
+  #define BTN_EN1                             EXP2_03_PIN
+  #define BTN_EN2                             EXP2_05_PIN
+  #define BTN_ENC                             EXP1_02_PIN
+  #define BEEPER_PIN                          EXP1_01_PIN
+  #define KILL_PIN                            EXP2_08_PIN
+
+  #define LCD_PINS_EN                         EXP1_03_PIN  //MISO
+//  #define SD_MISO_PIN                         EXP2_01_PIN
+  #define LCD_PINS_D4                         EXP1_05_PIN  // SCK
+//  #define LCD_PINS_RS                         EXP1_04_PIN  //SDSS
+#define LCD_PINS_RS                         EXP1_08_PIN
+ // #define SD_DETECT_PIN                       EXP2_07_PIN
+
+  #define DOGLCD_A0                EXP1_07_PIN
+  #define DOGLCD_CS                EXP1_06_PIN
+  #define DOGLCD_SCK               EXP2_02_PIN
+  #define DOGLCD_MOSI              EXP2_06_PIN
+
+  #define BOARD_ST7920_DELAY_1             1250
+  #define BOARD_ST7920_DELAY_2              630
+  #define BOARD_ST7920_DELAY_3             7800
+
+ #define FORCE_SOFT_SPI
+ #define SOFTWARE_SPI
+#endif
+#endif // if 0
+
+#if 0
+#if HAS_WIRED_LCD
+  #define BEEPER_PIN                 EXP1_01_PIN
+  #define LCD_PINS_EN                EXP1_03_PIN
+  #define LCD_PINS_RS                EXP1_04_PIN
+  #define BTN_ENC                    EXP1_02_PIN
+  #define BTN_EN1                    EXP2_03_PIN
+  #define BTN_EN2                    EXP2_05_PIN
+  #define LCD_BACKLIGHT_PIN                   -1
+  #define KILL_PIN                   EXP2_08_PIN
+
+  #if ENABLED(MKS_MINI_12864)
+    // MKS MINI12864 and MKS LCD12864B; If using MKS LCD12864A (Need to remove RPK2 resistor)
+    #define DOGLCD_CS                EXP1_06_PIN
+    #define DOGLCD_A0                EXP1_07_PIN
+    #define LCD_RESET_PIN                     -1
+  #elif ENABLED(FYSETC_MINI_12864_2_1)
+    // MKS_MINI_12864_V3, BTT_MINI_12864_V1, FYSETC_MINI_12864_2_1
+    #define DOGLCD_CS                EXP1_03_PIN
+    #define DOGLCD_A0                EXP1_04_PIN
+    #define LCD_RESET_PIN            EXP1_05_PIN
+    #define NEOPIXEL_PIN             EXP1_06_PIN
+    #if SD_CONNECTION_IS(ONBOARD)
+      #define FORCE_SOFT_SPI
+    #endif
+    #if BOTH(MKS_MINI_12864_V3, HAS_MEDIA)
+      #define PAUSE_LCD_FOR_BUSY_SD
+    #endif
+  #else
+   #define LCD_PINS_D4               EXP1_05_PIN
+    #if ENABLED(REPRAP_DISCOUNT_SMART_CONTROLLER)
+      #define LCD_PINS_D5            EXP1_06_PIN
+      #define LCD_PINS_D6            EXP1_07_PIN
+      #define LCD_PINS_D7            EXP1_08_PIN
+    #endif
+//    #define BOARD_ST7920_DELAY_1             125
+//    #define BOARD_ST7920_DELAY_2              63
+//    #define BOARD_ST7920_DELAY_3             780
+  #endif
+#endif // HAS_WIRED_LCD
+#endif  // if 0
+
+
+#if EITHER(TFT_COLOR_UI, TFT_CLASSIC_UI)
+  #define TFT_CS_PIN                 EXP1_07_PIN
+  #define TFT_SCK_PIN                EXP2_02_PIN
+  #define TFT_MISO_PIN               EXP2_01_PIN
+  #define TFT_MOSI_PIN               EXP2_06_PIN
+  #define TFT_DC_PIN                 EXP1_08_PIN
+  #define TFT_A0_PIN                  TFT_DC_PIN
+
+  #define TFT_RESET_PIN              EXP1_04_PIN
+
+  #define LCD_BACKLIGHT_PIN          EXP1_03_PIN
+  #define TFT_BACKLIGHT_PIN    LCD_BACKLIGHT_PIN
+
+  #define TOUCH_BUTTONS_HW_SPI
+  #define TOUCH_BUTTONS_HW_SPI_DEVICE          1
+
+  #ifndef TFT_WIDTH
+    #define TFT_WIDTH                        480
+  #endif
+  #ifndef TFT_HEIGHT
+    #define TFT_HEIGHT                       320
+  #endif
+
+  #define TOUCH_CS_PIN               EXP1_05_PIN  // SPI1_NSS
+  #define TOUCH_SCK_PIN              EXP2_02_PIN  // SPI1_SCK
+  #define TOUCH_MISO_PIN             EXP2_01_PIN  // SPI1_MISO
+  #define TOUCH_MOSI_PIN             EXP2_06_PIN  // SPI1_MOSI
+
+  #define LCD_READ_ID                       0xD3
+  #define LCD_USE_DMA_SPI
+
+  #define TFT_BUFFER_SIZE                  14400
+
+  #ifndef TOUCH_CALIBRATION_X
+    #define TOUCH_CALIBRATION_X           -17253
+  #endif
+  #ifndef TOUCH_CALIBRATION_Y
+    #define TOUCH_CALIBRATION_Y            11579
+  #endif
+  #ifndef TOUCH_OFFSET_X
+    #define TOUCH_OFFSET_X                   514
+    #endif
+  #ifndef TOUCH_OFFSET_Y
+    #define TOUCH_OFFSET_Y                   -24
+  #endif
+  #ifndef TOUCH_ORIENTATION
+    #define TOUCH_ORIENTATION    TOUCH_LANDSCAPE
+  #endif
+
+#elif HAS_WIRED_LCD
+
+  #define LCD_PINS_EN                EXP1_03_PIN
+  #define LCD_PINS_RS                EXP1_04_PIN
+  #define LCD_BACKLIGHT_PIN                 -1
+
+  // MKS MINI12864 and MKS LCD12864B; If using MKS LCD12864A (Need to remove RPK2 resistor)
+  #if ENABLED(MKS_MINI_12864)
+
+    #define ENABLE_SPI1
+    #define FORCE_SOFT_SPI
+    #define DOGLCD_A0                EXP1_07_PIN
+    #define DOGLCD_CS                EXP1_06_PIN
+    #define DOGLCD_SCK               EXP2_02_PIN
+    #define DOGLCD_MOSI              EXP2_06_PIN
+    //#define LCD_BACKLIGHT_PIN             -1
+    //#define LCD_RESET_PIN                 -1
+
+  #elif ENABLED(FYSETC_MINI_12864_2_1)
+
+    #define LCD_PINS_DC              EXP1_04_PIN
+    #define DOGLCD_CS                EXP1_03_PIN
+    #define DOGLCD_A0                LCD_PINS_DC
+    #define LCD_BACKLIGHT_PIN               -1
+    #define LCD_RESET_PIN            EXP1_05_PIN
+    #define NEOPIXEL_PIN             EXP1_06_PIN
+    #define DOGLCD_MOSI              EXP2_06_PIN
+    #define DOGLCD_SCK               EXP2_02_PIN
+    //#define LCD_SCREEN_ROTATE              180  // 0, 90, 180, 270
+
+  #else
+
+    #define LCD_PINS_D4              EXP1_05_PIN
+    #if IS_ULTIPANEL
+      #define LCD_PINS_D5            EXP1_06_PIN
+      #define LCD_PINS_D6            EXP1_07_PIN
+      #define LCD_PINS_D7            EXP1_08_PIN
+    #endif
+
+    #define BOARD_ST7920_DELAY_1              96
+    #define BOARD_ST7920_DELAY_2              48
+    #define BOARD_ST7920_DELAY_3             600
+
+  #endif // !MKS_MINI_12864
+
+#endif // HAS_WIRED_LCD
+
+#if ANY(TFT_COLOR_UI, TFT_CLASSIC_UI, HAS_WIRED_LCD)
+  #define BEEPER_PIN                 EXP1_01_PIN
+  #define BTN_EN1                    EXP2_03_PIN
+  #define BTN_EN2                    EXP2_05_PIN
+  #define BTN_ENC                    EXP1_02_PIN
+#endif
+
+
 
 // init ITCM ram or else callbacks don't register correctly
 #define BOARD_PREINIT() do { \
                            uint32_t *i; \
-							i = 0; \
-							for (uint32_t count = 0; count < 0x0fff; count++) { \
-							  *(i + count) = 0;\
-							  } \
-							}while(0)
+              i = 0; \
+              for (uint32_t count = 0; count < 0x0fff; count++) { \
+                *(i + count) = 0;\
+                } \
+              }while(0)
 
