@@ -120,14 +120,18 @@ bool SdVolume::allocContiguous(const uint32_t count, uint32_t * const curCluster
   return true;
 }
 
+#define CACHE_DELAY 10
+
 bool SdVolume::cacheFlush() {
   #if DISABLED(SDCARD_READONLY)
     if (cacheDirty_) {
+      HAL_Delay(CACHE_DELAY);
       if (!sdCard_->writeBlock(cacheBlockNumber_, cacheBuffer_.data))
         return false;
 
       // mirror FAT tables
       if (cacheMirrorBlock_) {
+        HAL_Delay(CACHE_DELAY);
         if (!sdCard_->writeBlock(cacheMirrorBlock_, cacheBuffer_.data))
           return false;
         cacheMirrorBlock_ = 0;
@@ -138,28 +142,28 @@ bool SdVolume::cacheFlush() {
   return true;
 }
 
-#include "C:\Users\bobku\Documents\GitHub\Marlin-Bob-2\Marlin\src\core\serial.h"
-extern HAL_StatusTypeDef temp_status2;
 bool SdVolume::cacheRawBlock(const uint32_t blockNumber, const bool dirty) {
   if (cacheBlockNumber_ != blockNumber) {
     if (!cacheFlush()) return false;
-    //uint8_t *pointer;
-    //pointer = &cacheBuffer_.data;
-    bool temp_status = !sdCard_->readBlock(blockNumber, cacheBuffer_.data);
-    SERIAL_ECHOLNPGM("read BLOCK : ", blockNumber);
-    SERIAL_ECHOPGM("DATA:");
-    for (uint8_t count = 0; count < 8; count++) {
-    SERIAL_ECHOPGM(" ", cacheBuffer_.data[count]);
-    }
-
-//   if (!sdCard_->readBlock(blockNumber, cacheBuffer_.data)) return false;
-    if (temp_status) {
-      SERIAL_ECHOLNPGM("  FAILURE: ", temp_status2);
-      return false;
-    }
-    SERIAL_ECHOLNPGM("  SUCCESS\n");
+    HAL_Delay(CACHE_DELAY);
+    if (!sdCard_->readBlock(blockNumber, cacheBuffer_.data)) return false;
     cacheBlockNumber_ = blockNumber;
   }
+  if (dirty) cacheDirty_ = true;
+  return true;
+}
+
+// continues even if cacheFlush() fails
+bool SdVolume::cacheRawBlock_Always(const uint32_t blockNumber, const bool dirty) {
+  if (cacheBlockNumber_ != blockNumber) {
+    cacheFlush();  // always continue
+  }
+  HAL_Delay(CACHE_DELAY);
+  if (!sdCard_->readBlock(blockNumber, cacheBuffer_.data)) {
+    SERIAL_ECHOLNPGM("cacheRawBlock_Always fail");
+    return false;
+  }
+  cacheBlockNumber_ = blockNumber;
   if (dirty) cacheDirty_ = true;
   return true;
 }

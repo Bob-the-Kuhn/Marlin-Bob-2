@@ -173,24 +173,31 @@
 
 #if SD_CONNECTION_IS(ONBOARD)
   #define SD_DETECT_PIN                       PG2
-// SDIO for external SD Card
 
+
+  // SDIO for SD Card
   #define ONBOARD_SDIO
-  #define SDIO_CLOCK                          4800000
-  #define SDIO__MAX_CLOCK                     118
-  #define SDIO_READ_RETRIES                   16
-  #define SDIO_D0_PIN                         PC8
-  //#define SDIO_D1_PIN                         PC9
-  //#define SDIO_D2_PIN                         PC10
-  //#define SDIO_D3_PIN                         PC11
-  #define SDIO_CK_PIN                         PC12
-  #define SDIO_CMD_PIN                        PD2
+  #ifdef ONBOARD_SDIO
+    #define SDIO_CLOCK                          4800000
+    #define SDIO__MAX_CLOCK                     118
+    #define SDIO_READ_RETRIES                   16
+    #define SDIO_D0_PIN                         PC8
+    //#define SDIO_D1_PIN                         PC9
+    //#define SDIO_D2_PIN                         PC10
+    //#define SDIO_D3_PIN                         PC11
+    #define SDIO_CK_PIN                         PC12
+    #define SDIO_CMD_PIN                        PD2
+  #else  // SPI
+    #define SD_MOSI_PIN                         PA7
+    #define SD_MISO_PIN                         PA6
+    #define SD_SCK_PIN                          PA5
+    #define SDSS                                PD14
+  #endif
 #endif
 
 
 
 #define LD1_PIN                          PB0  // green
-//define LD1_PIN                          PA5  // green
 #define LD2_PIN                          PB7  // blue
 #define LD3_PIN                          PB14  // red
 //#define LED_BLUE                         LD2_PIN   // already defined in JSON for nucleo_F746ZG

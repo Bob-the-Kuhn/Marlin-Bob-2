@@ -379,6 +379,7 @@ class SdBaseFile {
   bool addCluster();
   bool addDirCluster();
   dir_t* cacheDirEntry(const uint8_t action);
+  bool cacheDirEntry_Delete(void);
   int8_t lsPrintNext(const uint8_t flags, const uint8_t indent);
   static bool make83Name(const char *str, uint8_t * const name, const char **ptr);
   bool mkdir(SdBaseFile * const parent, const uint8_t dname[11]

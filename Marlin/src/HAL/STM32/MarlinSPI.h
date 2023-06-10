@@ -52,7 +52,7 @@ extern "C" {
 
 class MarlinSPI {
 public:
-  MarlinSPI() : MarlinSPI(NC, NC, NC, NC) {}
+  MarlinSPI() : MarlinSPI((pin_t)NC, (pin_t)NC, (pin_t)NC, (pin_t)NC) {}
 
   MarlinSPI(pin_t mosi, pin_t miso, pin_t sclk, pin_t ssel = (pin_t)NC) : _mosiPin(mosi), _misoPin(miso), _sckPin(sclk), _ssPin(ssel) {
     _spi.pin_miso = digitalPinToPinName(_misoPin);

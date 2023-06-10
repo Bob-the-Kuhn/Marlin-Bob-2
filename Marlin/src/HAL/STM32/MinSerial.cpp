@@ -141,7 +141,7 @@ void install_min_serial() {
         "b CommonHandler_ASM\n"
       );
     }
-    void __attribute__((naked, alias("JumpHandler_ASM"), nothrow)) HardFault_Handler();
+    //void __attribute__((naked, alias("JumpHandler_ASM"), nothrow)) HardFault_Handler();
     void __attribute__((naked, alias("JumpHandler_ASM"), nothrow)) BusFault_Handler();
     void __attribute__((naked, alias("JumpHandler_ASM"), nothrow)) UsageFault_Handler();
     void __attribute__((naked, alias("JumpHandler_ASM"), nothrow)) MemManage_Handler();

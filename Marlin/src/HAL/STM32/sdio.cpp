@@ -375,7 +375,10 @@ void HAL_SD_MspInit(SD_HandleTypeDef *hsd) {
   }
 
 #endif // !SDIO_FOR_STM32H7 or F7
+
 HAL_StatusTypeDef temp_status2;
+extern uint32_t temp_status1;
+
 /**
  * @brief Read a block
  * @details Read a block from media with SDIO
@@ -386,19 +389,28 @@ HAL_StatusTypeDef temp_status2;
  * @return true on success
  */
 bool SDIO_ReadBlock(uint32_t block, uint8_t *dst) {
+
+  uint8_t retries = SDIO_READ_RETRIES;
   #if (defined(SDIO_FOR_STM32H7) || defined(SDIO_FOR_STM32F7))
 
-    uint32_t timeout = HAL_GetTick() + SD_TIMEOUT;
-
-    while (HAL_SD_GetCardState(&hsd) != HAL_SD_CARD_TRANSFER)
-      if (HAL_GetTick() >= timeout) return false;
+   // uint32_t timeout = HAL_GetTick() + SD_TIMEOUT;
+   //
+   // while (HAL_SD_GetCardState(&hsd) != HAL_SD_CARD_TRANSFER)
+   //   if (HAL_GetTick() >= timeout) return false;
 
     waitingRxCplt = 1;
 //    if (HAL_SD_ReadBlocks_DMA(&hsd, (uint8_t*)dst, block, 1) != HAL_OK)
-temp_status2 = HAL_SD_ReadBlocks(&hsd, (uint8_t*)dst, block, 1, SD_TIMEOUT);
-    if (temp_status2 != HAL_OK)
 
-      return false;
+HAL_StatusTypeDef ret;
+    while (retries--) {
+      //if (HAL_SD_ReadBlocks(&hsd, (uint8_t*)dst, block, 1, SD_TIMEOUT) == HAL_OK)  return true;
+      ret = HAL_SD_ReadBlocks(&hsd, (uint8_t*)dst, block, 1, SD_TIMEOUT);
+      if (ret == HAL_OK) return true;
+    }
+    SERIAL_ECHOPGM("read fail: ", ret);
+    SERIAL_ECHOPGM("   status: ", temp_status1);
+    SERIAL_ECHOLNPGM("   hsd->ErrorCode: ", (uint32_t)hsd.ErrorCode);
+    return false;
 
 //    timeout = HAL_GetTick() + SD_TIMEOUT;
 //    while (waitingRxCplt)
@@ -407,11 +419,11 @@ temp_status2 = HAL_SD_ReadBlocks(&hsd, (uint8_t*)dst, block, 1, SD_TIMEOUT);
 //        return false;
 //      }
 
-    return true;
+//    return true;
 
   #else
 
-    uint8_t retries = SDIO_READ_RETRIES;
+   // uint8_t retries = SDIO_READ_RETRIES;
     while (retries--) if (SDIO_ReadWriteBlock_DMA(block, nullptr, dst)) return true;
     return false;
 
@@ -434,22 +446,28 @@ temp_status2 = HAL_SD_ReadBlocks(&hsd, (uint8_t*)dst, block, 1, SD_TIMEOUT);
 
 bool SDIO_WriteBlock(uint32_t block, const uint8_t *src) {
   #if (defined(SDIO_FOR_STM32H7) || defined(SDIO_FOR_STM32F7))
-    SD_HandleTypeDef temp;
+    //SD_HandleTypeDef temp;
     uint8_t buf[512]= {0};
     //memcpy (buf, src, 512);
-    uint32_t timeout = HAL_GetTick() + SD_TIMEOUT;
+   // uint32_t timeout = HAL_GetTick() + SD_TIMEOUT;
 
-    while (HAL_SD_GetCardState(&temp) != HAL_SD_CARD_TRANSFER)
-      if (HAL_GetTick() >= timeout) return false;
+   // while (HAL_SD_GetCardState(&hsd) != HAL_SD_CARD_TRANSFER)
+   //   if (HAL_GetTick() >= timeout) return false;
 
     waitingTxCplt = 1;
    // const_cast<uint8_t *>(src)    undefined reference
-  if (HAL_SD_WriteBlocks_DMA(&temp,(uint8_t *) src, block, 1) != HAL_OK)
+  //if (HAL_SD_WriteBlocks_DMA(&hsd,(uint8_t *) src, block, 1) != HAL_OK)
+  //if (HAL_SD_WriteBlocks(&hsd,(uint8_t *) src, block, 1, SD_TIMEOUT) != HAL_OK)
+   temp_status2 = HAL_SD_WriteBlocks(&hsd,(uint8_t *) src, block, 1, SD_TIMEOUT);
+    if (temp_status2 != HAL_OK) {
+    SERIAL_ECHOPGM("write fail: ", temp_status2);
+    SERIAL_ECHOPGM("   status: ", temp_status1);
+    SERIAL_ECHOLNPGM("   hsd->ErrorCode: ", (uint32_t)hsd.ErrorCode);
       return false;
-
-    timeout = HAL_GetTick() + SD_TIMEOUT;
-    while (waitingTxCplt)
-      if (HAL_GetTick() >= timeout) return false;
+    }
+    //timeout = HAL_GetTick() + SD_TIMEOUT;
+    //while (waitingTxCplt)
+    //  if (HAL_GetTick() >= timeout) return false;
 
     return true;
 

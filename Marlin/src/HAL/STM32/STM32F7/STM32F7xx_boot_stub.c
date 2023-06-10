@@ -36,6 +36,101 @@
 #include "stm32f7xx_hal_pwr.h"
 #include "stm32f7xx_hal_flash_ex.h"
 
+//C:\Users\bobku\Documents\GitHub\Marlin-Bob-2\Marlin\src\HAL\STM32\MinSerial.cpp
+//C:\Users\bobku\Documents\GitHub\Marlin-Bob-2\Marlin\src\HAL\shared\cpu_exception\exception_arm.cpp
+//C:\Users\bobku\Documents\GitHub\Marlin-Bob-2\Marlin\src\HAL\STM32\STM32F7\STM32F7xx_boot_stub.c
+//#include "../../shared/cpu_exception/exception_hook.h"
+//#include "../../shared/backtrace/backtrace.h"
+//#include "../../shared/MinSerial.h"
+
+//// Common exception frame for ARM, should work for all ARM CPU
+//// Described here (modified for convenience): https://interrupt.memfault.com/blog/cortex-m-fault-debug
+//struct __attribute__((packed)) ContextStateFrame {
+//  uint32_t r0;
+//  uint32_t r1;
+//  uint32_t r2;
+//  uint32_t r3;
+//  uint32_t r12;
+//  uint32_t lr;
+//  uint32_t pc;
+//  uint32_t xpsr;
+//};
+//
+//
+//
+//void CommonHandler_C(ContextStateFrame * frame, unsigned long lr, unsigned long cause);
+void CommonHandler_ASM();
+
+  volatile unsigned long stacked_r0 ;
+  volatile unsigned long stacked_r1 ;
+  volatile unsigned long stacked_r2 ;
+  volatile unsigned long stacked_r3 ;
+  volatile unsigned long stacked_r12 ;
+  volatile unsigned long stacked_lr ;
+  volatile unsigned long stacked_pc ;
+  volatile unsigned long stacked_psr ;
+  volatile unsigned long _CFSR ;
+  volatile unsigned long _HFSR ;
+  volatile unsigned long _DFSR ;
+  volatile unsigned long _AFSR ;
+  volatile unsigned long _BFAR ;
+  volatile unsigned long _MMAR ;
+
+void hard_fault_handler_c(unsigned long *hardfault_args){
+
+  // see https://blog.nathantsoi.com/article/stm32-hardfault-debugging/
+  //     https://interrupt.memfault.com/blog/cortex-m-hardfault-debug
+
+  //volatile unsigned long __attribute__((section("no_init"))) stacked_r0 ;
+  //volatile unsigned long __attribute__((section("no_init"))) stacked_r1 ;
+  //volatile unsigned long __attribute__((section("no_init"))) stacked_r2 ;
+  //volatile unsigned long __attribute__((section("no_init"))) stacked_r3 ;
+  //volatile unsigned long __attribute__((section("no_init"))) stacked_r12 ;
+  //volatile unsigned long __attribute__((section("no_init"))) stacked_lr ;
+  //volatile unsigned long __attribute__((section("no_init"))) stacked_pc ;
+  //volatile unsigned long __attribute__((section("no_init"))) stacked_psr ;
+  //volatile unsigned long __attribute__((section("no_init"))) _CFSR ;
+  //volatile unsigned long __attribute__((section("no_init"))) _HFSR ;
+  //volatile unsigned long __attribute__((section("no_init"))) _DFSR ;
+  //volatile unsigned long __attribute__((section("no_init"))) _AFSR ;
+  //volatile unsigned long __attribute__((section("no_init"))) _BFAR ;
+  //volatile unsigned long __attribute__((section("no_init"))) _MMAR ;
+
+  stacked_r0 = ((unsigned long)hardfault_args[0]) ;
+  stacked_r1 = ((unsigned long)hardfault_args[1]) ;
+  stacked_r2 = ((unsigned long)hardfault_args[2]) ;
+  stacked_r3 = ((unsigned long)hardfault_args[3]) ;
+  stacked_r12 = ((unsigned long)hardfault_args[4]) ;
+  stacked_lr = ((unsigned long)hardfault_args[5]) ;
+  stacked_pc = ((unsigned long)hardfault_args[6]) ;
+  stacked_psr = ((unsigned long)hardfault_args[7]) ;
+
+  // Configurable Fault Status Register
+  // Consists of MMSR, BFSR and UFSR
+  _CFSR = (*((volatile unsigned long *)(0xE000ED28))) ;
+
+  // Hard Fault Status Register
+  _HFSR = (*((volatile unsigned long *)(0xE000ED2C))) ;
+
+  // Debug Fault Status Register
+  _DFSR = (*((volatile unsigned long *)(0xE000ED30))) ;
+
+  // Auxiliary Fault Status Register
+  _AFSR = (*((volatile unsigned long *)(0xE000ED3C))) ;
+
+  // Read the Fault Address Registers. These may not contain valid values.
+  // Check BFARVALID/MMARVALID to see if they are valid values
+  // MemManage Fault Address Register
+  _MMAR = (*((volatile unsigned long *)(0xE000ED34))) ;
+  // Bus Fault Address Register
+  _BFAR = (*((volatile unsigned long *)(0xE000ED38))) ;
+
+ // __asm("BKPT #0\n") ; // Break into the debugger
+ CommonHandler_ASM();
+}
+
+
+
 
 void SystemClock_Config(void)
 {

@@ -1579,6 +1579,24 @@ dir_t* SdBaseFile::readDirCache() {
   return vol_->cache()->dir + i;
 }
 
+// cache a file's directory entry & mark as deleted
+// cache the current "dirBlock_"
+// mark the file as deleted
+// return pass/fail
+bool SdBaseFile::cacheDirEntry_Delete(void) {
+  HAL_Delay(250);
+  if (vol_->cacheRawBlock_Always(dirBlock_, true)) {  // flush cache & read in directory sector
+    dir_t *d =  vol_->cache()->dir + dirIndex_;
+    if (!d) return false;
+    d->name[0] = DIR_NAME_DELETED;  // mark name as deleted
+    return true;
+  }
+  else {
+    SERIAL_ECHOLNPGM("cacheDirEntry_Delete fail");
+    return false;
+  }
+}
+
 /**
  * Remove a file.
  *
@@ -1596,11 +1614,15 @@ bool SdBaseFile::remove() {
   if (ENABLED(SDCARD_READONLY)) return false;
 
   // free any clusters - will fail if read-only or directory
-  if (!truncate(0)) return false;
+  //if (!truncate(0)) return false;
+  truncate(0);
 
   // cache directory entry
-  dir_t *d = cacheDirEntry(SdVolume::CACHE_FOR_WRITE);
-  if (!d) return false;
+  //dir_t *d = cacheDirEntry(SdVolume::CACHE_FOR_WRITE);
+  if (!cacheDirEntry_Delete()) {
+    SERIAL_ECHOLNPGM("cacheDirEntry_Delete");
+    return false;
+  }
 
   #if ENABLED(LONG_FILENAME_WRITE_SUPPORT)
     // get SFN checksum before name rewrite (needed for LFN deletion)
@@ -1608,7 +1630,7 @@ bool SdBaseFile::remove() {
   #endif
 
   // mark entry deleted
-  d->name[0] = DIR_NAME_DELETED;
+  //d->name[0] = DIR_NAME_DELETED;
 
   // set this file closed
   type_ = FAT_FILE_TYPE_CLOSED;
@@ -1616,7 +1638,15 @@ bool SdBaseFile::remove() {
   // write entry to SD
   #if DISABLED(LONG_FILENAME_WRITE_SUPPORT)
 
-    return vol_->cacheFlush();
+    if (vol_->cacheFlush()) {
+      SERIAL_ECHOLNPGM("vol_->cacheFlush true");
+      return true;
+    }
+    else {
+      SERIAL_ECHOLNPGM("vol_->cacheFlush false");
+      return false;
+    }
+    //return vol_->cacheFlush();
 
   #else // LONG_FILENAME_WRITE_SUPPORT
 

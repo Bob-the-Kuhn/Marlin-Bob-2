@@ -178,6 +178,7 @@ class SdVolume {
   #else
     static bool cacheFlush();
     static bool cacheRawBlock(const uint32_t blockNumber, const bool dirty);
+    static bool cacheRawBlock_Always(const uint32_t blockNumber, const bool dirty);
   #endif
 
   // used by SdBaseFile write to assign cache to SD location

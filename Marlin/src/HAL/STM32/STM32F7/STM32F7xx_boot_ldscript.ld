@@ -30,8 +30,8 @@ ENTRY(Reset_Handler)
 /* Highest address of the user mode stack */
 _estack = ORIGIN(RAM) + LENGTH(RAM);	/* end of "RAM" Ram type memory */
 
-_Min_Heap_Size = 0x200 ;	/* required amount of heap  */
-_Min_Stack_Size = 0x400 ;	/* required amount of stack */
+_Min_Heap_Size = 0x400 ;	/* required amount of heap  */
+_Min_Stack_Size = 0x800 ;	/* required amount of stack */
 /* _LD_FLASH_OFFSET = 0x08000000;  linker defined symbol can't be set by C source
 
 LOAD _LD_FLASH_OFFSET;
@@ -56,6 +56,15 @@ __LD_FLASH_OFFSET = FLASH_OFFSET;  // use static C variable
 //////////////////
   FLASH    (rx)    : ORIGIN = 0x8000000 + LD_FLASH_OFFSET, LENGTH = LD_MAX_SIZE - LD_FLASH_OFFSET
 
+*/
+
+/* LOAD LD_FLASH_OFFSET; */
+
+/*
+_LD_FLASH_OFFSET = *(VECT_TAB_OFFSET);  // syntax error
+_LD_FLASH_OFFSET = &VECT_TAB_OFFSET;  // syntax error
+_LD_FLASH_OFFSET = VECT_TAB_OFFSET;  // unknown symbol
+KEEP(*(VECT_TAB_OFFSET))   // syntax error
 */
 
 
