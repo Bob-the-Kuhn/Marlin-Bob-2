@@ -153,18 +153,6 @@ bool SdVolume::cacheRawBlock(const uint32_t blockNumber, const bool dirty) {
   return true;
 }
 
-// continues even if cacheFlush() fails
-bool SdVolume::cacheRawBlock_Always(const uint32_t blockNumber, const bool dirty) {
-  if (cacheBlockNumber_ != blockNumber) {
-    cacheFlush();  // always continue
-  }
-  HAL_Delay(CACHE_DELAY);
-  if (!sdCard_->readBlock(blockNumber, cacheBuffer_.data)) return false;
-  cacheBlockNumber_ = blockNumber;
-  if (dirty) cacheDirty_ = true;
-  return true;
-}
-
 // return the size in bytes of a cluster chain
 bool SdVolume::chainSize(uint32_t cluster, uint32_t * const size) {
   uint32_t s = 0;
