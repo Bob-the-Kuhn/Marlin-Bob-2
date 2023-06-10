@@ -1592,7 +1592,6 @@ bool SdBaseFile::cacheDirEntry_Delete(void) {
     return true;
   }
   else {
-    SERIAL_ECHOLNPGM("cacheDirEntry_Delete fail");
     return false;
   }
 }
@@ -1619,10 +1618,7 @@ bool SdBaseFile::remove() {
 
   // cache directory entry
   //dir_t *d = cacheDirEntry(SdVolume::CACHE_FOR_WRITE);
-  if (!cacheDirEntry_Delete()) {
-    SERIAL_ECHOLNPGM("cacheDirEntry_Delete");
-    return false;
-  }
+  if (!cacheDirEntry_Delete()) return false;
 
   #if ENABLED(LONG_FILENAME_WRITE_SUPPORT)
     // get SFN checksum before name rewrite (needed for LFN deletion)
@@ -1638,15 +1634,7 @@ bool SdBaseFile::remove() {
   // write entry to SD
   #if DISABLED(LONG_FILENAME_WRITE_SUPPORT)
 
-    if (vol_->cacheFlush()) {
-      SERIAL_ECHOLNPGM("vol_->cacheFlush true");
-      return true;
-    }
-    else {
-      SERIAL_ECHOLNPGM("vol_->cacheFlush false");
-      return false;
-    }
-    //return vol_->cacheFlush();
+    return vol_->cacheFlush();
 
   #else // LONG_FILENAME_WRITE_SUPPORT
 

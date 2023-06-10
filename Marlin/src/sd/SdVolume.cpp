@@ -159,10 +159,7 @@ bool SdVolume::cacheRawBlock_Always(const uint32_t blockNumber, const bool dirty
     cacheFlush();  // always continue
   }
   HAL_Delay(CACHE_DELAY);
-  if (!sdCard_->readBlock(blockNumber, cacheBuffer_.data)) {
-    SERIAL_ECHOLNPGM("cacheRawBlock_Always fail");
-    return false;
-  }
+  if (!sdCard_->readBlock(blockNumber, cacheBuffer_.data)) return false;
   cacheBlockNumber_ = blockNumber;
   if (dirty) cacheDirty_ = true;
   return true;
