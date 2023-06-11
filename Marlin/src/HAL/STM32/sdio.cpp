@@ -69,7 +69,7 @@ SD_HandleTypeDef hsd = {0};  // SDIO structure
 
 static uint32_t clock_to_divider(uint32_t clk) {
   #ifdef SDIO__MAX_CLOCK
-	return SDIO__MAX_CLOCK;
+	  return SDIO__MAX_CLOCK;
   #endif
   #ifdef SDIO_FOR_STM32H7
     // SDMMC_CK frequency = sdmmc_ker_ck / [2 * CLKDIV].
@@ -111,6 +111,13 @@ void HAL_SD_MspInit(SD_HandleTypeDef *hsd) {
 
   #define SD_TIMEOUT              1000 // ms
 
+  // F7 & H7 supports one DMA for RX and another for TX, but Marlin will never
+  // do read and write at same time, so we use the same DMA for both.
+  DMA_HandleTypeDef hdma_sdio;
+
+  #define DMA_IRQ_HANDLER DMA2_Stream3_IRQHandler
+  extern "C" void DMA_IRQ_HANDLER(void) { HAL_DMA_IRQHandler(&hdma_sdio); }
+
   extern "C" void SDMMC1_IRQHandler(void) { HAL_SD_IRQHandler(&hsd); }
 
   uint8_t waitingRxCplt = 0, waitingTxCplt = 0;
@@ -134,6 +141,45 @@ void HAL_SD_MspInit(SD_HandleTypeDef *hsd) {
     hsd.Init.HardwareFlowControl = SDMMC_HARDWARE_FLOW_CONTROL_DISABLE;
     hsd.Init.ClockDiv = clock_to_divider(SDIO_CLOCK);
     sd_state = HAL_SD_Init(&hsd);
+
+
+    /* SDMMC1 DMA Init */
+    /* SDMMC1 Init */
+    hdma_sdio.Instance = DMA2_Stream3;
+    hdma_sdio.Init.Channel = DMA_CHANNEL_4;
+    hdma_sdio.Init.Direction = DMA_PERIPH_TO_MEMORY;
+    hdma_sdio.Init.PeriphInc = DMA_PINC_DISABLE;
+    hdma_sdio.Init.MemInc = DMA_MINC_ENABLE;
+    hdma_sdio.Init.PeriphDataAlignment = DMA_PDATAALIGN_WORD;
+    hdma_sdio.Init.MemDataAlignment = DMA_MDATAALIGN_WORD;
+    hdma_sdio.Init.Mode = DMA_PFCTRL;
+    hdma_sdio.Init.Priority = DMA_PRIORITY_LOW;
+    hdma_sdio.Init.FIFOMode = DMA_FIFOMODE_ENABLE;
+    hdma_sdio.Init.FIFOThreshold = DMA_FIFO_THRESHOLD_FULL;
+    hdma_sdio.Init.MemBurst = DMA_MBURST_INC4;
+    hdma_sdio.Init.PeriphBurst = DMA_PBURST_INC4;
+    //sd_state |= (HAL_DMA_Init(&hdma_sdio) ? HAL_ERROR : HAL_OK);
+    HAL_DMA_Init(&hdma_sdio);
+
+    /* Several peripheral DMA handle pointers point to the same DMA handle.
+     Be aware that there is only one stream to perform all the requested DMAs. */
+    /* Be sure to change transfer direction before calling
+     HAL_SD_ReadBlocks_DMA or HAL_SD_WriteBlocks_DMA. */
+    //__HAL_LINKDMA(hsd,hdmarx,hdma_sdio);
+    //__HAL_LINKDMA(hsd,hdmatx,hdma_sdio);
+    __HAL_LINKDMA(&hsd, hdmarx, hdma_sdio);
+    __HAL_LINKDMA(&hsd, hdmatx, hdma_sdio);
+
+    /* DMA controller clock enable */
+    __HAL_RCC_DMA2_FORCE_RESET();   delay(2);
+    __HAL_RCC_DMA2_RELEASE_RESET(); delay(2);
+    __HAL_RCC_DMA2_CLK_ENABLE();
+
+    /* DMA interrupt init */
+    /* DMA2_Stream3_IRQn interrupt configuration */
+    HAL_NVIC_SetPriority(DMA2_Stream3_IRQn, 0, 0);
+    HAL_NVIC_EnableIRQ(DMA2_Stream3_IRQn);
+
 
     #if PINS_EXIST(SDIO_D1, SDIO_D2, SDIO_D3)
       if (sd_state == HAL_OK)
@@ -389,38 +435,30 @@ bool SDIO_ReadBlock(uint32_t block, uint8_t *dst) {
 
   uint8_t retries = SDIO_READ_RETRIES;
   #if (defined(SDIO_FOR_STM32H7) || defined(SDIO_FOR_STM32F7))
+    uint32_t timeout = HAL_GetTick() + SD_TIMEOUT;
 
-   // uint32_t timeout = HAL_GetTick() + SD_TIMEOUT;
-   //
-   // while (HAL_SD_GetCardState(&hsd) != HAL_SD_CARD_TRANSFER)
-   //   if (HAL_GetTick() >= timeout) return false;
+    while (HAL_SD_GetCardState(&hsd) != HAL_SD_CARD_TRANSFER)
+      if (HAL_GetTick() >= timeout) return false;
 
-   // waitingRxCplt = 1;
-//    if (HAL_SD_ReadBlocks_DMA(&hsd, (uint8_t*)dst, block, 1) != HAL_OK)
+    waitingRxCplt = 1;
+    hdma_sdio.Init.Direction = DMA_PERIPH_TO_MEMORY;
+    HAL_DMA_Init(&hdma_sdio);
+    if (HAL_SD_ReadBlocks_DMA(&hsd, (uint8_t*)dst, block, 1) != HAL_OK)
+      return false;
 
-    while (retries--) {
-      //if (HAL_SD_ReadBlocks(&hsd, (uint8_t*)dst, block, 1, SD_TIMEOUT) == HAL_OK)  return true;
-      if (HAL_SD_ReadBlocks(&hsd, (uint8_t*)dst, block, 1, SD_TIMEOUT) == HAL_OK) return true;
-    }
+    timeout = HAL_GetTick() + SD_TIMEOUT;
+    while (waitingRxCplt)
+      if (HAL_GetTick() >= timeout) return false;
 
-//    timeout = HAL_GetTick() + SD_TIMEOUT;
-//    while (waitingRxCplt)
-//      if (HAL_GetTick() >= timeout) {
-//        temp_status2 = HAL_TIMEOUT;
-//        return false;
-//      }
-
-//    return true;
+    return true;
 
   #else
 
-   // uint8_t retries = SDIO_READ_RETRIES;
+    uint8_t retries = SDIO_READ_RETRIES;
     while (retries--) if (SDIO_ReadWriteBlock_DMA(block, nullptr, dst)) return true;
-
+    return false;
 
   #endif
-
-  return false;
 }
 
 /**
@@ -440,38 +478,36 @@ bool SDIO_ReadBlock(uint32_t block, uint8_t *dst) {
 bool SDIO_WriteBlock(uint32_t block, const uint8_t *src) {
 
   uint8_t retries = SDIO_READ_RETRIES;
+
   #if (defined(SDIO_FOR_STM32H7) || defined(SDIO_FOR_STM32F7))
-    //SD_HandleTypeDef temp;
-    //uint8_t buf[512]= {0};
-    //memcpy (buf, src, 512);
-   // uint32_t timeout = HAL_GetTick() + SD_TIMEOUT;
 
-   // while (HAL_SD_GetCardState(&hsd) != HAL_SD_CARD_TRANSFER)
-   //   if (HAL_GetTick() >= timeout) return false;
+    uint32_t timeout = HAL_GetTick() + SD_TIMEOUT;
 
-    //waitingTxCplt = 1;
-   // const_cast<uint8_t *>(src)    undefined reference
-  //if (HAL_SD_WriteBlocks_DMA(&hsd,(uint8_t *) src, block, 1) != HAL_OK)
-  //if (HAL_SD_WriteBlocks(&hsd,(uint8_t *) src, block, 1, SD_TIMEOUT) != HAL_OK)
-    while (retries--) {
-      if (HAL_SD_WriteBlocks(&hsd,(uint8_t *) src, block, 1, SD_TIMEOUT) == HAL_OK) return true;
-      delay(10);
-    }
-    //timeout = HAL_GetTick() + SD_TIMEOUT;
-    //while (waitingTxCplt)
-    //  if (HAL_GetTick() >= timeout) return false;
+    while (HAL_SD_GetCardState(&hsd) != HAL_SD_CARD_TRANSFER)
+      if (HAL_GetTick() >= timeout) return false;
+
+    waitingTxCplt = 1;
+    hdma_sdio.Init.Direction = DMA_MEMORY_TO_PERIPH;
+    HAL_DMA_Init(&hdma_sdio);
+    if (HAL_SD_WriteBlocks_DMA(&hsd, (uint8_t*)src, block, 1) != HAL_OK)
+      return false;
+
+    timeout = HAL_GetTick() + SD_TIMEOUT;
+    while (waitingTxCplt)
+      if (HAL_GetTick() >= timeout) return false;
+
+    return true;
 
   #else
 
+    uint8_t retries = SDIO_READ_RETRIES;
     while (retries--) {
       if (SDIO_ReadWriteBlock_DMA(block, src, nullptr)) return true;
       delay(10);
     }
-
+    return false;
 
   #endif
-
-  return false;
 }
 
 bool SDIO_IsReady() {
