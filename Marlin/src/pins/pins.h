@@ -563,6 +563,8 @@
   #include "stm32g0/pins_BTT_MANTA_M8P_V1_0.h"      // STM32G0                              env:STM32G0B1VE_btt env:STM32G0B1VE_btt_xfer
 #elif MB(BTT_MANTA_M8P_V1_1)
   #include "stm32g0/pins_BTT_MANTA_M8P_V1_1.h"      // STM32G0                              env:STM32G0B1VE_btt env:STM32G0B1VE_btt_xfer
+#elif MB(NUCLEO_G0B1RE)
+  #include "stm32g0/pins_NUCLEO_G0B1RE.h"           // STM32G0                              env:nucleo_G0B1RE
 
 //
 // STM32 ARM Cortex-M3

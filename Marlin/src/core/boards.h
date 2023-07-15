@@ -323,6 +323,7 @@
 #define BOARD_BTT_MANTA_M5P_V1_0      4004  // BigTreeTech Manta M5P V1.0 (STM32G0B1RE)
 #define BOARD_BTT_MANTA_M8P_V1_0      4005  // BigTreeTech Manta M8P V1.0 (STM32G0B1VE)
 #define BOARD_BTT_MANTA_M8P_V1_1      4006  // BigTreeTech Manta M8P V1.1 (STM32G0B1VE)
+#define BOARD_NUCLEO_G0B1RE           4007  // NUCLEO_G0B1RE (STM32G0B1RE)
 
 //
 // STM32 ARM Cortex-M3
