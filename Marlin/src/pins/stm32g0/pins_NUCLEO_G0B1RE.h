@@ -26,7 +26,7 @@
 
   // SPI 3             SPI 2          SPI 1
   // PA4  AF9 SS       PB9 AF5 SS     PD9 AF5 SS
-  // PC10 AF4 CLK      PB8 AF5 CLK    PD8 AF1 CLK
+  // PC10 AF4 CLK      PB8 AF1 CLK    PD8 AF1 CLK
   // PC11 AF4 MISO     PC2 AF1 MISO   PD5 AF1 MISO
   // PC12 AF4 MOSI     PC3 AF1 MOSI   PA2 AF0 MOSI
 
