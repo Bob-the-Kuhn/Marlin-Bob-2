@@ -802,7 +802,8 @@
   #include "stm32f4/pins_BLACKPILL_CUSTOM.h"        // STM32F4                              env:STM32F401CD_blackpill_stlink
 #elif MB(I3DBEEZ9_V1)
   #include "stm32f4/pins_I3DBEEZ9.h"                // STM32F4                              env:I3DBEEZ9_V1
-
+#elif MB(NUCLEO_G474RE)
+  #include "stm32g4/pins_NUCLEO_G474RE.h"           // STM32G4                              env:NUCLEO_G474RE
 //
 // ARM Cortex-M7
 //
