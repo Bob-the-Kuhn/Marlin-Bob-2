@@ -174,5 +174,5 @@ SECTIONS
   }
 
   .ARM.attributes 0 : { *(.ARM.attributes) }
-  ExtRAMData : {*(.ExtRAMData)} >MEMORY_ARRAY
+
 }

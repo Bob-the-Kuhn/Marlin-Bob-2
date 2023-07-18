@@ -57,6 +57,9 @@
   //#define SOFTWARE_SPI
 
 
+//  ALL PIN ASSIGNMENTS FROM HERE ON ARE RANDOM.  THEY ARE JUST
+//  HERE TO ALLOW THE BOARD TO COMPILE.
+
 // Ignore temp readings during development.
 //#define BOGUS_TEMPERATURE_GRACE_PERIOD    2000
 
@@ -175,24 +178,24 @@
 #endif
 
 #define Z_STEP_PIN                          PA0   // M3
-#define Z_DIR_PIN                           PD6
+#define Z_DIR_PIN                           PA15
 #define Z_ENABLE_PIN                        PA0
 #ifndef Z_CS_PIN
   #define Z_CS_PIN                          PA0
 #endif
 
-#define Z2_STEP_PIN                         PD3   // M4
+#define Z2_STEP_PIN                         PF0   // M4
 #define Z2_DIR_PIN                          PD2
-#define Z2_ENABLE_PIN                       PD5
+#define Z2_ENABLE_PIN                       PF1
 #ifndef Z2_CS_PIN
-  #define Z2_CS_PIN                         PD4
+  #define Z2_CS_PIN                         PA15
 #endif
 
 #define E0_STEP_PIN                         PC9   // M5
 #define E0_DIR_PIN                          PC8
-#define E0_ENABLE_PIN                       PD1
+#define E0_ENABLE_PIN                       PA15
 #ifndef E0_CS_PIN
-  #define E0_CS_PIN                         PD0
+  #define E0_CS_PIN                         PA4
 #endif
 
 
