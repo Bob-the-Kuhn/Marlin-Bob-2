@@ -71,6 +71,8 @@
 
 #endif
 
+void report_current_position_detail();
+
 #define SIZE_OF_LITTLE_RAISE 1
 #define BIG_RAISE_NOT_NEEDED 0
 
@@ -1039,8 +1041,10 @@ void set_message_with_feedback(FSTR_P const fstr) {
 
     LCD_MESSAGE(MSG_UBL_FINE_TUNE_MESH);
     ui.capture();                                         // Take over control of the LCD encoder
-
+//report_current_position_detail();
     do_blocking_move_to_xy_z(pos, Z_TWEEN_SAFE_CLEARANCE);  // Move to the given XY with probe clearance
+//    do_blocking_move_to_xy_z(pos, 10);  // Move to the given XY with probe clearance
+report_current_position_detail();
 
     MeshFlags done_flags{0};
     const xy_int8_t &lpos = location.pos;
@@ -1062,6 +1066,7 @@ void set_message_with_feedback(FSTR_P const fstr) {
       if (!position_is_reachable(raw)) break;             // SHOULD NOT OCCUR (find_closest_mesh_point_of_type only returns reachable)
 
       do_blocking_move_to(raw);                           // Move the nozzle to the edit point with probe clearance
+//report_current_position_detail();
 
       TERN_(UBL_MESH_EDIT_MOVES_Z, do_blocking_move_to_z(h_offset)); // Move Z to the given 'H' offset before editing
 
