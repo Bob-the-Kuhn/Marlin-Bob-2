@@ -33,7 +33,6 @@
 #include "../lcd/marlinui.h"
 #include "../inc/MarlinConfig.h"
 
-void report_current_position_detail();
 #if ENABLED(FT_MOTION)
   #include "ft_motion.h"
 #endif
@@ -422,10 +421,7 @@ void quickstop_stepper() {
  */
 void sync_plan_position() {
   if (DEBUGGING(LEVELING)) DEBUG_POS("sync_plan_position", current_position);
-//  SERIAL_ECHOLNPGM("motion.cpp line 427");
-//  report_current_position_detail();
   planner.set_position_mm(current_position);
-//  report_current_position_detail();
 }
 
 #if HAS_EXTRUDERS
@@ -2459,11 +2455,6 @@ void prepare_line_to_destination() {
 void set_axis_is_at_home(const AxisEnum axis) {
   if (DEBUGGING(LEVELING)) DEBUG_ECHOLNPGM(">>> set_axis_is_at_home(", AS_CHAR(AXIS_CHAR(axis)), ")");
 
- //uint32_t temp = (axis == Z_AXIS) ? TERN(HAS_BED_PROBE, DIFF_TERN(USE_PROBE_FOR_Z_HOMING, delta_height, probe.offset.z) , delta_height) : base_home_pos(axis);
- //SERIAL_ECHOPGM("AXIS: ", axis);
- //SERIAL_ECHOLNPGM("  Position: ", temp);
- //report_current_position_detail();
- //current_position[axis] = temp;
   set_axis_trusted(axis);
   set_axis_homed(axis);
 
