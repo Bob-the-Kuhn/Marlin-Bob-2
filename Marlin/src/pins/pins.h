@@ -318,7 +318,7 @@
   #include "mega/pins_GT2560_REV_B.h"               // ATmega2560                           env:mega2560
 #elif MB(GT2560_V4)
   #include "mega/pins_GT2560_V4.h"                  // ATmega2560                           env:mega2560
-#elif MB(GT2560_V4_A20)
+  #elif MB(GT2560_V4_A20)
   #include "mega/pins_GT2560_V4_A20.h"              // ATmega2560                           env:mega2560
 #elif MB(GT2560_V3_MC2)
   #include "mega/pins_GT2560_V3_MC2.h"              // ATmega2560                           env:mega2560
@@ -591,7 +591,7 @@
 #elif MB(CHITU3D)
   #include "stm32f1/pins_CHITU3D.h"                 // STM32F1                              env:STM32F103ZE env:STM32F103RE_maple
 #elif MB(MKS_ROBIN)
-  #include "stm32f1/pins_MKS_ROBIN.h"               // STM32F1                              env:mks_robin env:mks_robin_maple
+  #include "stm32f1/pins_MKS_ROBIN.h"               // STM32F1                              env:mks_robin env:mks_robin_maple env:mks_robin_soft_i2c env:mks_robin_hard_i2c
 #elif MB(MKS_ROBIN_MINI)
   #include "stm32f1/pins_MKS_ROBIN_MINI.h"          // STM32F1                              env:mks_robin_mini env:mks_robin_mini_maple
 #elif MB(MKS_ROBIN_NANO)
@@ -698,8 +698,8 @@
   #include "gd32f1/pins_TRIGORILLA_V006.h"          // GD32F1                               env:trigorilla_v006
 #elif MB(KEDI_CONTROLLER_V1_2)
   #include "stm32f1/pins_KEDI_CONTROLLER_V1_2.h"    // STM32F1                              env:STM32F103RC_btt env:STM32F103RC_btt_USB env:STM32F103RC_btt_maple env:STM32F103RC_btt_USB_maple
-#elif MB(MD_D301)
-  #include "stm32f1/pins_MD_D301.h"                 // STM32F1                              env:mingda_d301 env:mingda_d301_maple
+#elif MB(F103ZE_PRO)
+  #include "stm32f1/pins_F103ZE_PRO.h"              // STM32F1                              env:f103ze_pro env:f103ze_pro_soft_i2c
 
 //
 // ARM Cortex-M4F
@@ -723,7 +723,7 @@
 #elif MB(RUMBA32_BTT)
   #include "stm32f4/pins_RUMBA32_BTT.h"             // STM32F4                              env:rumba32
 #elif MB(BLACK_STM32F407VE)
-  #include "stm32f4/pins_BLACK_STM32F407VE.h"       // STM32F4                              env:STM32F407VE_black
+  #include "stm32f4/pins_BLACK_STM32F407VE.h"       // STM32F4                              env:STM32F407VE_black env:STM32F407VE_black_soft_i2c
 #elif MB(BTT_SKR_PRO_V1_1)
   #include "stm32f4/pins_BTT_SKR_PRO_V1_1.h"        // STM32F4                              env:BIGTREE_SKR_PRO env:BIGTREE_SKR_PRO_usb_flash_drive
 #elif MB(BTT_SKR_PRO_V1_2)

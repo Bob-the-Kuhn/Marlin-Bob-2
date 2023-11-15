@@ -154,3 +154,11 @@
     #define SD_MOSI_PIN                     PD2
   #endif
 #endif
+
+#if ENABLED(LCD_I2C_SOFT)
+  #define LCD_I2C_SDA_PIN                       PE1  // otherwise defaults to slave mode
+  #define LCD_I2C_SCL_PIN                       PE0
+#else
+  #define LCD_I2C_SDA_PIN                       PB7  // otherwise defaults to slave mode
+  #define LCD_I2C_SCL_PIN                       PB6
+#endif

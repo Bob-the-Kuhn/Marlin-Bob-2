@@ -79,12 +79,12 @@
 //
 // Steppers
 //
-#define X_ENABLE_PIN                        PB9
-#define X_STEP_PIN                          PB8
+#define X_ENABLE_PIN                        PF9  // originally PB9
+#define X_STEP_PIN                          PF8  // originally PB8
 #define X_DIR_PIN                           PB5
 
-#define Y_ENABLE_PIN                        PB4
-#define Y_STEP_PIN                          PG15
+#define Y_ENABLE_PIN                        PF4  // originally PB4
+#define Y_STEP_PIN                          PF15 // originally PG15
 #define Y_DIR_PIN                           PG10
 
 #define Z_ENABLE_PIN                        PD7
@@ -277,4 +277,20 @@
   #define SPI_FLASH_SCK_PIN                 PB13
   #define SPI_FLASH_MISO_PIN                PB14
   #define SPI_FLASH_MOSI_PIN                PB15
+#endif
+
+
+//
+// LCD Pins
+//
+
+
+#if ENABLED(LCD_I2C_SOFT)
+  #define LCD_I2C_SDA_PIN                       PB4  // Y - EN   (pin 1)
+  #define LCD_I2C_SCL_PIN                       PG15 // Y - STEP (pin 7)
+#else
+  #define LCD_I2C_SDA_PIN                       PB9   // X - EN   (pin 1)
+  #define LCD_I2C_SCL_PIN                       PB8   // X - STEP (pin 7)
+
+
 #endif
