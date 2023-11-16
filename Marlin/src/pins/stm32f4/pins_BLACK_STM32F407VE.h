@@ -156,9 +156,9 @@
 #endif
 
 #if ENABLED(LCD_I2C_SOFT)
-  #define LCD_I2C_SDA_PIN                       PE1  // otherwise defaults to slave mode
-  #define LCD_I2C_SCL_PIN                       PE0
+  #define DOGLCD_SDA                           PE1  // otherwise defaults to slave mode
+  #define DOGLCD_SCL                           PE0
 #else
-  #define LCD_I2C_SDA_PIN                       PB7  // otherwise defaults to slave mode
-  #define LCD_I2C_SCL_PIN                       PB6
+  #define DOGLCD_SDA                           PB7  // otherwise defaults to slave mode
+  #define DOGLCD_SCL                           PB6
 #endif

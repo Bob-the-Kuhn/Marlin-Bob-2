@@ -425,9 +425,9 @@
 // I2C LCD Pins
 //
 #if ENABLED(LCD_I2C_SOFT)
-  #define LCD_I2C_SDA_PIN                       PE0    // CN10 - 33
-  #define LCD_I2C_SCL_PIN                       PB0    // CN10 - 31
+  #define DOGLCD_SDA                           PE0    // CN10 - 33
+  #define DOGLCD_SCL                           PB0    // CN10 - 31
 #else
-  #define LCD_I2C_SDA_PIN                       PB11   // CN10 - 34 - I2C2
-  #define LCD_I2C_SCL_PIN                       PB10   // CN10 - 32 - I2C2
+  #define DOGLCD_SDA                           PB11   // CN10 - 34 - I2C2
+  #define DOGLCD_SCL                           PB10   // CN10 - 32 - I2C2
   #endif

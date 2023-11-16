@@ -286,11 +286,11 @@
 
 
 #if ENABLED(LCD_I2C_SOFT)
-  #define LCD_I2C_SDA_PIN                       PB4  // Y - EN   (pin 1)
-  #define LCD_I2C_SCL_PIN                       PG15 // Y - STEP (pin 7)
+  #define DOGLCD_SDA                           PB4  // Y - EN   (pin 1)
+  #define DOGLCD_SCL                           PG15 // Y - STEP (pin 7)
 #else
-  #define LCD_I2C_SDA_PIN                       PB9   // X - EN   (pin 1)
-  #define LCD_I2C_SCL_PIN                       PB8   // X - STEP (pin 7)
+  #define DOGLCD_SDA                           PB9   // X - EN   (pin 1)
+  #define DOGLCD_SCL                           PB8   // X - STEP (pin 7)
 
 
 #endif

@@ -34,8 +34,8 @@
  * ANY pin can be selected for SDA and SLC.
  *
  * This driver requires the SDA and SLC pins be named:
- *   LCD_I2C_SDA_PIN
- *   LCD_I2C_SCL_PIN
+ *   DOGLCD_SDA
+ *   DOGLCD_SCL
  *
  * This allows independence from other I2C devices (mostly EEPROMs) that
  * usually use I2C_SDA_PIN and I2C_SLC_PIN.
@@ -79,7 +79,7 @@
 
   char swTxBuffer[BUFFER_LENGTH];
   char swRxBuffer[BUFFER_LENGTH];
-  SoftWire sw(LCD_I2C_SDA_PIN, LCD_I2C_SCL_PIN);
+  SoftWire sw(DOGLCD_SDA    , DOGLCD_SCL    );
   #define I2C_ITF sw
 
 #elif !defined(HAL_I2C_MODULE_DISABLED)
@@ -114,8 +114,8 @@ uint8_t u8g_com_stm32duino_ssd_i2c_fn(u8g_t *u8g, uint8_t msg, uint8_t arg_val, 
         I2C_ITF.begin();
       #else
         I2C_ITF.setClock(400000);
-        I2C_ITF.setSCL(LCD_I2C_SCL_PIN );
-        I2C_ITF.setSDA(LCD_I2C_SDA_PIN );
+        I2C_ITF.setSCL(DOGLCD_SCL     );
+        I2C_ITF.setSDA(DOGLCD_SDA     );
         I2C_ITF.begin(MASTER_ADDRESS, 0); // start as master
       #endif
       break;
