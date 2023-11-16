@@ -59,6 +59,7 @@
 #if defined(ARDUINO_ARCH_STM32)
 
 #include <U8glib-HAL.h>
+
 #include "../../MarlinCore.h"  // so can get SDA & SCL pins
 
 /*
@@ -84,6 +85,10 @@
 #elif !defined(HAL_I2C_MODULE_DISABLED)
   #include <Wire.h>
   #define I2C_ITF Wire
+  #ifndef MASTER_ADDRESS
+//    #define MASTER_ADDRESS 0x33
+    #define MASTER_ADDRESS 0x01  // F746
+  #endif
 #else
   #error "unsupported I2C configuration"
 #endif
