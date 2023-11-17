@@ -56,7 +56,9 @@
  *
  */
 
-#if defined(ARDUINO_ARCH_STM32)
+#include "../../inc/MarlinConfigPre.h"
+
+#if (defined(ARDUINO_ARCH_STM32) && (defined(U8GLIB_SH1106) || defined(IS_U8GLIB_SSD1306) || defined(U8GLIB_SSD1309)))
 
 #include <U8glib-HAL.h>
 
@@ -79,15 +81,14 @@
 
   char swTxBuffer[BUFFER_LENGTH];
   char swRxBuffer[BUFFER_LENGTH];
-  SoftWire sw(DOGLCD_SDA    , DOGLCD_SCL    );
+  SoftWire sw(DOGLCD_SDA, DOGLCD_SCL);
   #define I2C_ITF sw
 
 #elif !defined(HAL_I2C_MODULE_DISABLED)
   #include <Wire.h>
   #define I2C_ITF Wire
   #ifndef MASTER_ADDRESS
-//    #define MASTER_ADDRESS 0x33
-    #define MASTER_ADDRESS 0x01  // F746
+    #define MASTER_ADDRESS 0x01
   #endif
 #else
   #error "unsupported I2C configuration"
@@ -114,8 +115,8 @@ uint8_t u8g_com_stm32duino_ssd_i2c_fn(u8g_t *u8g, uint8_t msg, uint8_t arg_val, 
         I2C_ITF.begin();
       #else
         I2C_ITF.setClock(400000);
-        I2C_ITF.setSCL(DOGLCD_SCL     );
-        I2C_ITF.setSDA(DOGLCD_SDA     );
+        I2C_ITF.setSCL(DOGLCD_SCL);
+        I2C_ITF.setSDA(DOGLCD_SDA);
         I2C_ITF.begin(MASTER_ADDRESS, 0); // start as master
       #endif
       break;

@@ -72,6 +72,7 @@
  *  IS_U8GLIB_ST7565_64128N : ST7565 128x64 LCD with SPI interface via U8GLib
  *  IS_U8GLIB_LM6059_AF     : LM6059 with Hardware SPI via U8GLib
  */
+
 #if ANY(MKS_MINI_12864, ENDER2_STOCKDISPLAY)
 
   #define MINIPANEL
