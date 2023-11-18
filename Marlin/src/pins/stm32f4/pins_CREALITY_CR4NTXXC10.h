@@ -136,7 +136,7 @@
   #define TMC_BAUD_RATE 19200
 
   /**
-   * TMC2208/TMC2209 stepper drivers
+   * TMC2209 stepper drivers
    *
    * Hardware serial communication ports.
    * If undefined software serial is used according to the pins below
@@ -172,9 +172,6 @@
 
   #define E0_SERIAL_TX_PIN      X_SERIAL_TX_PIN
   #define E0_SERIAL_RX_PIN      X_SERIAL_RX_PIN
-
-  #define E1_SERIAL_TX_PIN      X_SERIAL_TX_PIN
-  #define E1_SERIAL_RX_PIN      X_SERIAL_RX_PIN
 
   #define X_DIAG_PIN                       PC13
   #define Y_DIAG_PIN                       PC14
