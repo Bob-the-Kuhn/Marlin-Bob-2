@@ -27,7 +27,7 @@
  */
 #include "env_validate.h"
 
-#if HOTENDS > 1 || E_STEPPERS > 1
+#if HAS_MULTI_HOTEND || E_STEPPERS > 1
   #error "CR4NT220801C10 only supports one hotend / E-stepper."
 #endif
 
@@ -113,6 +113,7 @@
 #define E0_STEP_PIN                         PB4
 #define E0_DIR_PIN                          PB3
 
+//
 // Temperature Sensors
 //
 #define TEMP_0_PIN                          PC5   // TH1
@@ -132,8 +133,10 @@
 #endif
 
 #if HAS_TMC_UART
-  // Reduce baud rate to improve software serial reliability
-  #define TMC_BAUD_RATE 19200
+  #ifndef TMC_BAUD_RATE
+    // Reduce baud rate to improve software serial reliability
+    #define TMC_BAUD_RATE 19200
+  #endif
 
   /**
    * TMC2209 stepper drivers
@@ -159,8 +162,9 @@
     #define E0_SLAVE_ADDRESS                  3
   #endif
 
+  //
   // Software serial
-
+  //
   #define X_SERIAL_TX_PIN                   PC6   // Shared
   #define X_SERIAL_RX_PIN                   PC7   // Shared
 
