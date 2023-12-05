@@ -2196,7 +2196,7 @@
  * NOTE: This method is less reliable as it can only catch hangups while
  * interrupts are enabled.
  */
-#define USE_WATCHDOG
+//#define USE_WATCHDOG
 #if ENABLED(USE_WATCHDOG)
   //#define WATCHDOG_RESET_MANUAL
 #endif
@@ -3409,7 +3409,7 @@
 // I2C Master ID for LPC176x LCD and Digital Current control
 // Does not apply to other peripherals based on the Wire library.
 //
-//#define I2C_MASTER_ID  1  // Set a value from 0 to 2
+#define I2C_MASTER_ID  2  // Set a value from 0 to 2
 
 /**
  * TWI/I2C BUS

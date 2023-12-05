@@ -254,3 +254,16 @@
 
 // Include common SKR pins
 #include "pins_BTT_SKR_common.h"
+
+//P0_27  SDA0  fully compliant I/O
+//P0_28  SCL0
+//
+//
+//P0_00  SDA1 E1_DIR
+//P0_01  SCL1 E1_STEP
+//P0_19  SDA1 Z_CS_PIN
+//P0_20  SCL1 Z_STEP_PIN
+//
+//P0_10  SDA2 E1_CS_PIN
+//P0_11  SCL2 E0_STEP_PIN
+

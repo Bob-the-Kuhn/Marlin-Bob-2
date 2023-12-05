@@ -61,3 +61,16 @@
   #endif
 
 #endif // HAS_TMC_UART
+
+//P0_27  SDA0 SD_DETECT_PIN   fully compliant I/O
+//P0_28  SCL0 SD_SS_PIN
+//
+//
+//P0_00  SDA1
+//P0_01  SCL1
+//P0_19  SDA1 Z_ENABLE_PIN
+//P0_20  SCL1 Z_DIR_PIN
+//
+//
+//P0_10  SDA2 Y_ENABLE_PIN
+//P0_11  SCL2 Y_DIR_PIN

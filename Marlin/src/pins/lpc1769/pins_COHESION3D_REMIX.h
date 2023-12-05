@@ -62,8 +62,8 @@
 #define X_CS_PIN                           P1_10  // Ethernet Expansion - Pin 9
 
 #define Y_STEP_PIN                         P2_01
-#define Y_DIR_PIN                          P0_11
-#define Y_ENABLE_PIN                       P0_10
+#define Y_DIR_PIN                          P0_07
+#define Y_ENABLE_PIN                       P0_08
 #define Y_CS_PIN                           P1_09  // Ethernet Expansion - Pin 10
 
 #define Z_STEP_PIN                         P2_02
@@ -284,3 +284,17 @@
  *    9 - GND
  *   10 - N/C
  */
+
+#define I2C_MASTER_ID 2
+
+//P0_27  SDA0  EXP1-8, EXP2-7   fully compliant I/O
+//P0_28  SCL0  EXP2-4
+//
+//
+//P0_00  SDA1
+//P0_01  SCL1
+//P0_19  SDA1 Z_ENABLE_PIN
+//P0_20  SCL1 Z_DIR_PIN
+//
+//P0_10  SDA2 Y_ENABLE_PIN
+//P0_11  SCL2 Y_DIR_PIN

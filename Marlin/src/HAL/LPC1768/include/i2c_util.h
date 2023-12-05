@@ -26,17 +26,23 @@
  */
 
 #include "../../../inc/MarlinConfigPre.h"
+//#include "../../../MarlinCore.h"  // so can get SDA & SCL pins
+//C:\Users\bobku\Documents\GitHub\Marlin-Bob-2\Marlin\src\HAL\LPC1768\include\i2c_util.h
+//C:\Users\bobku\Documents\GitHub\Marlin-Bob-2\Marlin\src\MarlinCore.h
 
 #ifndef I2C_MASTER_ID
-  #define I2C_MASTER_ID 1
+  #define I2C_MASTER_ID 2
 #endif
 
 #if I2C_MASTER_ID == 0
+  #error "don't want to be here 1"
   #define I2CDEV_M LPC_I2C0
 #elif I2C_MASTER_ID == 1
   #define I2CDEV_M LPC_I2C1
+   #error "don't want to be here 2"
 #elif I2C_MASTER_ID == 2
   #define I2CDEV_M LPC_I2C2
+//  #error "want to be here"
 #else
   #error "Master I2C device not defined!"
 #endif

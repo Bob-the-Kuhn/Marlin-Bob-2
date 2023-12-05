@@ -43,13 +43,15 @@ uint8_t u8g_i2c_start(const uint8_t sla) {
   // Sometimes TX data ACK or NAK status is returned.  That mean the start state didn't
   // happen which means only the value of the slave address was send.  Keep looping until
   // the slave address and write bit are actually sent.
+  millis_t timeout = millis() + 10;
   do{
     _I2C_Stop(I2CDEV_M); // output stop state on I2C bus
     _I2C_Start(I2CDEV_M); // output start state on I2C bus
     while ((I2C_status != I2C_I2STAT_M_TX_START)
         && (I2C_status != I2C_I2STAT_M_TX_RESTART)
         && (I2C_status != I2C_I2STAT_M_TX_DAT_ACK)
-        && (I2C_status != I2C_I2STAT_M_TX_DAT_NACK));  //wait for start to be asserted
+        && (I2C_status != I2C_I2STAT_M_TX_DAT_NACK)
+        && (millis() < timeout) );  //wait for start to be asserted
 
     LPC_I2C1->I2CONCLR = I2C_I2CONCLR_STAC; // clear start state before tansmitting slave address
     LPC_I2C1->I2DAT = I2CDEV_S_ADDR & I2C_I2DAT_BITMASK; // transmit slave address & write bit
@@ -58,7 +60,8 @@ uint8_t u8g_i2c_start(const uint8_t sla) {
     while ((I2C_status != I2C_I2STAT_M_TX_SLAW_ACK)
         && (I2C_status != I2C_I2STAT_M_TX_SLAW_NACK)
         && (I2C_status != I2C_I2STAT_M_TX_DAT_ACK)
-        && (I2C_status != I2C_I2STAT_M_TX_DAT_NACK));  //wait for slaw to finish
+        && (I2C_status != I2C_I2STAT_M_TX_DAT_NACK)
+        && (millis() < timeout) );  //wait for slaw to finish
   }while ( (I2C_status == I2C_I2STAT_M_TX_DAT_ACK) ||  (I2C_status == I2C_I2STAT_M_TX_DAT_NACK));
   return 1;
 }
@@ -76,7 +79,8 @@ uint8_t u8g_i2c_send_byte(uint8_t data) {
   const millis_t timeout = millis() + I2C_TIMEOUT;
   while ((I2C_status != I2C_I2STAT_M_TX_DAT_ACK) && (I2C_status != I2C_I2STAT_M_TX_DAT_NACK) && PENDING(millis(), timeout));  // wait for xmit to finish
   // had hangs with SH1106 so added time out - have seen temporary screen corruption when this happens
-  return 1;
+//  return 1;
+  return millis() > timeout ? 1 : 0;
 }
 
 void u8g_i2c_stop() {

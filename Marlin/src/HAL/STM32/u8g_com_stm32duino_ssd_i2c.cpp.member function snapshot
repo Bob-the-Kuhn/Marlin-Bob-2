@@ -104,13 +104,13 @@
 //#if pin_in_pinmap((PinName)PB_7, PinMap_I2C_SDA)
 //#if ((pin_in_pinmap((PinName)PB_7, PinMap_I2C_SDA)) && (pin_in_pinmap(PB_6, PinMap_I2C_SCL)))
 
-  #include <Wire2.h>
+  #include <Wire.h>
   #define I2C_ITF Wire
   #ifndef MASTER_ADDRESS
     #define MASTER_ADDRESS 0x01
   #endif
 #else
-  #include <SoftWire2.h>
+  #include <SoftWire.h>
   #include <AsyncDelay.h>
 
   char swTxBuffer[BUFFER_LENGTH];
@@ -121,31 +121,61 @@
 */
 
 static uint8_t control;
-static uint8_t msgInitCount = 0; // Ignore all messages until 2nd U8G_COM_MSG_INIT
-                                 //
+static uint8_t msgInitCount = 2; // Ignore all messages until 2nd U8G_COM_MSG_INIT
 
-static uint8_t I2C_initialized = 0;  // flag to only run init/linking code once
-static uint8_t HARD_I2C = 0;         // 1 - hard I2C, 0 - soft I2C
+//void *I2C_ITF_beginTransmission(uint8_t);  //pointers to run time routines
+//uint8_t *I2C_ITF_endTransmission(void);
+//uint32_t* I2C_ITF_write_byte(uint8_t);
+//uint32_t* I2C_ITF_write_buffer(const uint8_t * , size_t );
 
-TwoWire Wire2;  // Create an object of TwoWire
-extern SoftWire I2C_soft(DOGLCD_SDA, DOGLCD_SCL);   // Create an object of SoftWire
-//SoftWire I2C_soft(PE1, PE0);   // Create an object of SoftWire
+
+class I2C_ITF {
+  public:
+    void    beginTransmission(uint8_t);
+    uint8_t endTransmission(void);
+    size_t  write_byte(uint8_t);
+    size_t  write_buffer(const uint8_t * , size_t );
+};
+
+
+static uint8_t I2C_initialized = 0;  //flag to only do run time linking once
+static uint8_t HARD_I2c = 0;                // 1 - hard I2C, 0 - soft I2C
 
 uint8_t u8g_com_stm32duino_ssd_i2c_fn(u8g_t *u8g, uint8_t msg, uint8_t arg_val, void *arg_ptr)
 {
-  I2C_TypeDef *i2cInstance;
   if(!I2C_initialized) {  // init runtime linkages
       I2C_initialized = 1;  //only do this once
+      I2C_TypeDef *i2cInstance;
       i2cInstance      = (I2C_TypeDef *)pinmap_peripheral(digitalPinToPinName(DOGLCD_SDA), PinMap_I2C_SDA);
       if (i2cInstance != (I2C_TypeDef *)pinmap_peripheral(digitalPinToPinName(DOGLCD_SCL), PinMap_I2C_SCL)) i2cInstance = NP;
 
+
       if (i2cInstance) {  // found hard I2C controller
-        HARD_I2C = 1;
-    //    TwoWire Wire;  // Create an object of TwoWire
+        HARD_I2c = 1;
+        void  (TwoWire::*I2C_ITF_beginTransmission) (uint8_t);
+        I2C_ITF_beginTransmission = &TwoWire::beginTransmission;
+        uint8_t  (TwoWire::*I2C_ITF_endTransmission) (void);
+        I2C_ITF_endTransmission = &TwoWire::endTransmission;
+        size_t  (TwoWire::*I2C_ITF_write_byte) (uint8_t);
+        I2C_ITF_write_byte = &TwoWire::write;
+        size_t  (TwoWire::*I2C_ITF_write_buffer) (const uint8_t * , size_t);
+        I2C_ITF_write_buffer = &TwoWire::write;
+
+        void I2C_ITF::beginTransmission(uint8_t value){
+          I2C_ITF_beginTransmission(value);
+        }
+        I2C_ITF I2C_ITF_obj;
       }
-      else {
-        //SoftWire I2C_soft(DOGLCD_SDA, DOGLCD_SCL);   // Create an object of SoftWire
-        SoftWire I2C_soft(PE1, PB14);   // Create an object of SoftWire
+      else {    // use soft I2C
+        void  (SoftWire::*I2C_ITF_beginTransmission) (uint8_t);
+        I2C_ITF_beginTransmission = &SoftWire::beginTransmission;
+        uint8_t  (SoftWire::*I2C_ITF_endTransmission) (void);
+        I2C_ITF_endTransmission = &SoftWire::endTransmission;
+        size_t  (SoftWire::*I2C_ITF_write_byte) (uint8_t);
+        I2C_ITF_write_byte = &SoftWire::write;
+        size_t  (SoftWire::*I2C_ITF_write_buffer) (const uint8_t * , size_t);
+        I2C_ITF_write_buffer = &SoftWire::write;
+        SoftWire I2C_ITF_obj(DOGLCD_SDA, DOGLCD_SCL);
       }
   }
 
@@ -155,116 +185,66 @@ uint8_t u8g_com_stm32duino_ssd_i2c_fn(u8g_t *u8g, uint8_t msg, uint8_t arg_val, 
     if (msgInitCount) return -1;
   }
 
-  if (i2cInstance) {  // found hard I2C controller
-    HARD_I2C = 1;
-//    TwoWire Wire;  // Create an object of TwoWire
-
-    switch (msg)
-    {
-      case U8G_COM_MSG_INIT:
-        Wire2.setClock(400000);
-        Wire2.setSCL(DOGLCD_SCL);
-        Wire2.setSDA(DOGLCD_SDA);
-        Wire2.begin(MASTER_ADDRESS, 0); // start as master
-        break;
-
-      case U8G_COM_MSG_ADDRESS:           /* define cmd (arg_val = 0) or data mode (arg_val = 1) */
-        control = arg_val ? 0x40 : 0x00;
-        break;
-
-      case U8G_COM_MSG_WRITE_BYTE:
-        Wire2.beginTransmission(0x3c);
-        Wire2.write(control);
-        Wire2.write(arg_val);
-        Wire2.endTransmission();
-        break;
-
-      case U8G_COM_MSG_WRITE_SEQ:
-      {
-        uint8_t* dataptr = (uint8_t*)arg_ptr;
-        #ifdef I2C_MAX_LENGTH
-          while (arg_val > 0) {
-            Wire2.beginTransmission(0x3c);
-            Wire2.write(control);
-            if (arg_val <= I2C_MAX_LENGTH) {
-              Wire2.write(dataptr, arg_val);
-              arg_val = 0;
-            }
-            else {
-              Wire2.write(dataptr, I2C_MAX_LENGTH);
-              arg_val -= I2C_MAX_LENGTH;
-              dataptr += I2C_MAX_LENGTH;
-            }
-            Wire2.endTransmission();
-          }
-        #else
-          Wire2.beginTransmission(0x3c);
-          Wire2.write(control);
-          Wire2.write(dataptr, arg_val);
-          Wire2.endTransmission();
-        #endif // I2C_MAX_LENGTH
-        break;
+  switch (msg)
+  {
+    case U8G_COM_MSG_INIT:
+      if (HARD_I2c) {  // found hard I2C controller
+        Wire.setClock(400000);
+        Wire.setSCL(DOGLCD_SCL);
+        Wire.setSDA(DOGLCD_SDA);
+        Wire.begin(MASTER_ADDRESS, 0); // start as master
       }
-
-    }
-  return 1;
-  }
-
-  else {    // use soft I2C
- //   SoftWire I2C_soft(DOGLCD_SDA, DOGLCD_SCL);   // Create an object of SoftWire
-
-    switch (msg)
-    {
-      case U8G_COM_MSG_INIT:
+      else {    // use soft I2C
         char swTxBuffer[BUFFER_LENGTH];
         char swRxBuffer[BUFFER_LENGTH];
-        I2C_soft.setClock(400000);
-        I2C_soft.setTxBuffer(swTxBuffer, BUFFER_LENGTH);
-        I2C_soft.setRxBuffer(swRxBuffer, BUFFER_LENGTH);
-        I2C_soft.begin();
-        break;
-
-      case U8G_COM_MSG_ADDRESS:           /* define cmd (arg_val = 0) or data mode (arg_val = 1) */
-        control = arg_val ? 0x40 : 0x00;
-        break;
-
-      case U8G_COM_MSG_WRITE_BYTE:
-        I2C_soft.beginTransmission(0x3c);
-        I2C_soft.write(control);
-        I2C_soft.write(arg_val);
-        I2C_soft.endTransmission();
-        break;
-
-      case U8G_COM_MSG_WRITE_SEQ:
-      {
-        uint8_t* dataptr = (uint8_t*)arg_ptr;
-        #ifdef I2C_MAX_LENGTH
-          while (arg_val > 0) {
-            I2C_soft.beginTransmission(0x3c);
-            I2C_soft.write(control);
-            if (arg_val <= I2C_MAX_LENGTH) {
-              I2C_soft.write(dataptr, arg_val);
-              arg_val = 0;
-            }
-            else {
-              I2C_soft.write(dataptr, I2C_MAX_LENGTH);
-              arg_val -= I2C_MAX_LENGTH;
-              dataptr += I2C_MAX_LENGTH;
-            }
-            I2C_soft.endTransmission();
-          }
-        #else
-          I2C_soft.beginTransmission(0x3c);
-          I2C_soft.write(control);
-          I2C_soft.write(dataptr, arg_val);
-          I2C_soft.endTransmission();
-        #endif // I2C_MAX_LENGTH
-        break;
+        SoftWire sw(DOGLCD_SDA, DOGLCD_SCL);
+        sw.setClock(400000);
+        sw.setTxBuffer(swTxBuffer, BUFFER_LENGTH);
+        sw.setRxBuffer(swRxBuffer, BUFFER_LENGTH);
+        sw.begin();
       }
+      break;
 
+    case U8G_COM_MSG_ADDRESS:           /* define cmd (arg_val = 0) or data mode (arg_val = 1) */
+      control = arg_val ? 0x40 : 0x00;
+      break;
+
+    case U8G_COM_MSG_WRITE_BYTE:
+      I2C_ITF_obj->*I2C_ITF_beginTransmission(0x3c);
+      I2C_ITF_obj->*I2C_ITF_write_byte(control);
+      I2C_ITF_obj->*I2C_ITF_write_byte(arg_val);
+      I2C_ITF_obj->*I2C_ITF_endTransmission();
+      break;
+
+    case U8G_COM_MSG_WRITE_SEQ:
+    {
+      uint8_t* dataptr = (uint8_t*)arg_ptr;
+      #ifdef I2C_MAX_LENGTH
+        while (arg_val > 0) {
+          I2C_ITF_obj->*I2C_ITF_beginTransmission(0x3c);
+          I2C_ITF_obj->*I2C_ITF_write_byte(control);
+          if (arg_val <= I2C_MAX_LENGTH) {
+            I2C_ITF_obj->*I2C_ITF_write_buffer(dataptr, arg_val);
+            arg_val = 0;
+          }
+          else {
+            I2C_ITF_obj->*I2C_ITF_write_buffer(dataptr, I2C_MAX_LENGTH);
+            arg_val -= I2C_MAX_LENGTH;
+            dataptr += I2C_MAX_LENGTH;
+          }
+          I2C_ITF_obj->*I2C_ITF_endTransmission();
+        }
+      #else
+        I2C_ITF_obj->*I2C_ITF_beginTransmission(0x3c);
+        I2C_ITF_obj->*I2C_ITF_write_byte(control);
+        I2C_ITF_obj->*I2C_ITF_write_buffer(dataptr, arg_val);
+        I2C_ITF_obj->*I2C_ITF_endTransmission();
+      #endif // I2C_MAX_LENGTH
+      break;
     }
-    return 1;
+
   }
+  return 1;
 }
 
 #endif // ARDUINO_ARCH_STM32

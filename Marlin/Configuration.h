@@ -69,12 +69,13 @@
 // Choose the name from boards.h that matches your setup
 #ifndef MOTHERBOARD
   //#define MOTHERBOARD BOARD_RAMPS_14_EFB
-  //#define MOTHERBOARD BOARD_BLACK_STM32F407VE
+  #define MOTHERBOARD BOARD_BLACK_STM32F407VE
   //#define MOTHERBOARD BOARD_F103ZE_PRO
   //#define MOTHERBOARD BOARD_MKS_ROBIN
-  #define MOTHERBOARD BOARD_NUCLEO_F746ZG
-  #define NO_CONTROLLER_CUSTOM_WIRING_WARNING
+  //#define MOTHERBOARD BOARD_NUCLEO_F746ZG
+  //#define NO_CONTROLLER_CUSTOM_WIRING_WARNING
   //#define MOTHERBOARD BOARD_BTT_BTT002_V1_0
+  //#define MOTHERBOARD BOARD_COHESION3D_REMIX
 #endif
 
 /**
@@ -85,7 +86,7 @@
  *
  * :[-1, 0, 1, 2, 3, 4, 5, 6, 7]
  */
-#define SERIAL_PORT 1
+#define SERIAL_PORT 2
 
 /**
  * Serial Port Baud Rate
