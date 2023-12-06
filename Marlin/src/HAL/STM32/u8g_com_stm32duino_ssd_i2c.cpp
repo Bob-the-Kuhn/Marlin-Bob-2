@@ -30,11 +30,11 @@
  * ANY hardware SDA and SLC pairs can be selected and the WIRE library
  * will automatically enable the correct hardware.
  *
- * The SoftWire library is used for the software I2C. That means that
+ * The SlowSoftWire library is used for the software I2C. That means that
  * ANY pin can be selected for SDA and SLC.
  *
  * Selection of the WIRE library or the SoftWire library is automatically done
- * at compile time.
+ * at run time.
  *
  * This driver requires the SDA and SLC pins be named:
  *   DOGLCD_SDA
@@ -46,27 +46,6 @@
  */
 
 
-
-/** is used for the hardware I2C.  That means that
- * ANY hardware SDA and SLC pairs can be selected and the WIRE library
- * will automatically enable the correct hardware.
- *
- * The SoftWire library * The following MUST be present in the platformio environment used to
- * compile Marlin. This required because
- *
- * The flag LCD_I2C_SOFT is used to select which I2C library is used.
- * It must be enabled in the platformio environment used to compile
- * Marlin.  Enabling it anywhere else results in LCD_I2C_SOFT not being
- * enabled during crucial portions of the compile process which results
- * in defaulting to hardwired operation.  The net result is the following
- * MUST be in the platformio environment in order to use the software I2C
- * system:
- *    build_flags = -DLCD_I2C_SOFT
- *    lib_deps    = stevemarple/SoftWire@^2.0.9
- *                  stevemarple/AsyncDelay@^1.1.2
- *
- */
-
 #include "../../inc/MarlinConfigPre.h"
 
 #if (defined(ARDUINO_ARCH_STM32) && (defined(U8GLIB_SH1106) || defined(IS_U8GLIB_SSD1306) || defined(U8GLIB_SSD1309)))
@@ -75,17 +54,10 @@
 
 #include "../../MarlinCore.h"  // so can get SDA & SCL pins
 #include <Wire.h>
-//#include <SoftWire.h>
-//#include <AsyncDelay.h>
-
-//////////.h>
 
 #include <SlowSoftI2CMaster.h>
-#include "SlowSoftWire.h"
-//#include "../../../../lib/SlowSoftI2CMaster/SlowSoftI2CMaster.h"
-//C:\Users\bobku\Documents\GitHub\Marlin-Bob-2\Marlin\src\HAL\STM32\u8g_com_stm32duino_ssd_i2c.cpp
-//C:\Users\bobku\Documents\GitHub\Marlin-Bob-2\lib\SlowSoftI2CMaster\SlowSoftI2CMaster.h"
-//#include "../../../../lib/SlowSoftWire/SlowSoftWire.h"
+#include <SlowSoftWire.h>
+
 
 /*
   BUFFER_LENGTH is defined in libraries\Wire\utility\WireBase.h
@@ -102,43 +74,13 @@
   #define MASTER_ADDRESS 0x01
 #endif
 
-
-
-/*
-#define HasI2C_HARD(p,q)    (pin_in_pinmap(digitalPinToPinName(p), PinMap_I2C_SDA) &&\
-                             pin_in_pinmap(digitalPinToPinName(q), PinMap_I2C_SCL))
-
-//bool pin_in_pinmap(PinName pin, const PinMap *map);
-//#if PinMap_I2C_SDA[digitalPinToPinName(DOGLCD_SDA),0,0].pin <> null
-//#if pin_in_pinmap((PinName)PB_7, PinMap_I2C_SDA)
-//#if ((pin_in_pinmap((PinName)PB_7, PinMap_I2C_SDA)) && (pin_in_pinmap(PB_6, PinMap_I2C_SCL)))
-
-  #include <Wire2.h>
-  #define I2C_ITF Wire
-  #ifndef MASTER_ADDRESS
-    #define MASTER_ADDRESS 0x01
-  #endif
-#else
-  #include <SoftWire2.h>
-  #include <AsyncDelay.h>
-
-  char swTxBuffer[BUFFER_LENGTH];
-  char swRxBuffer[BUFFER_LENGTH];
-  SoftWire sw(DOGLCD_SDA, DOGLCD_SCL);
-  #define I2C_ITF sw
-#endif
-*/
-
 static uint8_t control;
 static uint8_t msgInitCount = 0; // Ignore all messages until 2nd U8G_COM_MSG_INIT
-                                 //
 
 static uint8_t I2C_initialized = 0;  // flag to only run init/linking code once
 static uint8_t HARD_I2C = 0;         // 1 - hard I2C, 0 - soft I2C
 
 TwoWire Wire2;  // Create an object of TwoWire
-//extern SoftWire I2C_soft(DOGLCD_SDA, DOGLCD_SCL);   // Create an object of SoftWire
-//SoftWire I2C_soft(PE1, PE0);   // Create an object of SoftWire
 SlowSoftWire I2C_soft = SlowSoftWire((uint8_t)DOGLCD_SDA, (uint8_t)DOGLCD_SCL);
 
 uint8_t u8g_com_stm32duino_ssd_i2c_fn(u8g_t *u8g, uint8_t msg, uint8_t arg_val, void *arg_ptr)
@@ -151,11 +93,6 @@ uint8_t u8g_com_stm32duino_ssd_i2c_fn(u8g_t *u8g, uint8_t msg, uint8_t arg_val, 
 
       if (i2cInstance) {  // found hard I2C controller
         HARD_I2C = 1;
-    //    TwoWire Wire;  // Create an object of TwoWire
-      }
-      else {
-        //SoftWire I2C_soft(DOGLCD_SDA, DOGLCD_SCL);   // Create an object of SoftWire
-        //SoftWire I2C_soft(PE1, PB14);   // Create an object of SoftWire
       }
   }
 
@@ -166,8 +103,6 @@ uint8_t u8g_com_stm32duino_ssd_i2c_fn(u8g_t *u8g, uint8_t msg, uint8_t arg_val, 
   }
 
   if (HARD_I2C) {  // found hard I2C controller
-
-//    TwoWire Wire;  // Create an object of TwoWire
 
     switch (msg)
     {
@@ -221,20 +156,11 @@ uint8_t u8g_com_stm32duino_ssd_i2c_fn(u8g_t *u8g, uint8_t msg, uint8_t arg_val, 
   }
 
   else {    // use soft I2C
- //   SoftWire I2C_soft(DOGLCD_SDA, DOGLCD_SCL);   // Create an object of SoftWire
 
     switch (msg)
     {
       case U8G_COM_MSG_INIT:
-        //char swTxBuffer[BUFFER_LENGTH];
-        //char swRxBuffer[BUFFER_LENGTH];
-        //I2C_soft.setClock(400000);
-        //I2C_soft.setTxBuffer(swTxBuffer, BUFFER_LENGTH);
-        //I2C_soft.setRxBuffer(swRxBuffer, BUFFER_LENGTH);
-        //I2C_soft.begin();
         I2C_soft.setClock(400000);
-        //I2C_soft.setSCL(DOGLCD_SCL);
-        //I2C_soft.setSDA(DOGLCD_SDA);
         I2C_soft.begin(); // start as master
         break;
 

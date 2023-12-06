@@ -155,9 +155,9 @@
   #endif
 #endif
 
-//#define DOGLCD_SDA                           PE1  // I2C_SOFT otherwise defaults to slave mode
-//#define DOGLCD_SCL                           PE0  // I2C_SOFT
+#define DOGLCD_SDA                           PE1  // I2C_SOFT otherwise defaults to slave mode
+#define DOGLCD_SCL                           PE0  // I2C_SOFT
 
-#define DOGLCD_SDA                           PB7  // I2C_HARD  otherwise defaults to slave mode
-#define DOGLCD_SCL                           PB6  // I2C_HARD
+//#define DOGLCD_SDA                           PB7  // I2C_HARD  otherwise defaults to slave mode
+//#define DOGLCD_SCL                           PB6  // I2C_HARD
 
