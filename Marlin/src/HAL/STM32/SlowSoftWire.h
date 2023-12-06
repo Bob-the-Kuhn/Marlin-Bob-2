@@ -2,7 +2,8 @@
 
 #ifndef SLOW_SOFT_WIRE
 #define SLOW_SOFT_WIRE
-#include "../SlowSoftI2CMaster/SlowSoftI2CMaster.h"
+#include <SlowSoftI2CMaster.h>
+
 
 class SlowSoftWire : public Stream
 {
