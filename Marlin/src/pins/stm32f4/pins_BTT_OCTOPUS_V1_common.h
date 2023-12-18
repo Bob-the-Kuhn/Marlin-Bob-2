@@ -497,12 +497,12 @@
 #endif  // HAS_WIRED_LCD
 
 // Alter timing for graphical display
-#if IS_U8GLIB_ST7920
-  #define BOARD_ST7920_DELAY_1               120
-  #define BOARD_ST7920_DELAY_2                80
-  #define BOARD_ST7920_DELAY_3               580
-#endif
-
+//#if IS_U8GLIB_ST7920
+//  #define BOARD_ST7920_DELAY_1               120
+//  #define BOARD_ST7920_DELAY_2                80
+//  #define BOARD_ST7920_DELAY_3               580
+//#endif
+//
 #if HAS_SPI_TFT
   #define TFT_CS_PIN                 EXP2_04_PIN
   #define TFT_A0_PIN                 EXP2_07_PIN
