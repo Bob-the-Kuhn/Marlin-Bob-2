@@ -26,6 +26,13 @@
 #define HAS_OTG_USB_HOST_SUPPORT                  // USB Flash Drive support
 #define USES_DIAG_JUMPERS
 
+//
+// Caliper interface
+//
+#define caliper_data                        PA10  // blue wire
+#define caliper_clock                       PA9   // green wire
+
+
 // Onboard I2C EEPROM
 #if ANY(NO_EEPROM_SELECTED, I2C_EEPROM)
   #undef NO_EEPROM_SELECTED

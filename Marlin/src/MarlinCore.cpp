@@ -1648,6 +1648,8 @@ void setup() {
   TERN_(MARLIN_TEST_BUILD, runStartupTests());
 }
 
+void display_caliper(void);
+
 /**
  * The main Marlin program loop
  *
@@ -1664,6 +1666,8 @@ void setup() {
 void loop() {
   do {
     idle();
+
+    display_caliper();
 
     #if HAS_MEDIA
       if (card.flag.abort_sd_printing) abortSDPrinting();

@@ -168,6 +168,9 @@ typedef struct { float p, i, d, c, f; } raw_pidcf_t;
   /// PID classes that implement these features are expected to override these methods
   /// Since the finally used PID class is typedef-d, there is no need to use virtual functions
   template<int MIN_POW, int MAX_POW>
+
+
+
   struct PID_t {
     protected:
       bool pid_reset = true;
@@ -587,6 +590,16 @@ typedef struct { raw_adc_t raw_min, raw_max; celsius_t mintemp, maxtemp; } temp_
   #define HAS_FAN_LOGIC 1
 #endif
 
+#ifdef FAN_KICKSTART_TIME
+
+typedef struct {
+    uint8_t kick_active = 0;  // 0: fan off, 1: kick active, 2: fan on (normal)
+    millis_t kick_end;
+  } AUTO_FAN_kick;
+
+static AUTO_FAN_kick autofan_kick[HOTENDS];
+#endif
+
 class Temperature {
 
   public:
@@ -622,6 +635,7 @@ class Temperature {
     #if ANY(AUTO_POWER_E_FANS, HAS_FANCHECK)
       static uint8_t autofan_speed[HOTENDS];
     #endif
+
     #if ENABLED(AUTO_POWER_CHAMBER_FAN)
       static uint8_t chamberfan_speed;
     #endif
