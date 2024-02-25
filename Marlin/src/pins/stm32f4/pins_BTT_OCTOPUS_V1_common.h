@@ -29,8 +29,8 @@
 //
 // Caliper interface
 //
-#define caliper_data                        PA10  // blue wire
-#define caliper_clock                       PA9   // green wire
+#define CALIPER_DATA_PIN                   PB6   // blue wire
+#define CALIPER_CLOCK_PIN                  PB7   // green wire
 
 
 // Onboard I2C EEPROM
