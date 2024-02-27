@@ -77,11 +77,14 @@
 
 #define E0_STEP_PIN                         PD7
 #define E0_DIR_PIN                          PD0
-#define E0_ENABLE_PIN                       PB9
+#define E0_ENABLE_PIN                       PD1 // PB9
 
-#define E1_STEP_PIN                         PE0
-#define E1_DIR_PIN                          PE1
-#define E1_ENABLE_PIN                       PB8
+//#define E1_STEP_PIN                         PE0
+//#define E1_DIR_PIN                          PE1
+//#define E1_ENABLE_PIN                       PB8
+
+#define CALIPER_DATA_PIN                   PB8   // blue wire
+#define CALIPER_CLOCK_PIN                  PB9   // green wire
 
 //
 // Temperature Sensors

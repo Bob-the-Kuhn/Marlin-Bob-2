@@ -53,11 +53,13 @@
 void display_caliper_setup()
 {
 
-  pinMode(CALIPER_DATA_PIN , INPUT);
-  pinMode(CALIPER_CLOCK_PIN, INPUT);
+  SET_INPUT(CALIPER_DATA_PIN);
+  SET_INPUT(CALIPER_CLOCK_PIN);
 
-  pinMode(PD5, OUTPUT);
-  pinMode(PD6, OUTPUT);
+  SET_OUTPUT(PE1);
+  SET_OUTPUT(PE0);
+  SET_OUTPUT(PB6);
+  SET_OUTPUT(PB7);
 
 }
 
@@ -69,7 +71,7 @@ int sign;
 int inches_caliper;
 long value;
 float result;
-bool mm = true; //define mm to false if you want inches values
+bool mm = false; //define mm to false if you want inches values
 void readCaliper();
 
 void display_caliper(void)
@@ -101,14 +103,17 @@ void display_caliper(void)
     {
      // if(inches)
      //   {
-          dtostrf(result,6,3,buf+1); strcat(buf," in ");
+          //dtostrf(result,6,3,buf+1); strcat(buf," in ");
+          dtostrf(result,7,4,buf2+1); strcat(buf2," in ");
+          sprintf_P(buf, PSTR("%s %4li %i"), buf2, value, inches_caliper);
      //   }
      //  else
      //    {
      //      dtostrf(float(result/25.4f),6,3,buf+1); strcat(buf," in ");
      //    }
     }
-  ui.set_status(buf, true);
+  ui.set_status(buf, true);  // LCD
+  SERIAL_ECHOLN(buf);        // host
 }
 
 void delay_us(unsigned long delay_uSec) {
@@ -127,66 +132,72 @@ void readCaliper()  // always return the result in the desired units (per mm set
   inches_caliper=0;
   float temp_div = 0 ;
 
-  tmpTime=millis();
-    digitalWrite(PD6, HIGH);        // triple pulse to show looking for new packet
-    delay(4);
-    digitalWrite(PD6, LOW);
-    delay(4);
-    digitalWrite(PD6, HIGH);
-    delay(4);
-    digitalWrite(PD6, LOW);
-    delay(4);
-    digitalWrite(PD6, HIGH);
-    delay(4);
-    digitalWrite(PD6, LOW);
-  while((millis()-tmpTime)<CALIPER_READ_TIMEOUT) {digitalWrite(PD6, !digitalRead(PD6)); if (digitalRead(CALIPER_CLOCK_PIN)==LOW) {tmpTime=millis();}} // wait for inter-packet quiet time
-  //while((millis()-tmpTime)<CALIPER_READ_TIMEOUT) { if (digitalRead(CALIPER_CLOCK_PIN)==LOW) {tmpTime=millis();}digitalWrite(PD5, !digitalRead(PD5));
-  //digitalWrite(PD6, digitalRead(CALIPER_DATA_PIN));} // wait for inter-packet quiet time
 
-  while(digitalRead(CALIPER_CLOCK_PIN)==HIGH) {digitalWrite(PD5, !digitalRead(PD5));}  ;  // wait for start of packet
-  //while(digitalRead(CALIPER_CLOCK_PIN)==HIGH) {
-  //digitalWrite(PD6, !digitalRead(PD6));}  ;  // wait for start of packet
+    WRITE(PE0, HIGH);        // triple pulse to show looking for new packet
+    delay(4);
+    WRITE(PE0, LOW);
+    delay(4);
+    WRITE(PE0, HIGH);
+    delay(4);
+    WRITE(PE0, LOW);
+    delay(4);
+    WRITE(PE0, HIGH);
+    delay(4);
+    WRITE(PE0, LOW);
+    tmpTime=millis();
+  while((millis()-tmpTime)<CALIPER_READ_TIMEOUT) {WRITE(PE0, !READ(PE0)); if (READ(CALIPER_CLOCK_PIN)==LOW) {tmpTime=millis();}} // wait for inter-packet quiet time
+  //while((millis()-tmpTime)<CALIPER_READ_TIMEOUT) { if (READ(CALIPER_CLOCK_PIN)==LOW) {tmpTime=millis();}WRITE(PE1, !READ(PE1));
+  //WRITE(PE0, READ(CALIPER_DATA_PIN));} // wait for inter-packet quiet time
+
+  while(READ(CALIPER_CLOCK_PIN)==HIGH) {WRITE(PE1, !READ(PE1));}  ;  // wait for start of packet
+  //while(READ(CALIPER_CLOCK_PIN)==HIGH) {
+  //WRITE(PE0, !READ(PE0));}  ;  // wait for start of packet
   // first clock received - sample data on rising edge of clock
-  digitalWrite(PD5, LOW);
-  digitalWrite(PD6, LOW);
-  tmpTime=millis();
+  WRITE(PE1, LOW);
+  WRITE(PE0, LOW);
+
   for(int i=0;i<24;i++) {
-    digitalWrite(PD5, HIGH);  //single pulse to show when reading bit
-    //digitalWrite(PD5, digitalRead(CALIPER_CLOCK_PIN));
-    //digitalWrite(PD6, digitalRead(CALIPER_DATA_PIN));
-//    while(digitalRead(CALIPER_CLOCK_PIN)==HIGH) {} // wait for high to low transition on clock
-   // while(digitalRead((CALIPER_CLOCK_PIN)==LOW) && ((millis()-tmpTime)<CALIPER_READ_TIMEOUT) ) {}  // wait for low to high transition on clock
-    while(digitalRead((CALIPER_CLOCK_PIN)==LOW)) {}  // wait for low to high transition on clock
-//    while(digitalRead(CALIPER_CLOCK_PIN)==LOW) {}  // wait for low to high transition on clock
-//    while(digitalRead(CALIPER_CLOCK_PIN)==HIGH) {} // wait for high to low transition on clock
-    //digitalWrite(PD5, HIGH);  //single pulse to show when reading bit
+    WRITE(PB6, HIGH);  //single pulse to show when reading bit
+    //WRITE(PE1, READ(CALIPER_CLOCK_PIN));
+    //WRITE(PE0, READ(CALIPER_DATA_PIN));
+//    while(READ(CALIPER_CLOCK_PIN)==HIGH) {} // wait for high to low transition on clock
+   // while(READ(CALIPER_CLOCK_PIN)==LOW) && ((millis()-tmpTime)<CALIPER_READ_TIMEOUT) ) {}  // wait for low to high transition on clock
+  while(READ(CALIPER_CLOCK_PIN)==LOW) {WRITE(PB7, !READ(PB7));}  ; // wait for low to high transition on clock
+//    while(READ(CALIPER_CLOCK_PIN)==LOW) {}  // wait for low to high transition on clock
+//    while(READ(CALIPER_CLOCK_PIN)==HIGH) {} // wait for high to low transition on clock
+    //WRITE(PE1, HIGH);  //single pulse to show when reading bit
 
 
-    if(digitalRead(CALIPER_DATA_PIN)==HIGH) {
+    if(READ(CALIPER_DATA_PIN)==HIGH) {
       if(i<20) value|=(1<<i);
       if(i==20) sign=-1;
       if(i==23) {inches_caliper=2;}
     }
-    if(i==0) digitalWrite(PD6, HIGH);  // single pulse to show reading first bit
+    if(i==0) WRITE(PE0, HIGH);  // single pulse to show reading first bit
     if(i==23) {
-      digitalWrite(PD6, HIGH);        // double pulse to show reading 23rd bit
-      digitalWrite(PD6, !digitalRead(PD6));
-      digitalWrite(PD6, !digitalRead(PD6));
+      WRITE(PE0, HIGH);        // double pulse to show reading 23rd bit
+      WRITE(PE0, !READ(PE0));
+      WRITE(PE0, !READ(PE0));
     }
-    digitalWrite(PD6, LOW);
-    digitalWrite(PD5, LOW);
-    //while(digitalRead((CALIPER_CLOCK_PIN)==HIGH) && ((millis()-tmpTime)<CALIPER_READ_TIMEOUT) ) {}  // wait for high to low transition on clock
-    while(digitalRead((CALIPER_CLOCK_PIN)==HIGH) ) {}  // wait for high to low transition on clock
+    WRITE(PE0, LOW);
+    WRITE(PE1, LOW);
+    WRITE(PB6, LOW);
+    WRITE(PB7, LOW);
+    //while(READ(CALIPER_CLOCK_PIN)==HIGH) && ((millis()-tmpTime)<CALIPER_READ_TIMEOUT) ) {}  // wait for high to low transition on clock
+  while(READ(CALIPER_CLOCK_PIN)==HIGH) {READ(CALIPER_DATA_PIN);}  // wait for high to low transition on clock
   }
   if(mm)
   {
-    temp_div = inches_caliper ? 100.0:78.74;
+    temp_div = inches_caliper ? 78.74 : 100.0;
+    //temp_div = inches_caliper ? 100.0:78.74;
     result=(value*sign)/temp_div;
     //result=(value*sign)/(inches ? 100.0:78.74);
   }
   else
   {
-  result=(value*sign)/(inches_caliper ? 2000.0:(100.0*25.4)); //We map the values for inches, define mm to false if you want inches values
+  //result=(value*sign)/(inches_caliper ? (100.0*25.4) : 2000.0); //We map the values for inches, define mm to false if you want inches values
+  result=(value*sign)/(inches_caliper ? 2000.0:(100.0*25.39408)); //We map the values for inches, define mm to false if you want inches values
+                                                                  // strange - mm to inches conversion constant should be 25.4 - caliper's conversion routine must be slightly off
   }
 
 }

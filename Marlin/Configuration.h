@@ -70,29 +70,30 @@
 
 // Choose the name from boards.h that matches your setup
 #ifndef MOTHERBOARD
-  #define MOTHERBOARD BOARD_BTT_OCTOPUS_V1_1
+  //#define MOTHERBOARD BOARD_BTT_OCTOPUS_V1_1
+  #define MOTHERBOARD BOARD_BLACK_STM32F407VE
 
 
-  #define TEMP_CHAMBER_PIN        TEMP_1_PIN
-  #define HEATER_CHAMBER_PIN      PB4  // J74 - 3
-  //#define FIL_RUNOUT_PIN         PG12  // E0DET
-
-  #define M672_MOD_PIN            PB5  // J74 - 4
-  #define SMART_EFFECTOR_MOD_PIN  M672_MOD_PIN
-  #define Z_MIN_PROBE_PIN         PB3  // J74 - 5
-  #define E0_AUTO_FAN_PIN         FAN1_PIN
-
-  #define DIAG_JUMPERS_REMOVED
-
- #ifndef BOARD_ST7920_DELAY_1
-   #define BOARD_ST7920_DELAY_1          130 // 250//0 //120
- #endif
- #ifndef BOARD_ST7920_DELAY_2
-   #define BOARD_ST7920_DELAY_2          100 // 250//0  // 80
- #endif
- #ifndef BOARD_ST7920_DELAY_3
-   #define BOARD_ST7920_DELAY_3          600 // 250//0  //589
- #endif
+ // #define TEMP_CHAMBER_PIN        TEMP_1_PIN
+ // #define HEATER_CHAMBER_PIN      PB4  // J74 - 3
+ // //#define FIL_RUNOUT_PIN         PG12  // E0DET
+ //
+ // #define M672_MOD_PIN            PB5  // J74 - 4
+ // #define SMART_EFFECTOR_MOD_PIN  M672_MOD_PIN
+ // #define Z_MIN_PROBE_PIN         PB3  // J74 - 5
+ // #define E0_AUTO_FAN_PIN         FAN1_PIN
+ //
+ // #define DIAG_JUMPERS_REMOVED
+ //
+ //#ifndef BOARD_ST7920_DELAY_1
+ //  #define BOARD_ST7920_DELAY_1          130 // 250//0 //120
+ //#endif
+ //#ifndef BOARD_ST7920_DELAY_2
+ //  #define BOARD_ST7920_DELAY_2          100 // 250//0  // 80
+ //#endif
+ //#ifndef BOARD_ST7920_DELAY_3
+ //  #define BOARD_ST7920_DELAY_3          600 // 250//0  //589
+ //#endif
 
 #endif
 
@@ -1439,7 +1440,7 @@
  * Use the nozzle as the probe, as with a conductive
  * nozzle system or a piezo-electric smart effector.
  */
-#define NOZZLE_AS_PROBE
+//#define NOZZLE_AS_PROBE
 
 /**
  * Z Servo Probe, such as an endstop switch on a rotating arm.
@@ -1931,7 +1932,7 @@
  * RAMPS-based boards use SERVO3_PIN for the first runout sensor.
  * For other boards you may need to define FIL_RUNOUT_PIN, FIL_RUNOUT2_PIN, etc.
  */
-#define FILAMENT_RUNOUT_SENSOR
+//#define FILAMENT_RUNOUT_SENSOR
 #if ENABLED(FILAMENT_RUNOUT_SENSOR)
   #define FIL_RUNOUT_ENABLED_DEFAULT true // Enable the sensor on startup. Override with M412 followed by M500.
   #define NUM_RUNOUT_SENSORS   1          // Number of sensors, up to one per extruder. Define a FIL_RUNOUT#_PIN for each.
@@ -2076,7 +2077,7 @@
 //#define AUTO_BED_LEVELING_3POINT
 //#define AUTO_BED_LEVELING_LINEAR
 //#define AUTO_BED_LEVELING_BILINEAR
-#define AUTO_BED_LEVELING_UBL
+//#define AUTO_BED_LEVELING_UBL
 //#define MESH_BED_LEVELING
 
 /**
