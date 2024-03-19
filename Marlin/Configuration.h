@@ -73,14 +73,14 @@
   #define MOTHERBOARD BOARD_BTT_OCTOPUS_V1_1
 
 
-  #define TEMP_CHAMBER_PIN        TEMP_1_PIN
+  #define TEMP_CHAMBER_PIN        TEMP_2_PIN // TEMP_1_PIN
   #define HEATER_CHAMBER_PIN      PB4  // J74 - 3
   //#define FIL_RUNOUT_PIN         PG12  // E0DET
 
   #define M672_MOD_PIN            PB5  // J74 - 4
   #define SMART_EFFECTOR_MOD_PIN  M672_MOD_PIN
   #define Z_MIN_PROBE_PIN         PB3  // J74 - 5
-  #define E0_AUTO_FAN_PIN         FAN1_PIN
+  #define E0_AUTO_FAN_PIN         FAN4_PIN  // FAN1_PIN FET blown
 
   #define DIAG_JUMPERS_REMOVED
 
@@ -578,7 +578,7 @@
  *   998 : Dummy Table that ALWAYS reads 25°C or the temperature defined below.
  *   999 : Dummy Table that ALWAYS reads 100°C or the temperature defined below.
  */
-#define TEMP_SENSOR_0 998 // 1047
+#define TEMP_SENSOR_0 1047
 #define TEMP_SENSOR_1 0
 #define TEMP_SENSOR_2 0
 #define TEMP_SENSOR_3 0
@@ -586,13 +586,14 @@
 #define TEMP_SENSOR_5 0
 #define TEMP_SENSOR_6 0
 #define TEMP_SENSOR_7 0
-#define TEMP_SENSOR_BED 998 // 1
+#define TEMP_SENSOR_BED 1
 #define TEMP_SENSOR_PROBE 0
-#define TEMP_SENSOR_CHAMBER 998 // 1
+#define TEMP_SENSOR_CHAMBER 1
 #define TEMP_SENSOR_COOLER 0
 #define TEMP_SENSOR_BOARD 0
 #define TEMP_SENSOR_SOC 0
 #define TEMP_SENSOR_REDUNDANT 0
+//#define TEMP_SENSOR_REDUNDANT_PIN TEMP_2_PIN
 
 // Dummy thermistor constant temperature readings, for use with 998 and 999
 #define DUMMY_THERMISTOR_998_VALUE  25
@@ -1290,7 +1291,7 @@
  * Override with M203
  *                                      X, Y, Z [, I [, J [, K...]]], E0 [, E1[, E2...]]
  */
-#define DEFAULT_MAX_FEEDRATE           { 20000, 20000, 20000, 1000 } // { 666.67, 666.67, 666.67, 1000 }  // { 200, 200, 200, 1000 } //
+#define DEFAULT_MAX_FEEDRATE            { 250, 250, 250, 500 }    // { 20000, 20000, 20000, 1000 } // { 666.67, 666.67, 666.67, 1000 }  // { 200, 200, 200, 1000 } //
 
 //#define LIMITED_MAX_FR_EDITING        // Limit edit via M203 or LCD to DEFAULT_MAX_FEEDRATE * 2
 #if ENABLED(LIMITED_MAX_FR_EDITING)
@@ -1303,7 +1304,7 @@
  * Override with M201
  *                                      X, Y, Z [, I [, J [, K...]]], E0 [, E1[, E2...]]
  */
-#define DEFAULT_MAX_ACCELERATION      {500, 500, 500, 1500} // {1000, 1000, 1000, 1500} // { 9000, 9000, 9000, 1500 }  //  { 20, 20, 20, 1500 }
+#define DEFAULT_MAX_ACCELERATION      { 25, 25, 25, 500 } // {100, 100, 100, 1000} // {500, 500, 500, 1500} // {1000, 1000, 1000, 1500} // { 9000, 9000, 9000, 1500 }  //  { 20, 20, 20, 1500 }
 
 //#define LIMITED_MAX_ACCEL_EDITING     // Limit edit via M201 or LCD to DEFAULT_MAX_ACCELERATION * 2
 #if ENABLED(LIMITED_MAX_ACCEL_EDITING)
@@ -1320,9 +1321,9 @@
  *   M204 I    Angular Acceleration
  *   M204 J    Angular Travel Acceleration
  */
-#define DEFAULT_ACCELERATION                  400  // X, Y, Z ... and E acceleration for printing moves
-#define DEFAULT_RETRACT_ACCELERATION          400  // E acceleration for retracts
-#define DEFAULT_TRAVEL_ACCELERATION           400  // X, Y, Z ... acceleration for travel (non printing) moves
+#define DEFAULT_ACCELERATION                   25  // X, Y, Z ... and E acceleration for printing moves
+#define DEFAULT_RETRACT_ACCELERATION           25  // E acceleration for retracts
+#define DEFAULT_TRAVEL_ACCELERATION            25  // X, Y, Z ... acceleration for travel (non printing) moves
 #if ENABLED(AXIS4_ROTATES)
   #define DEFAULT_ANGULAR_ACCELERATION        3000  // I, J, K acceleration for rotational-only printing moves
   #define DEFAULT_ANGULAR_TRAVEL_ACCELERATION 3000  // I, J, K acceleration for rotational-only travel (non printing) moves

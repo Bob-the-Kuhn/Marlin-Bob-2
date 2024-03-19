@@ -1667,7 +1667,7 @@ void loop() {
   do {
     idle();
 
-    display_caliper();
+//    display_caliper();
 
     #if HAS_MEDIA
       if (card.flag.abort_sd_printing) abortSDPrinting();
