@@ -26,6 +26,14 @@
 #define HAS_OTG_USB_HOST_SUPPORT                  // USB Flash Drive support
 #define USES_DIAG_JUMPERS
 
+//
+// BD interface
+//
+#define  I2C_BD_SDA_PIN    PB7     // using BLTouch interface
+#define  I2C_BD_SCL_PIN    PB6
+#define  I2C_BD_DELAY      20      // default value is 20, should be in the range [20,50].
+
+
 // Onboard I2C EEPROM
 #if ANY(NO_EEPROM_SELECTED, I2C_EEPROM)
   #undef NO_EEPROM_SELECTED
@@ -42,7 +50,7 @@
 //
 // Servos
 //
-#define SERVO0_PIN                          PB6
+//#define SERVO0_PIN                          PB6
 
 //
 // Trinamic Stallguard pins
@@ -117,14 +125,7 @@
 // Z Probe (when not Z_MIN_PIN)
 //
 #ifndef Z_MIN_PROBE_PIN
-  #define Z_MIN_PROBE_PIN                   PB7
-#endif
-
-//
-// Probe enable
-//
-#if ENABLED(PROBE_ENABLE_DISABLE) && !defined(PROBE_ENABLE_PIN)
-  #define PROBE_ENABLE_PIN            SERVO0_PIN
+//  #define Z_MIN_PROBE_PIN                   PB7
 #endif
 
 //
@@ -164,19 +165,19 @@
   #define X_CS_PIN                          PC4
 #endif
 
-#define Y_STEP_PIN                          PG0   // MOTOR 1
-#define Y_DIR_PIN                           PG1
-#define Y_ENABLE_PIN                        PF15
-#ifndef Y_CS_PIN
-  #define Y_CS_PIN                          PD11
-#endif
-
-#define Z_STEP_PIN                          PF11  // MOTOR 2
-#define Z_DIR_PIN                           PG3
-#define Z_ENABLE_PIN                        PG5
-#ifndef Z_CS_PIN
-  #define Z_CS_PIN                          PC6
-#endif
+//#define Y_STEP_PIN                          PG0   // MOTOR 1
+//#define Y_DIR_PIN                           PG1
+//#define Y_ENABLE_PIN                        PF15
+//#ifndef Y_CS_PIN
+//  #define Y_CS_PIN                          PD11
+//#endif
+//
+//#define Z_STEP_PIN                          PF11  // MOTOR 2
+//#define Z_DIR_PIN                           PG3
+//#define Z_ENABLE_PIN                        PG5
+//#ifndef Z_CS_PIN
+//  #define Z_CS_PIN                          PC6
+//#endif
 
 #define Z2_STEP_PIN                         PG4   // MOTOR 3
 #define Z2_DIR_PIN                          PC1
@@ -199,22 +200,35 @@
   #define E1_CS_PIN                         PE4
 #endif
 
-#define E2_STEP_PIN                         PE2   // MOTOR 6
-#define E2_DIR_PIN                          PE3
-#define E2_ENABLE_PIN                       PD4
-#ifndef E2_CS_PIN
-
-  #define E2_CS_PIN                         PE1
-#endif
-
-#define E3_STEP_PIN                         PE6   // MOTOR 7
-#define E3_DIR_PIN                          PA14
-#define E3_ENABLE_PIN                       PE0
-#ifndef E3_CS_PIN
-  #define E3_CS_PIN                         PD3
-#endif
-
+//#define E2_STEP_PIN                         PE2   // MOTOR 6
+//#define E2_DIR_PIN                          PE3
+//#define E2_ENABLE_PIN                       PD4
+//#ifndef E2_CS_PIN
 //
+//  #define E2_CS_PIN                         PE1
+//#endif
+//
+//#define E3_STEP_PIN                         PE6   // MOTOR 7
+//#define E3_DIR_PIN                          PA14
+//#define E3_ENABLE_PIN                       PE0
+//#ifndef E3_CS_PIN
+//  #define E3_CS_PIN                         PD3
+//#endif
+
+#define Y_STEP_PIN                           PE2   // MOTOR 6
+#define Y_DIR_PIN                            PE3
+#define Y_ENABLE_PIN                         PD4
+#ifndef Y_CS_PIN
+  #define Y_CS_PIN                           PE1
+#endif
+
+#define Z_STEP_PIN                           PE6   // MOTOR 7
+#define Z_DIR_PIN                            PA14
+#define Z_ENABLE_PIN                         PE0
+#ifndef Z_CS_PIN
+  #define Z_CS_PIN                           PD3
+#endif
+
 // Temperature Sensors
 //
 #define TEMP_BED_PIN                        PF3   // TB
@@ -242,7 +256,7 @@
 // SD Support
 //
 #ifndef SDCARD_CONNECTION
-  #if HAS_WIRED_LCD && DISABLED(NO_LCD_SDCARD)
+  #if HAS_WIRED_LCD
     #define SDCARD_CONNECTION                LCD
   #else
     #define SDCARD_CONNECTION            ONBOARD
@@ -412,9 +426,8 @@
 #endif // BTT_MOTOR_EXPANSION
 
 //
-// LCD / Controller
+// LCDs and Controllers
 //
-
 #if IS_TFTGLCD_PANEL
 
   #if ENABLED(TFTGLCD_PANEL_SPI)
@@ -502,16 +515,15 @@
     #endif
 
   #endif
-
-#endif // HAS_WIRED_LCD
+#endif  // HAS_WIRED_LCD
 
 // Alter timing for graphical display
-#if IS_U8GLIB_ST7920
-  #define BOARD_ST7920_DELAY_1               120
-  #define BOARD_ST7920_DELAY_2                80
-  #define BOARD_ST7920_DELAY_3               580
-#endif
-
+//#if IS_U8GLIB_ST7920
+//  #define BOARD_ST7920_DELAY_1               120
+//  #define BOARD_ST7920_DELAY_2                80
+//  #define BOARD_ST7920_DELAY_3               580
+//#endif
+//
 #if HAS_SPI_TFT
   #define TFT_CS_PIN                 EXP2_04_PIN
   #define TFT_A0_PIN                 EXP2_07_PIN
@@ -533,8 +545,8 @@
 //
 // NeoPixel LED
 //
-#ifndef BOARD_NEOPIXEL_PIN
-  #define BOARD_NEOPIXEL_PIN                PB0
+#ifndef NEOPIXEL_PIN
+  #define NEOPIXEL_PIN                      PB0
 #endif
 
 #if ENABLED(WIFISUPPORT)
