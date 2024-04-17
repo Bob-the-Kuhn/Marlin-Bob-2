@@ -59,6 +59,17 @@ BDS_Leveling bdl;
 #define CMD_END_CALIBRATE             1021
 #define BD_SENSOR_I2C_ADDR            0x3C
 
+
+float Z_pos_BD(void) {  // provide current Z location
+
+  #if ENABLED(DELTA)
+    xyze_pos_t temp = current_position.asLogical();  // use logical locations on Delta printers
+  #else
+    xyze_pos_t temp = planner.get_axis_position_mm(Z_AXIS);  // use stepper position(s)
+  #endif
+  return (float)temp.z;
+}
+
 I2C_SegmentBED BD_I2C_SENSOR;
 float BDS_Leveling::pos_zero_offset;
 int8_t BDS_Leveling::config_state;
@@ -68,7 +79,12 @@ void BDS_Leveling::init(uint8_t _sda, uint8_t _scl, uint16_t delay_s) {
   const int ret = BD_I2C_SENSOR.i2c_init(_sda, _scl, BD_SENSOR_I2C_ADDR, delay_s);
   if (ret != 1) SERIAL_ECHOLNPGM("BD Sensor Init Fail (", ret, ")");
   sync_plan_position();
-  pos_zero_offset = planner.get_axis_position_mm(Z_AXIS) - current_position.z;
+
+ #if ENABLED(DELTA)
+    pos_zero_offset = 0;
+  #else
+    pos_zero_offset = Z_pos_BD() - current_position.z;  // use stepper position(s)
+  #endif
   SERIAL_ECHOLNPGM("BD Sensor Zero Offset:", pos_zero_offset);
 }
 
@@ -86,6 +102,7 @@ bool BDS_Leveling::check(const uint16_t data, const bool raw_data/*=false*/, con
       return false;
   }
   else {
+
     if ((data & 0x3FF) >= (MAX_BD_HEIGHT) * 100 - 10)
       SERIAL_ECHOLNPGM("Out of Range.");
     else
@@ -113,7 +130,7 @@ void BDS_Leveling::process() {
     next_check_ms = ms + (config_state == BDS_HOMING_Z ? 1 : (config_state < BDS_IDLE ? 200 : 50));
 
     uint16_t tmp = 0;
-    const float cur_z = planner.get_axis_position_mm(Z_AXIS) - pos_zero_offset;
+    const float cur_z = Z_pos_BD() - pos_zero_offset;
     static float old_cur_z = cur_z, old_buf_z = current_position.z;
     tmp = BD_I2C_SENSOR.BD_i2c_read();
     if (BD_I2C_SENSOR.BD_Check_OddEven(tmp) && good_data(tmp)) {
@@ -196,23 +213,30 @@ void BDS_Leveling::process() {
       if (config_state == BDS_CALIBRATE_START) {
         config_state = BDS_CALIBRATING;
         REMEMBER(gsit, gcode.stepper_inactive_time, MIN_TO_MS(5));
-        SERIAL_ECHOLNPGM("c_z0:", planner.get_axis_position_mm(Z_AXIS), "-", pos_zero_offset);
+        if (axis_was_homed(Z_AXIS)) {
+          SERIAL_ECHOLNPGM("c_z0:", planner.get_axis_position_mm(Z_AXIS), "-", pos_zero_offset);
 
-        // Move the z axis instead of enabling the Z axis with M17
-        // TODO: Use do_blocking_move_to_z for synchronized move.
-        current_position.z = 0;
-        sync_plan_position();
-        gcode.process_subcommands_now(F("G1Z0.05"));
-        safe_delay(300);
-        gcode.process_subcommands_now(F("G1Z0.00"));
-        safe_delay(300);
-        current_position.z = 0;
-        sync_plan_position();
-        //safe_delay(1000);
+          // Move the z axis instead of enabling the Z axis with M17
+          // TODO: Use do_blocking_move_to_z for synchronized move.
+          current_position.z = 0;
+          sync_plan_position();
+          gcode.process_subcommands_now(F("G1Z0.05"));
+          safe_delay(300);
+          gcode.process_subcommands_now(F("G1Z0.00"));
+          safe_delay(300);
+          current_position.z = 0;
+          sync_plan_position();
+          //safe_delay(1000);
 
-        while ((planner.get_axis_position_mm(Z_AXIS) - pos_zero_offset) > 0.00001f) {
-          safe_delay(200);
-          SERIAL_ECHOLNPGM("waiting cur_z:", planner.get_axis_position_mm(Z_AXIS));
+          while ((Z_pos_BD() - pos_zero_offset) > 0.00001f) {
+            safe_delay(200);
+            SERIAL_ECHOLNPGM("waiting cur_z:", planner.get_axis_position_mm(Z_AXIS));
+          }
+        }
+        else {
+          SERIAL_ECHOLNPGM("Z axis not homed - assuming head is in contact with bed");
+          gcode.process_subcommands_now(F("G92Z0"));  // tell Marlin head is at Z0
+          safe_delay(300);
         }
         zpos = 0.00001f;
         safe_delay(100);
@@ -220,7 +244,7 @@ void BDS_Leveling::process() {
         SERIAL_ECHOLNPGM("BD Sensor Calibrating...");
         safe_delay(200);
       }
-      else if ((planner.get_axis_position_mm(Z_AXIS) - pos_zero_offset) < 10.0f) {
+      else if ((Z_pos_BD() - pos_zero_offset) < 10.0f) {
         if (zpos >= MAX_BD_HEIGHT) {
           config_state = BDS_IDLE;
           BD_I2C_SENSOR.BD_i2c_write(CMD_END_CALIBRATE); // End calibrate
@@ -229,22 +253,24 @@ void BDS_Leveling::process() {
           safe_delay(500);
         }
         else {
-          char tmp_1[32];
-          // TODO: Use prepare_internal_move_to_destination to guarantee machine space
-          sprintf_P(tmp_1, PSTR("G1Z%d.%d"), int(zpos), int(zpos * 10) % 10);
-          gcode.process_subcommands_now(tmp_1);
-          SERIAL_ECHO(tmp_1); SERIAL_ECHOLNPGM(", Z:", current_position.z);
-          uint16_t failcount = 300;
-          for (float tmp_k = 0; abs(zpos - tmp_k) > 0.006f && failcount--;) {
-            tmp_k = planner.get_axis_position_mm(Z_AXIS) - pos_zero_offset;
-            safe_delay(10);
-            if (!failcount--) break;
+          if ((Z_pos_BD() - pos_zero_offset) < 10.0f) {
+            char tmp_1[32];
+            // TODO: Use prepare_internal_move_to_destination to guarantee machine space
+            sprintf_P(tmp_1, PSTR("G1Z%d.%d"), int(zpos), int(zpos * 10) % 10);
+            gcode.process_subcommands_now(tmp_1);
+            SERIAL_ECHO(tmp_1); SERIAL_ECHOLNPGM(", Z:", Z_pos_BD());
+            uint16_t failcount = 300;
+            for (float tmp_k = 0; abs(zpos - tmp_k) > 0.006f && failcount--;) {
+              tmp_k = Z_pos_BD() - pos_zero_offset;
+              safe_delay(10);
+              if (!failcount--) break;
+            }
+            safe_delay(600);
+            tmp = uint16_t((zpos + 0.00001f) * 10);
+            BD_I2C_SENSOR.BD_i2c_write(tmp);
+            SERIAL_ECHOLNPGM("w:", tmp, ", Z:", zpos);
+            zpos += 0.1001f;
           }
-          safe_delay(600);
-          tmp = uint16_t((zpos + 0.00001f) * 10);
-          BD_I2C_SENSOR.BD_i2c_write(tmp);
-          SERIAL_ECHOLNPGM("w:", tmp, ", Z:", zpos);
-          zpos += 0.1001f;
         }
       }
     }
