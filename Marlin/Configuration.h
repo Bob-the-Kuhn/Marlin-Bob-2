@@ -188,7 +188,7 @@
 //#define U_DRIVER_TYPE  A4988
 //#define V_DRIVER_TYPE  A4988
 //#define W_DRIVER_TYPE  A4988
-#define E0_DRIVER_TYPE A4988
+#define E0_DRIVER_TYPE TMC5160
 //#define E1_DRIVER_TYPE A4988
 //#define E2_DRIVER_TYPE A4988
 //#define E3_DRIVER_TYPE A4988
@@ -1283,7 +1283,10 @@
 //#define E0_steps  1098  // Flex3drive,4 usteps
 //#define E0_steps 802  // Creality, 128 usteps, 101/100
 //#define E0_steps 3298  // Creality dual gear, 128 usteps, 100/100
-#define E0_steps 3298/8  // A4988 16 usteps - Creality dual gear, 128 usteps, 100/100
+//#define E0_steps 3298/8  // A4988 16 usteps - Creality dual gear, 128 usteps, 100/100
+#define E0_steps 3298  // TMC5160 128 usteps - Creality dual gear
+
+
 
 #define DEFAULT_AXIS_STEPS_PER_UNIT   { DEFAULT_XYZ_STEPS_PER_UNIT, DEFAULT_XYZ_STEPS_PER_UNIT, DEFAULT_XYZ_STEPS_PER_UNIT, E0_steps }
 /**
@@ -1291,7 +1294,7 @@
  * Override with M203
  *                                      X, Y, Z [, I [, J [, K...]]], E0 [, E1[, E2...]]
  */
-#define DEFAULT_MAX_FEEDRATE           { 250, 250, 250, 500 }    // { 200, 200, 200, 1000 } // { 20000, 20000, 20000, 1000 } // { 666.67, 666.67, 666.67, 1000 }  // { 200, 200, 200, 1000 } //
+#define DEFAULT_MAX_FEEDRATE           { 250, 250, 250, 250 }    // { 250, 250, 250, 500 }   { 200, 200, 200, 1000 } // { 20000, 20000, 20000, 1000 } // { 666.67, 666.67, 666.67, 1000 }  // { 200, 200, 200, 1000 } //
 
 //#define LIMITED_MAX_FR_EDITING        // Limit edit via M203 or LCD to DEFAULT_MAX_FEEDRATE * 2
 #if ENABLED(LIMITED_MAX_FR_EDITING)
@@ -1304,7 +1307,7 @@
  * Override with M201
  *                                      X, Y, Z [, I [, J [, K...]]], E0 [, E1[, E2...]]
  */
-#define DEFAULT_MAX_ACCELERATION      { 25, 25, 25, 500 } // {100, 100, 100, 500} // {400, 400, 400, 1500} // {1000, 1000, 1000, 1500} // { 9000, 9000, 9000, 1500 }  //  { 20, 20, 20, 1500 }
+#define DEFAULT_MAX_ACCELERATION      { 25, 25, 25, 100 } // { 25, 25, 25, 500 }  {100, 100, 100, 500} // {400, 400, 400, 1500} // {1000, 1000, 1000, 1500} // { 9000, 9000, 9000, 1500 }  //  { 20, 20, 20, 1500 }
 
 //#define LIMITED_MAX_ACCEL_EDITING     // Limit edit via M201 or LCD to DEFAULT_MAX_ACCELERATION * 2
 #if ENABLED(LIMITED_MAX_ACCEL_EDITING)
@@ -1787,7 +1790,7 @@
 // @section motion
 
 // Invert the stepper direction. Change (or reverse the motor connector) if an axis goes the wrong way.
-#define INVERT_X_DIR true
+#define INVERT_X_DIR false
 #define INVERT_Y_DIR true
 #define INVERT_Z_DIR true
 //#define INVERT_I_DIR false
@@ -1800,7 +1803,7 @@
 // @section extruder
 
 // For direct drive extruder v9 set to true, for geared extruder set to false.
-#define INVERT_E0_DIR true // true for flexdrive, dual gear
+#define INVERT_E0_DIR false // true for flexdrive, dual gear
 #define INVERT_E1_DIR false
 #define INVERT_E2_DIR false
 #define INVERT_E3_DIR false
