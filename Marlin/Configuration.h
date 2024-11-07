@@ -72,11 +72,10 @@
 #ifndef MOTHERBOARD
   #define MOTHERBOARD BOARD_BTT_OCTOPUS_V1_1
 
-  //#define CALIPER_PROBE           // use caliper in G29 P4
 
-  #define TEMP_CHAMBER_PIN        TEMP_1_PIN
+  #define TEMP_CHAMBER_PIN        TEMP_2_PIN // TEMP_1_PIN
   #define HEATER_CHAMBER_PIN      PB4  // J74 - 3
-  #define FIL_RUNOUT_PIN         PG12  // E0DET
+  //#define FIL_RUNOUT_PIN         PG12  // E0DET
 
   #define M672_MOD_PIN            PB5  // J74 - 4
   #define SMART_EFFECTOR_MOD_PIN  M672_MOD_PIN
@@ -1536,7 +1535,7 @@
 
 // Duet Smart Effector (for delta printers) - https://docs.duet3d.com/en/Duet3D_hardware/Accessories/Smart_Effector
 // When the pin is defined you can use M672 to set/reset the probe sensitivity.
-//#define DUET_SMART_EFFECTOR
+#define DUET_SMART_EFFECTOR
 #if ENABLED(DUET_SMART_EFFECTOR)
   // #define SMART_EFFECTOR_MOD_PIN  ?  // Connect a GPIO pin to the Smart Effector MOD pin
 #endif
