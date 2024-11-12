@@ -70,41 +70,48 @@
 //
 // Limit Switches
 //
-#ifdef X_STALL_SENSITIVITY
-  #define X_STOP_PIN                  X_DIAG_PIN
-  #if X_HOME_TO_MIN
-    #define X_MAX_PIN                       PE15  // E0
-  #else
-    #define X_MIN_PIN                       PE15  // E0
-  #endif
-#else
-  #define X_MIN_PIN                         PB10  // X-
-  #define X_MAX_PIN                         PE15  // E0
-#endif
+//#ifdef X_STALL_SENSITIVITY
+//  #define X_STOP_PIN                  X_DIAG_PIN
+//  #if X_HOME_TO_MIN
+//    #define X_MAX_PIN                       PE15  // E0
+//  #else
+//    #define X_MIN_PIN                       PE15  // E0
+//  #endif
+//#else
+//  #define X_MIN_PIN                         PB10  // X-
+//  #define X_MAX_PIN                         PE15  // E0
+//#endif
+//
+//#ifdef Y_STALL_SENSITIVITY
+//  #define Y_STOP_PIN                  Y_DIAG_PIN
+//  #if Y_HOME_TO_MIN
+//    #define Y_MAX_PIN                       PE10  // E1
+//  #else
+//    #define Y_MIN_PIN                       PE10  // E1
+//  #endif
+//#else
+//  #define Y_MIN_PIN                         PE12  // Y-
+//  #define Y_MAX_PIN                         PE10  // E1
+//#endif
+//
+//#ifdef Z_STALL_SENSITIVITY
+//  #define Z_STOP_PIN                  Z_DIAG_PIN
+//  #if Z_HOME_TO_MIN
+//    #define Z_MAX_PIN                       PG5   // E2
+//  #else
+//    #define Z_MIN_PIN                       PG5   // E2
+//  #endif
+//#else
+//  #define Z_MIN_PIN                         PG8   // Z-
+//  #define Z_MAX_PIN                         PG5   // E2
+//#endif
 
-#ifdef Y_STALL_SENSITIVITY
-  #define Y_STOP_PIN                  Y_DIAG_PIN
-  #if Y_HOME_TO_MIN
-    #define Y_MAX_PIN                       PE10  // E1
-  #else
-    #define Y_MIN_PIN                       PE10  // E1
-  #endif
-#else
-  #define Y_MIN_PIN                         PE12  // Y-
-  #define Y_MAX_PIN                         PE10  // E1
-#endif
-
-#ifdef Z_STALL_SENSITIVITY
-  #define Z_STOP_PIN                  Z_DIAG_PIN
-  #if Z_HOME_TO_MIN
-    #define Z_MAX_PIN                       PG5   // E2
-  #else
-    #define Z_MIN_PIN                       PG5   // E2
-  #endif
-#else
-  #define Z_MIN_PIN                         PG8   // Z-
-  #define Z_MAX_PIN                         PG5   // E2
-#endif
+#define X_MIN_PIN                           PB10
+#define X_MAX_PIN                           PE15
+#define Y_MIN_PIN                           PE12
+#define Y_MAX_PIN                           PE10
+#define Z_MIN_PIN                           PG8
+#define Z_MAX_PIN                           PG5
 
 //
 // Z Probe must be this pin
@@ -292,7 +299,7 @@
 #define FAN1_PIN                            PE5   // Fan1
 
 #ifndef E0_AUTO_FAN_PIN
-  #define E0_AUTO_FAN_PIN               FAN1_PIN
+  #define E0_AUTO_FAN_PIN                   PC9
 #endif
 
 #if !defined(CONTROLLER_FAN_PIN) && ENABLED(USE_CONTROLLER_FAN) && HOTENDS < 2
@@ -306,7 +313,7 @@
 //
 
 #ifndef SDCARD_CONNECTION
-  #define SDCARD_CONNECTION              ONBOARD
+  #define SDCARD_CONNECTION              LCD
 #endif
 
 /**               ------                                      ------
@@ -556,7 +563,7 @@
    */
   #define ESP_WIFI_MODULE_COM                  6  // Must also set either SERIAL_PORT or SERIAL_PORT_2 to this
   #define ESP_WIFI_MODULE_BAUDRATE      BAUDRATE  // Must use same BAUDRATE as SERIAL_PORT & SERIAL_PORT_2
-  #define ESP_WIFI_MODULE_RESET_PIN         PG0
+  #define ESP_WIFI_MODULE_RESET_PIN         -1 // PG0
   #define ESP_WIFI_MODULE_ENABLE_PIN        PG1
   #define ESP_WIFI_MODULE_GPIO0_PIN         PF14
   #define ESP_WIFI_MODULE_GPIO2_PIN         PF15
