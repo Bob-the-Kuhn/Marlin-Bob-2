@@ -873,7 +873,7 @@
 #endif
 
 #if HAS_Y2_STEPPER
-  //#define INVERT_Y2_VS_Y_DIR        // Y2 direction signal is the opposite of Y
+  #define INVERT_Y2_VS_Y_DIR        // Y2 direction signal is the opposite of Y
   //#define Y_DUAL_ENDSTOPS           // Y2 has its own endstop
   #if ENABLED(Y_DUAL_ENDSTOPS)
     //#define Y2_STOP_PIN Y_MAX_PIN   // Y2 endstop pin override
@@ -889,7 +889,7 @@
 
   #define Z_MULTI_ENDSTOPS          // Other Z axes have their own endstops
   #if ENABLED(Z_MULTI_ENDSTOPS)
-    //#define Z2_STOP_PIN Z_MIN_PIN   // Z2 endstop pin override
+    #define Z2_STOP_PIN Z_MIN_PIN   // Z2 endstop pin override
     #define Z2_ENDSTOP_ADJUSTMENT 11   // Z2 offset relative to Z endstop
   #endif
   #ifdef Z3_DRIVER_TYPE

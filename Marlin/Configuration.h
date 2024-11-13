@@ -68,7 +68,8 @@
 
 // Choose the name from boards.h that matches your setup
 #ifndef MOTHERBOARD
-  #define MOTHERBOARD BOARD_BTT_SKR_PRO_V1_1
+  #define MOTHERBOARD BOARD_BTT_OCTOPUS_V1_1
+  #define E0_AUTO_FAN_PIN FAN5_PIN
 #endif
 
 #define Bob_UBL
@@ -80,7 +81,7 @@
 
   #define CUSTOM_MACHINE_NAME  Bob_UBL   // Name displayed in the LCD "Ready" message and Info menu
 
-  #define TEMP_SENSOR_0 51
+  #define TEMP_SENSOR_0 1  // 51 is if have 1K pullup
   #define TEMP_SENSOR_BED 1
 
 // Travel limits (mm) after homing, corresponding to endstop positions.
@@ -196,7 +197,7 @@
  * Currently Ethernet (-2) is only supported on Teensy 4.1 boards.
  * :[-2, -1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
  */
-#define SERIAL_PORT_2 6
+//#define SERIAL_PORT_2 6
 //#define BAUDRATE_2 250000   // :[2400, 9600, 19200, 38400, 57600, 115200, 250000, 500000, 1000000] Enable to override BAUDRATE
 
 /**
@@ -248,8 +249,8 @@
 #define Y_DRIVER_TYPE  TMC5160
 #define Z_DRIVER_TYPE  TMC5160
 //#define X2_DRIVER_TYPE A4988
-//#define Y2_DRIVER_TYPE TMC5160
-//#define Z2_DRIVER_TYPE TMC5160
+#define Y2_DRIVER_TYPE TMC5160
+#define Z2_DRIVER_TYPE TMC5160
 //#define Z3_DRIVER_TYPE A4988
 //#define Z4_DRIVER_TYPE A4988
 //#define I_DRIVER_TYPE  A4988
