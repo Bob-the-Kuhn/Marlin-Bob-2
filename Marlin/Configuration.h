@@ -1293,7 +1293,7 @@
  * Override with M203
  *                                      X, Y, Z [, I [, J [, K...]]], E0 [, E1[, E2...]]
  */
-#define DEFAULT_MAX_FEEDRATE           { 250, 250, 250, 250 }    // { 250, 250, 250, 500 }   { 200, 200, 200, 1000 } // { 20000, 20000, 20000, 1000 } // { 666.67, 666.67, 666.67, 1000 }  // { 200, 200, 200, 1000 } //
+#define DEFAULT_MAX_FEEDRATE           { 666.67, 666.67, 666.67, 1000 } // { 250, 250, 250, 250 }    // { 250, 250, 250, 500 }   { 200, 200, 200, 1000 } // { 20000, 20000, 20000, 1000 } // { 666.67, 666.67, 666.67, 1000 }  // { 200, 200, 200, 1000 } //
 
 //#define LIMITED_MAX_FR_EDITING        // Limit edit via M203 or LCD to DEFAULT_MAX_FEEDRATE * 2
 #if ENABLED(LIMITED_MAX_FR_EDITING)
@@ -1306,7 +1306,7 @@
  * Override with M201
  *                                      X, Y, Z [, I [, J [, K...]]], E0 [, E1[, E2...]]
  */
-#define DEFAULT_MAX_ACCELERATION      { 25, 25, 25, 100 } // { 25, 25, 25, 500 }  {100, 100, 100, 500} // {400, 400, 400, 1500} // {1000, 1000, 1000, 1500} // { 9000, 9000, 9000, 1500 }  //  { 20, 20, 20, 1500 }
+#define DEFAULT_MAX_ACCELERATION       {100, 100, 100, 500}// { 25, 25, 25, 100 } // { 25, 25, 25, 500 }  {100, 100, 100, 500} // {400, 400, 400, 1500} // {1000, 1000, 1000, 1500} // { 9000, 9000, 9000, 1500 }  //  { 20, 20, 20, 1500 }
 
 //#define LIMITED_MAX_ACCEL_EDITING     // Limit edit via M201 or LCD to DEFAULT_MAX_ACCELERATION * 2
 #if ENABLED(LIMITED_MAX_ACCEL_EDITING)
@@ -1442,7 +1442,7 @@
  * Use the nozzle as the probe, as with a conductive
  * nozzle system or a piezo-electric smart effector.
  */
-//#define NOZZLE_AS_PROBE
+#define NOZZLE_AS_PROBE
 
 /**
  * Z Servo Probe, such as an endstop switch on a rotating arm.
@@ -1495,8 +1495,8 @@
  * For information about this sensor https://github.com/markniu/Bed_Distance_sensor
  * Uses I2C port, so it requires I2C library markyue/Panda_SoftMasterI2C.
  */
-#define BD_SENSOR
-#define BD_SENSOR_PROBE_NO_STOP
+//#define BD_SENSOR
+//#define BD_SENSOR_PROBE_NO_STOP
 
 // A probe that is deployed and stowed with a solenoid pin (SOL1_PIN)
 //#define SOLENOID_PROBE
@@ -1620,8 +1620,8 @@
  *     |    [-]    |
  *     O-- FRONT --+
  */
-#define NOZZLE_TO_PROBE_OFFSET { -5, 18, -0.22 }  // BD_sensor
-//#define NOZZLE_TO_PROBE_OFFSET { 0, 0, 0 }
+//#define NOZZLE_TO_PROBE_OFFSET { -5, 18, -0.22 }  // BD_sensor
+#define NOZZLE_TO_PROBE_OFFSET { 0, 0, 0 }
 
 // Enable and set to use a specific tool for probing. Disable to allow any tool.
 #define PROBING_TOOL 0
@@ -1631,16 +1631,16 @@
 
 // Most probes should stay away from the edges of the bed, but
 // with NOZZLE_AS_PROBE this can be negative for a wider probing area.
-#define PROBING_MARGIN 0
+#define PROBING_MARGIN 15
 
 // X and Y axis travel speed (mm/min) between probes
 #define XY_PROBE_FEEDRATE 1000
 
 // Feedrate (mm/min) for the first approach when double-probing (MULTIPLE_PROBING == 2)
-#define Z_PROBE_FEEDRATE_FAST 4*60
+#define Z_PROBE_FEEDRATE_FAST 600
 
 // Feedrate (mm/min) for the "accurate" probe of each point
-#define Z_PROBE_FEEDRATE_SLOW Z_PROBE_FEEDRATE_FAST/16
+#define Z_PROBE_FEEDRATE_SLOW 600
 
 /**
  * Probe Activation Switch
@@ -1704,9 +1704,9 @@
  * Example: `M851 Z-5` with a CLEARANCE of 4  =>  9mm from bed to nozzle.
  *     But: `M851 Z+1` with a CLEARANCE of 2  =>  2mm from bed to nozzle.
  */
-#define Z_CLEARANCE_DEPLOY_PROBE   0 // (mm) Z Clearance for Deploy/Stow
-#define Z_CLEARANCE_BETWEEN_PROBES 1 // (mm) Z Clearance between probe points
-#define Z_CLEARANCE_MULTI_PROBE    1 // (mm) Z Clearance between multiple probes
+#define Z_CLEARANCE_DEPLOY_PROBE   10// (mm) Z Clearance for Deploy/Stow
+#define Z_CLEARANCE_BETWEEN_PROBES 10// (mm) Z Clearance between probe points
+#define Z_CLEARANCE_MULTI_PROBE    10// (mm) Z Clearance between multiple probes
 #define Z_PROBE_ERROR_TOLERANCE     3 // (mm) Tolerance for early trigger (<= -probe.offset.z + ZPET)
 //#define Z_AFTER_PROBING           5 // (mm) Z position after probing is done
 
@@ -2324,8 +2324,7 @@
 #endif
 
 // Homing speeds (linear=mm/min, rotational=°/min)
-#define HOMING_FEEDRATE_MM_M { (100*60), (100*60), (100*60) }
-
+#define HOMING_FEEDRATE_MM_M {(200*60), (200*60), (200*60) }
 // Validate that endstops are triggered on homing moves
 #define VALIDATE_HOMING_ENDSTOPS
 

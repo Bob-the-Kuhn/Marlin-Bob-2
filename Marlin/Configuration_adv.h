@@ -3075,7 +3075,7 @@
     #define V_CURRENT      800
     #define V_CURRENT_HOME V_CURRENT
     #define V_MICROSTEPS     8
-    #define V_RSENSE         0.075
+    #define VaZSXXXXXXXXXXXXXXXXXXXXXXX_RSENSE         0.075
     #define V_CHAIN_POS     -1
     //#define V_INTERPOLATE  true
     //#define V_HOLD_MULTIPLIER 0.5
