@@ -1349,7 +1349,10 @@
  * Override with M203
  *                                      X, Y, Z [, I [, J [, K...]]], E0 [, E1[, E2...]]
  */
-#define DEFAULT_MAX_FEEDRATE           { 666.67, 666.67, 666.67, 1000 } // { 250, 250, 250, 250 }    // { 250, 250, 250, 500 }   { 200, 200, 200, 1000 } // { 20000, 20000, 20000, 1000 } // { 666.67, 666.67, 666.67, 1000 }  // { 200, 200, 200, 1000 } //
+#define DEFAULT_MAX_FEEDRATE           { 20000, 20000, 20000, 1000 } // { 666.67, 666.67, 666.67, 1000 } // works but is SLOW  // { 250, 250, 250, 250 }    // { 250, 250, 250, 500 }   { 200, 200, 200, 1000 } // { 20000, 20000, 20000, 1000 } // { 666.67, 666.67, 666.67, 1000 }  // { 200, 200, 200, 1000 } //
+
+// 30 mm/s best quality prints
+// 75 mm/s reasonable quality prints
 
 //#define LIMITED_MAX_FR_EDITING        // Limit edit via M203 or LCD to DEFAULT_MAX_FEEDRATE * 2
 #if ENABLED(LIMITED_MAX_FR_EDITING)
@@ -1362,7 +1365,7 @@
  * Override with M201
  *                                      X, Y, Z [, I [, J [, K...]]], E0 [, E1[, E2...]]
  */
-#define DEFAULT_MAX_ACCELERATION       {100, 100, 100, 500}// { 25, 25, 25, 100 } // { 25, 25, 25, 500 }  {100, 100, 100, 500} // {400, 400, 400, 1500} // {1000, 1000, 1000, 1500} // { 9000, 9000, 9000, 1500 }  //  { 20, 20, 20, 1500 }
+#define DEFAULT_MAX_ACCELERATION       { 5000, 5000, 5000, 1500 }  //{100, 100, 100, 500}// works but is SLOW // { 25, 25, 25, 100 } // { 25, 25, 25, 500 }  {100, 100, 100, 500} // {400, 400, 400, 1500} // {1000, 1000, 1000, 1500} // { 9000, 9000, 9000, 1500 }  //  { 20, 20, 20, 1500 }
 
 //#define LIMITED_MAX_ACCEL_EDITING     // Limit edit via M201 or LCD to DEFAULT_MAX_ACCELERATION * 2
 #if ENABLED(LIMITED_MAX_ACCEL_EDITING)
@@ -1379,9 +1382,9 @@
  *   M204 I    Angular Acceleration
  *   M204 J    Angular Travel Acceleration
  */
-#define DEFAULT_ACCELERATION                   25  // X, Y, Z ... and E acceleration for printing moves
-#define DEFAULT_RETRACT_ACCELERATION           25  // E acceleration for retracts
-#define DEFAULT_TRAVEL_ACCELERATION            25  // X, Y, Z ... acceleration for travel (non printing) moves
+#define DEFAULT_ACCELERATION                   2500  // X, Y, Z ... and E acceleration for printing moves
+#define DEFAULT_RETRACT_ACCELERATION           2500  // E acceleration for retracts
+#define DEFAULT_TRAVEL_ACCELERATION            2500  // X, Y, Z ... acceleration for travel (non printing) moves
 #if ENABLED(AXIS4_ROTATES)
   #define DEFAULT_ANGULAR_ACCELERATION        3000  // I, J, K acceleration for rotational-only printing moves
   #define DEFAULT_ANGULAR_TRAVEL_ACCELERATION 3000  // I, J, K acceleration for rotational-only travel (non printing) moves
@@ -1397,7 +1400,7 @@
  */
 #define CLASSIC_JERK
 #if ENABLED(CLASSIC_JERK)
-  #define DEFAULT_XJERK 0.2
+  #define DEFAULT_XJERK 0.5    // 1.0 too high, 0.2 works but is slow
   #define DEFAULT_YJERK DEFAULT_XJERK
   #define DEFAULT_ZJERK DEFAULT_XJERK // Must be same as XY for delta
   //#define DEFAULT_IJERK  0.3
@@ -2400,10 +2403,10 @@
 #endif
 
 // Homing speeds (linear=mm/min, rotational=°/min)
-#define HOMING_FEEDRATE_MM_M {(200*60), (200*60), (200*60) }
+#define HOMING_FEEDRATE_MM_M {(100*60), (100*60), (100*60) }
 
 // Edit homing feedrates with M210 and MarlinUI menu items
-//#define EDITABLE_HOMING_FEEDRATE
+#define EDITABLE_HOMING_FEEDRATE
 
 // Validate that endstops are triggered on homing moves
 #define VALIDATE_HOMING_ENDSTOPS

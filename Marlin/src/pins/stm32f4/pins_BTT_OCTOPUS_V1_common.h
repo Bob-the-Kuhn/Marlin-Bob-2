@@ -171,12 +171,12 @@
   #define X_CS_PIN                          PC4
 #endif
 
-#define Y_STEP_PIN                          PG0   // MOTOR 1
-#define Y_DIR_PIN                           PG1
-#define Y_ENABLE_PIN                        PF15
-#ifndef Y_CS_PIN
-  #define Y_CS_PIN                          PD11
-#endif
+//#define Y_STEP_PIN                          PG0   // MOTOR 1  // bad socket?
+//#define Y_DIR_PIN                           PG1
+//#define Y_ENABLE_PIN                        PF15
+//#ifndef Y_CS_PIN
+//  #define Y_CS_PIN                          PD11
+//#endif
 
 #define Z_STEP_PIN                          PF11  // MOTOR 2
 #define Z_DIR_PIN                           PG3
@@ -214,12 +214,21 @@
   #define E2_CS_PIN                         PE1
 #endif
 
-#define E3_STEP_PIN                         PE6   // MOTOR 7
-#define E3_DIR_PIN                          PA14
-#define E3_ENABLE_PIN                       PE0
-#ifndef E3_CS_PIN
-  #define E3_CS_PIN                         PD3
+//#define E3_STEP_PIN                         PE6   // MOTOR 7
+//#define E3_DIR_PIN                          PA14
+//#define E3_ENABLE_PIN                       PE0
+//#ifndef E3_CS_PIN
+//  #define E3_CS_PIN                         PD3
+//#endif
+
+
+#define Y_STEP_PIN                          PE6   // MOTOR 7
+#define Y_DIR_PIN                           PA14
+#define Y_ENABLE_PIN                        PE0
+#ifndef Y_CS_PIN
+  #define Y_CS_PIN                          PD3
 #endif
+
 
 
 
