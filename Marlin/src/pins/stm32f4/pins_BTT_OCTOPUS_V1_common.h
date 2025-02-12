@@ -178,18 +178,25 @@
 //  #define Y_CS_PIN                          PD11
 //#endif
 
-#define Z_STEP_PIN                          PF11  // MOTOR 2
-#define Z_DIR_PIN                           PG3
-#define Z_ENABLE_PIN                        PG5
-#ifndef Z_CS_PIN
-  #define Z_CS_PIN                          PC6
-#endif
+//#define Z_STEP_PIN                          PF11  // MOTOR 2  // melted connector
+//#define Z_DIR_PIN                           PG3
+//#define Z_ENABLE_PIN                        PG5
+//#ifndef Z_CS_PIN
+//  #define Z_CS_PIN                          PC6
+//#endif
 
-#define Z2_STEP_PIN                         PG4   // MOTOR 3
-#define Z2_DIR_PIN                          PC1
-#define Z2_ENABLE_PIN                       PA0
-#ifndef Z2_CS_PIN
-  #define Z2_CS_PIN                         PC7
+//#define Z2_STEP_PIN                         PG4   // MOTOR 3
+//#define Z2_DIR_PIN                          PC1
+//#define Z2_ENABLE_PIN                       PA0
+//#ifndef Z2_CS_PIN
+//  #define Z2_CS_PIN                         PC7
+//#endif
+
+#define Z_STEP_PIN                          PG4    // MOTOR 3
+#define Z_DIR_PIN                           PC1
+#define Z_ENABLE_PIN                        PA0
+#ifndef Z_CS_PIN
+  #define Z_CS_PIN                          PC7
 #endif
 
 #define E0_STEP_PIN                         PF9   // MOTOR 4
@@ -248,12 +255,13 @@
 #define HEATER_2_PIN                        PB10  // Heater2
 #define HEATER_3_PIN                        PB11  // Heater3
 
-#define FAN0_PIN                            PA8   // Fan0
+//#define FAN0_PIN                            PA8   // Fan0  FET bad?
+#define FAN0_PIN                            PD15  // now Fan0 - was Fan5
 #define FAN1_PIN                            PE5   // Fan1
 #define FAN2_PIN                            PD12  // Fan2
 #define FAN3_PIN                            PD13  // Fan3
 #define FAN4_PIN                            PD14  // Fan4
-#define FAN5_PIN                            PD15  // Fan5
+//#define FAN5_PIN                            PD15  // Fan5
 
 //
 // SD Support
