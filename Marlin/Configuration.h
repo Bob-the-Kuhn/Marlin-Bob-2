@@ -1331,7 +1331,7 @@
 #define XYZ_FULL_STEPS_PER_ROTATION 400
 #define XYZ_MICROSTEPS 32
 #define XYZ_BELT_PITCH 2
-#define XYZ_PULLEY_TEETH 12
+#define XYZ_PULLEY_TEETH 20 // 12 tooth pully may not be engaging enough ribs on belt resulting in missed steps
 
 #define DEFAULT_XYZ_STEPS_PER_UNIT ((XYZ_FULL_STEPS_PER_ROTATION) * (XYZ_MICROSTEPS) / double(XYZ_BELT_PITCH) / double(XYZ_PULLEY_TEETH))
 //#define E0_steps  283  // win?? extruder
