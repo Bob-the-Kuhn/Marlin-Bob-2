@@ -594,7 +594,10 @@
  *   998 : Dummy Table that ALWAYS reads 25°C or the temperature defined below.
  *   999 : Dummy Table that ALWAYS reads 100°C or the temperature defined below.
  */
-#define TEMP_SENSOR_0 1047  //  147
+#define TEMP_SENSOR_0 1047  //   PT1000, 4.7K PU
+//#define TEMP_SENSOR_0 1   // 4.7k PU
+//#define TEMP_SENSOR_0 1010
+//#define TEMP_SENSOR_0 51  // 1k PU
 #define TEMP_SENSOR_1 0
 #define TEMP_SENSOR_2 0
 #define TEMP_SENSOR_3 0
@@ -605,6 +608,8 @@
 #define TEMP_SENSOR_BED 1
 #define TEMP_SENSOR_PROBE 0
 #define TEMP_SENSOR_CHAMBER 1
+//#define TEMP_SENSOR_CHAMBER 1047 // PT1000, 4.7K PU  works
+//#define TEMP_SENSOR_CHAMBER 1010  // PT1000, 1K PU  doesn't work
 #define TEMP_SENSOR_COOLER 0
 #define TEMP_SENSOR_BOARD 0
 #define TEMP_SENSOR_SOC 0
