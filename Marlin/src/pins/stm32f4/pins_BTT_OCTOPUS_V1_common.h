@@ -249,19 +249,18 @@
 // Temperature Sensors
 //
 #define TEMP_BED_PIN                        PF3   // TB
+#define TEMP_0_PIN                          PF5   // PF6   // TH55
 #define TEMP_1_PIN                          PF6   // PF5   // TH1
-#define TEMP_2_PIN                          PF7   // PF6   // TH55
-//#define TEMP_2_PIN                          PF6   // PF5   // TH1
-//#define TEMP_1_PIN                          PF7   // PF6   // TH55
+#define TEMP_2_PIN                          PF7   // PF5   // TH1
 
 //
 // Heaters / Fan
 //
 #define HEATER_BED_PIN                      PA1   // Hotbed
 #define HEATER_0_PIN                        PA2   // Heater0
-#define HEATER_1_PIN                        PA3   // Heater1
-#define HEATER_2_PIN                        PB10  // Heater2
-#define HEATER_3_PIN                        PB11  // Heater3
+//#define HEATER_1_PIN                        PA3   // Heater1
+//#define HEATER_2_PIN                        PB10  // Heater2
+//#define HEATER_3_PIN                        PB11  // Heater3
 
 //#define FAN0_PIN                            PA8   // Fan0  FET bad?
 #define FAN0_PIN                            PD15  // now Fan0 - was Fan5
