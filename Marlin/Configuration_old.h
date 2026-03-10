@@ -70,7 +70,7 @@
 
 // Choose the name from boards.h that matches your setup
 #ifndef MOTHERBOARD
-   #define MOTHERBOARD BOARD_BTT_OCTOPUS_V1_1
+  #define MOTHERBOARD BOARD_BTT_OCTOPUS_V1_1
 
 
   #define TEMP_CHAMBER_PIN        TEMP_1_PIN
@@ -152,11 +152,7 @@
 #endif
 
 // Enable CAN bus support and protocol
-//#define CAN_HOST
-//#define CAN_TOOLHEAD
-#if ANY(CAN_HOST, CAN_TOOLHEAD)
-  //#define CAN_DEBUG
-#endif
+//#define CAN_MASTER
 
 // Enable the Bluetooth serial interface on AT90USB devices
 //#define BLUETOOTH
@@ -182,9 +178,9 @@
  * Options: A4988, A5984, DRV8825, LV8729, TB6560, TB6600, TMC2100,
  *          TMC2130, TMC2130_STANDALONE, TMC2160, TMC2160_STANDALONE,
  *          TMC2208, TMC2208_STANDALONE, TMC2209, TMC2209_STANDALONE,
- *          TMC2240, TMC2660, TMC2660_STANDALONE,
- *          TMC5130, TMC5130_STANDALONE, TMC5160, TMC5160_STANDALONE
- * :['A4988', 'A5984', 'DRV8825', 'LV8729', 'TB6560', 'TB6600', 'TMC2100', 'TMC2130', 'TMC2130_STANDALONE', 'TMC2160', 'TMC2160_STANDALONE', 'TMC2208', 'TMC2208_STANDALONE', 'TMC2209', 'TMC2209_STANDALONE', 'TMC2240', 'TMC2660', 'TMC2660_STANDALONE', 'TMC5130', 'TMC5130_STANDALONE', 'TMC5160', 'TMC5160_STANDALONE']
+ *          TMC2660, TMC2660_STANDALONE, TMC5130, TMC5130_STANDALONE,
+ *          TMC5160, TMC5160_STANDALONE
+ * :['A4988', 'A5984', 'DRV8825', 'LV8729', 'TB6560', 'TB6600', 'TMC2100', 'TMC2130', 'TMC2130_STANDALONE', 'TMC2160', 'TMC2160_STANDALONE', 'TMC2208', 'TMC2208_STANDALONE', 'TMC2209', 'TMC2209_STANDALONE', 'TMC2660', 'TMC2660_STANDALONE', 'TMC5130', 'TMC5130_STANDALONE', 'TMC5160', 'TMC5160_STANDALONE']
  */
 #define X_DRIVER_TYPE  TMC5160
 #define Y_DRIVER_TYPE  TMC5160
@@ -340,18 +336,6 @@
 #endif
 
 /**
- * Differential Extruder
- *
- * The X and E steppers work together to create a differential drive system.
- * Simple  : E steps = X + E   ; X steps = X  (E drives a loop, X stays the same)
- * Balanced: E steps = X + E/2 ; X steps = X - E/2  (Dual loop system)
- */
-//#define DIFFERENTIAL_EXTRUDER
-#if ENABLED(DIFFERENTIAL_EXTRUDER)
-  //#define BALANCED_DIFFERENTIAL_EXTRUDER
-#endif
-
-/**
  * Switching Toolhead
  *
  * Support for swappable and dockable toolheads, such as
@@ -502,7 +486,7 @@
 //===========================================================================
 //============================= Thermal Settings ============================
 //===========================================================================
-// @section temperature sensors
+// @section temperature
 
 /**
  * Temperature Sensors:
@@ -534,7 +518,7 @@
  *    10 : 100kΩ RS PRO 198-961
  *    11 : 100kΩ Keenovo AC silicone mats, most Wanhao i3 machines - beta 3950, 1%
  *    12 : 100kΩ Vishay 0603 SMD NTCS0603E3104FXT (#8) - calibrated for Makibox hot bed
- *    13 : 100kΩ Hisense up to 300°C - for "Simple ONE" & "All In ONE" hotend - beta 3950, 1%
+ *    13 : 100kΩ Hisens up to 300°C - for "Simple ONE" & "All In ONE" hotend - beta 3950, 1%
  *    14 : 100kΩ  (R25), 4092K (beta25), 4.7kΩ pull-up, bed thermistor as used in Ender-5 S1
  *    15 : 100kΩ Calibrated for JGAurora A5 hotend
  *    17 : 100kΩ Dagoma NTC white thermistor
@@ -596,7 +580,6 @@
  * ================================================================
  *  Analog Thermocouple Boards
  * ================================================================
- *   -18 : ADS1118 with Thermocouple, e.g., Mightyboard rev G/H
  *    -4 : AD8495 with Thermocouple
  *    -1 : AD595  with Thermocouple
  *
@@ -686,8 +669,6 @@
   #define TEMP_SENSOR_REDUNDANT_TARGET    E0  // The sensor that we are providing a redundant reading for.
   #define TEMP_SENSOR_REDUNDANT_MAX_DIFF  10  // (°C) Temperature difference that will trigger a print abort.
 #endif
-
-// @section temperature
 
 // Below this temperature the heater will be switched off
 // because it probably indicates a broken thermistor wire.
@@ -795,12 +776,7 @@
   //#define MPC_AUTOTUNE_MENU                         // Add MPC auto-tuning to the "Advanced Settings" menu. (~350 bytes of flash)
 
   #define MPC_MAX 255                                 // (0..255) Current to nozzle while MPC is active.
-  #define MPC_HEATER_POWER { 40.0f }                  // (W) Nominal heat cartridge powers.
-  //#define MPC_PTC                                   // Hotend power changes with temperature (e.g., PTC heat cartridges).
-  #if ENABLED(MPC_PTC)
-    #define MPC_HEATER_ALPHA { 0.0028f }              // Temperature coefficient of resistance of the heat cartridges.
-    #define MPC_HEATER_REFTEMP { 20 }                 // (°C) Reference temperature for MPC_HEATER_POWER and MPC_HEATER_ALPHA.
-  #endif
+  #define MPC_HEATER_POWER { 40.0f }                  // (W) Heat cartridge powers.
 
   #define MPC_INCLUDE_FAN                             // Model the fan speed?
 
@@ -812,7 +788,6 @@
     #define MPC_AMBIENT_XFER_COEFF_FAN255 {0.1972f}  // (W/K) Heat transfer coefficients from heat block to room air with fan on full.
   #endif
 
-
   // For one fan and multiple hotends MPC needs to know how to apply the fan cooling effect.
   #if ENABLED(MPC_INCLUDE_FAN)
     //#define MPC_FAN_0_ALL_HOTENDS
@@ -821,7 +796,7 @@
 
   // Filament Heat Capacity (joules/kelvin/mm)
   // Set at runtime with M306 H<value>
-   #define FILAMENT_HEAT_CAPACITY_PERMM { 0.00515 }    // 0.0056 J/K/mm for 1.75mm PLA
+  #define FILAMENT_HEAT_CAPACITY_PERMM { 0.00515 }    // 0.0056 J/K/mm for 1.75mm PLA
                                                       // 0.0149 J/K/mm for 2.85mm PLA.
                                                       // 0.0036 J/K/mm for 1.75mm PETG (0.0094 J/K/mm for 2.85mm PETG).
                                                       // 0.00515 J/K/mm for 1.75mm ABS (0.0137 J/K/mm for 2.85mm ABS).
@@ -834,7 +809,6 @@
 
   #define MPC_TUNING_POS { X_CENTER, Y_CENTER, 1.0f } // (mm) M306 Autotuning position, ideally bed center at first layer height.
   #define MPC_TUNING_END_Z 10.0f                      // (mm) M306 Autotuning final Z position.
-  //#define EVENT_GCODE_AFTER_MPC_TUNE "M84"          // G-code to execute after MPC tune finished and Z raised.
 #endif
 
 //===========================================================================
@@ -871,9 +845,9 @@
   //#define PID_BED_DEBUG     // Print Bed PID debug data to the serial port. Use 'M303 D' to enable/disable.
 
   // 220V TEVO Little Monster PID Autotune
-  #define DEFAULT_BED_KP 104.73
-  #define DEFAULT_BED_KI 16.25
-  #define DEFAULT_BED_KD 450.11
+  #define DEFAULT_bedKp 104.73
+  #define DEFAULT_bedKi 16.25
+  #define DEFAULT_bedKd 450.11
 
   // FIND YOUR OWN: "M303 E-1 C8 S90" to run autotune on the bed at 90 degreesC for 8 cycles.
 #else
@@ -954,9 +928,9 @@
 
   // Lasko "MyHeat Personal Heater" (200w) modified with a Fotek SSR-10DA to control only the heating element
   // and placed inside the small Creality printer enclosure tent.
-  #define DEFAULT_CHAMBER_KP  37.04
-  #define DEFAULT_CHAMBER_KI   1.40
-  #define DEFAULT_CHAMBER_KD 655.17
+  #define DEFAULT_chamberKp  37.04
+  #define DEFAULT_chamberKi   1.40
+  #define DEFAULT_chamberKd 655.17
   // M309 P37.04 I1.04 D655.17
 
   // FIND YOUR OWN: "M303 E-2 C8 S50" to run autotune on the chamber at 50 degreesC for 8 cycles.
@@ -1003,7 +977,7 @@
  * protect against a broken or disconnected thermistor wire.
  *
  * The issue: If a thermistor falls out, it will report the much lower
- * temperature of the air in the room, and the firmware will keep
+ * temperature of the air in the room, and the the firmware will keep
  * the heater on.
  *
  * If you get "Thermal Runaway" or "Heating failed" errors the
@@ -1097,7 +1071,7 @@
   // Maximum reachable area
   #define DELTA_MAX_RADIUS       140.0    // (mm)
 
-  // Center-to-center distance of the holes in the diagonal push rods.
+  // CeXDnter-to-center distance of the holes in the diagonal push rods.
   #define DELTA_DIAGONAL_ROD 400.35       // (mm)
 
   // Distance between bed and nozzle Z home position
@@ -1117,7 +1091,7 @@
   //#define DELTA_RADIUS_TRIM_TOWER       { 0.0, 0.0, 0.0 } // (mm)
   //#define DELTA_DIAGONAL_ROD_TRIM_TOWER { 0.0, 0.0, 0.0 } // (mm)
 
-#endif // DELTA
+#endif
 
 // @section scara
 
@@ -1173,37 +1147,17 @@
   #define TPARA_LINKAGE_1 120     // (mm)
   #define TPARA_LINKAGE_2 120     // (mm)
 
-  // Height of the Shoulder axis (pivot) relative to the tower floor
-  #define TPARA_SHOULDER_AXIS_HEIGHT 135.0     // (mm)
-
-  // The position of the last linkage relative to the robot arm origin
-  // (intersection of the base axis and floor) when at the home position
-  #define TPARA_ARM_X_HOME_POS  28.75  // (mm) Measured from shoulder axis to tool holder axis in home position
-  #define TPARA_ARM_Y_HOME_POS   0     // (mm)
-  #define TPARA_ARM_Z_HOME_POS 250.00  // (mm) Measured from tool holder axis to the floor
-
-  // TPARA Workspace offset relative to the tower (position of workspace origin relative to robot Tower origin )
+  // TPARA tower offset (position of Tower relative to bed zero position)
   // This needs to be reasonably accurate as it defines the printbed position in the TPARA space.
-  #define TPARA_OFFSET_X    127.0     // (mm) to coincide with minimum radius MIDDLE_DEAD_ZONE_R, and W(0,0,0) is reachable
-  #define TPARA_OFFSET_Y      0.0     // (mm)
-  #define TPARA_OFFSET_Z      0.0     // (mm)
-
-  // TPARA tool connection point offset, relative to the tool moving frame origin which is in the last linkage axis,
-  // (TCP: tool center/connection point) of the robot,
-  // the plane of measured offset must be alligned with home position plane
-  #define TPARA_TCP_OFFSET_X    27.0     // (mm) Tool flange: 27 (distance from pivot to bolt holes), extruder tool: 50.0,
-  #define TPARA_TCP_OFFSET_Y     0.0     // (mm)
-  #define TPARA_TCP_OFFSET_Z   -65.0     // (mm) Tool flange (bottom): -6 (caution as Z 0 posiion will crash second linkage to the floor, -35 is safe for testing with no tool), extruder tool (depends on extruder): -65.0
+  #define TPARA_OFFSET_X    0     // (mm)
+  #define TPARA_OFFSET_Y    0     // (mm)
+  #define TPARA_OFFSET_Z    0     // (mm)
 
   #define FEEDRATE_SCALING        // Convert XY feedrate from mm/s to degrees/s on the fly
 
   // Radius around the center where the arm cannot reach
-  // For now use a hardcoded uniform limit, although it should be calculated, or fix a limit for each axis angle
-  #define MIDDLE_DEAD_ZONE_R   100    // (mm)
-
-  // Max angle between L1 and L2
-  #define TPARA_MAX_L1L2_ANGLE 140.0f // (degrees)
-#endif // AXEL_TPARA
+  #define MIDDLE_DEAD_ZONE_R   0  // (mm)
+#endif
 
 // @section polar
 
@@ -1419,6 +1373,7 @@
 
 // 30 mm/s best quality prints
 // 75 mm/s reasonable quality prints
+
 //#define LIMITED_MAX_FR_EDITING        // Limit edit via M203 or LCD to DEFAULT_MAX_FEEDRATE * 2
 #if ENABLED(LIMITED_MAX_FR_EDITING)
   #define MAX_FEEDRATE_EDIT_VALUES    { 600, 600, 10, 50 } // ...or, set your own edit limits
@@ -1449,8 +1404,9 @@
 #define DEFAULT_ACCELERATION          3000    // X, Y, Z and E acceleration for printing moves
 #define DEFAULT_RETRACT_ACCELERATION  3000    // E acceleration for retracts
 #define DEFAULT_TRAVEL_ACCELERATION   3000    // X, Y, Z acceleration for travel (non printing) moves
-  // from default config
-//#define DEFAULT_MAX_ACCELERATION       { 15000, 15000, 15000, 15000 }  //  { 9000, 9000, 9000, 4500 }  //  { 5000, 5000, 5000, 1500 }  //{100, 100, 100, 500}// works but is SLOW // { 25, 25, 25, 100 } // { 25, 25, 25, 500 }  {100, 100, 100, 500} // {400, 400, 400, 1500} // {1000, 1000, 1000, 1500} // { 9000, 9000, 9000, 1500 }  //  { 20, 20, 20, 1500 }
+//#define DEFAULT_ACCELERATION         10000  // X, Y, Z ... and E acceleration for printing moves
+//#define DEFAULT_RETRACT_ACCELERATION 10000  // E acceleration for retracts
+//#define DEFAULT_TRAVEL_ACCELERATION  10000  // X, Y, Z ... acceleration for travel (non printing) moves
 
 /**
  * Default Jerk limits (mm/s)
@@ -1462,11 +1418,10 @@
  */
 #define CLASSIC_JERK
 #if ENABLED(CLASSIC_JERK)
-  #define DEFAULT_XJERK  0.75    // 1.0 too high, 0.2 works but is slow // 10.0  config default
+  #define DEFAULT_XJERK 0.75    // 1.0 too high, 0.2 works but is slow // 10.0  config default
   #define DEFAULT_YJERK DEFAULT_XJERK
   #define DEFAULT_ZJERK DEFAULT_XJERK // Must be same as XY for delta
   #define DEFAULT_EJERK  2.0 // 5.0  config default
-  //#define DEFAULT_IJERK  0.3
   //#define DEFAULT_IJERK  0.3
   //#define DEFAULT_JJERK  0.3
   //#define DEFAULT_KJERK  0.3
@@ -1504,11 +1459,6 @@
  * See https://github.com/synthetos/TinyG/wiki/Jerk-Controlled-Motion-Explained
  */
 #define S_CURVE_ACCELERATION
-#if ENABLED(S_CURVE_ACCELERATION)
-  // Define to use 4th instead of 6th order motion curve
-  //#define S_CURVE_FACTOR 0.25    // Initial and final acceleration factor, ideally 0.1 to 0.4.
-                                   // Shouldn't generally require tuning.
-#endif
 
 //===========================================================================
 //============================= Z Probe Options =============================
@@ -1737,7 +1687,7 @@
  * Nozzle-to-Probe offsets { X, Y, Z }
  *
  * X and Y offset
- *   Use a caliper or ruler to measure the distance (in mm) from the tip of
+ *   Use a caliper or ruler to measure the distance from the tip of
  *   the Nozzle to the center-point of the Probe in the X and Y axes.
  *
  * Z offset
@@ -1773,7 +1723,7 @@
  *     |    [-]    |
  *     O-- FRONT --+
  */
-//#define NOZZLE_TO_PROBE_OFFSET { 20, -10, -1.05 } // (mm) X, Y, Z distance from Nozzle tip to
+//#define NOZZLE_TO_PROBE_OFFSET { 20, -10, -1.05 }
 #define NOZZLE_TO_PROBE_OFFSET { 0, 0, 0 }
 
 // Enable and set to use a specific tool for probing. Disable to allow any tool.
@@ -1781,8 +1731,6 @@
 #ifdef PROBING_TOOL
   //#define PROBE_TOOLCHANGE_NO_MOVE  // Suppress motion on probe tool-change
 #endif
-
-//#define PROBE_WAKEUP_TIME_MS  30    // (ms) Time for the probe to wake up
 
 // Most probes should stay away from the edges of the bed, but
 // with NOZZLE_AS_PROBE this can be negative for a wider probing area.
@@ -1846,7 +1794,6 @@
  */
 #define MULTIPLE_PROBING 5
 #define EXTRA_PROBING    1
-
 
 /**
  * Z probes require clearance when deploying, stowing, and moving between
@@ -1938,12 +1885,15 @@
 //#define DISABLE_V
 //#define DISABLE_W
 
+// Turn off the display blinking that warns about possible accuracy reduction
+//#define DISABLE_REDUCED_ACCURACY_WARNING
+
 // @section extruder
 
 //#define DISABLE_E               // Disable the extruder when not stepping
 #define DISABLE_OTHER_EXTRUDERS   // Keep only the active extruder enabled
 
-// @section stepper drivers
+// @section motion
 
 // Invert the stepper direction. Change (or reverse the motor connector) if an axis goes the wrong way.
 #define INVERT_X_DIR true
@@ -1955,6 +1905,8 @@
 //#define INVERT_U_DIR false
 //#define INVERT_V_DIR false
 //#define INVERT_W_DIR false
+
+// @section extruder
 
 // For direct drive extruder v9 set to true, for geared extruder set to false.
 #define INVERT_E0_DIR true // false for flexdrive, dual gear
@@ -2320,7 +2272,7 @@
     #define MESH_TEST_NOZZLE_SIZE    0.4  // (mm) Diameter of primary nozzle.
     #define MESH_TEST_LAYER_HEIGHT   0.2  // (mm) Default layer height for G26.
     #define MESH_TEST_HOTEND_TEMP  240    // (°C) Default nozzle temperature for G26.
-    #define MESH_TEST_BED_TEMP     110    // (°C) Default nozzle temperature for G26.
+    #define MESH_TEST_BED_TEMP      70    // (°C) Default bed temperature for G26.
     #define G26_XY_FEEDRATE         20    // (mm/s) Feedrate for G26 XY moves.
     #define G26_XY_FEEDRATE_TRAVEL 100    // (mm/s) Feedrate for G26 XY travel moves.
     #define G26_RETRACT_MULTIPLIER   1.0  // G26 Q (retraction) used by default between mesh test elements.
@@ -2607,7 +2559,7 @@
 //
 //#define TEMPERATURE_UNITS_SUPPORT
 
-// @section temperature presets
+// @section temperature
 
 //
 // Preheat Constants - Up to 10 are supported without changes
@@ -2647,7 +2599,7 @@
 
 #if ENABLED(NOZZLE_PARK_FEATURE)
   // Specify a park position as { X, Y, Z_raise }
-  #define NOZZLE_PARK_POINT  {0, 0, 50 } // { (X_MIN_POS + 10), 0, 20 }
+  #define NOZZLE_PARK_POINT {0, 0, 50 } // { (X_MIN_POS + 10), 0, 20 }
   //#define NOZZLE_PARK_X_ONLY          // X move only is required to park
   //#define NOZZLE_PARK_Y_ONLY          // Y move only is required to park
   #define NOZZLE_PARK_Z_RAISE_MIN   2   // (mm) Always raise Z by at least this distance
@@ -2844,10 +2796,10 @@
  *
  * Select the language to display on the LCD. These languages are available:
  *
- *   en, an, bg, ca, cz, da, de, el, el_CY, es, eu, fi, fr, gl, hg, hr, hu, id, it,
+ *   en, an, bg, ca, cz, da, de, el, el_CY, es, eu, fi, fr, gl, hr, hu, it,
  *   jp_kana, ko_KR, nl, pl, pt, pt_br, ro, ru, sk, sv, tr, uk, vi, zh_CN, zh_TW
  *
- * :{ 'en':'English', 'an':'Aragonese', 'bg':'Bulgarian', 'ca':'Catalan', 'cz':'Czech', 'da':'Danish', 'de':'German', 'el':'Greek (Greece)', 'el_CY':'Greek (Cyprus)', 'es':'Spanish', 'eu':'Basque-Euskera', 'fi':'Finnish', 'fr':'French', 'gl':'Galician', 'hg':'Hinglish (Hindi-Latin)', 'hr':'Croatian', 'hu':'Hungarian', 'id':'Indonesian', 'it':'Italian', 'jp_kana':'Japanese', 'ko_KR':'Korean (South Korea)', 'nl':'Dutch', 'pl':'Polish', 'pt':'Portuguese', 'pt_br':'Portuguese (Brazilian)', 'ro':'Romanian', 'ru':'Russian', 'sk':'Slovak', 'sv':'Swedish', 'tr':'Turkish', 'uk':'Ukrainian', 'vi':'Vietnamese', 'zh_CN':'Chinese (Simplified)', 'zh_TW':'Chinese (Traditional)' }
+ * :{ 'en':'English', 'an':'Aragonese', 'bg':'Bulgarian', 'ca':'Catalan', 'cz':'Czech', 'da':'Danish', 'de':'German', 'el':'Greek (Greece)', 'el_CY':'Greek (Cyprus)', 'es':'Spanish', 'eu':'Basque-Euskera', 'fi':'Finnish', 'fr':'French', 'gl':'Galician', 'hr':'Croatian', 'hu':'Hungarian', 'it':'Italian', 'jp_kana':'Japanese', 'ko_KR':'Korean (South Korea)', 'nl':'Dutch', 'pl':'Polish', 'pt':'Portuguese', 'pt_br':'Portuguese (Brazilian)', 'ro':'Romanian', 'ru':'Russian', 'sk':'Slovak', 'sv':'Swedish', 'tr':'Turkish', 'uk':'Ukrainian', 'vi':'Vietnamese', 'zh_CN':'Chinese (Simplified)', 'zh_TW':'Chinese (Traditional)' }
  */
 #define LCD_LANGUAGE en
 
@@ -3245,7 +3197,7 @@
 
 //
 // FYSETC variant of the MINI12864 graphic controller with SD support
-// https://wiki.fysetc.com/docs/Mini12864Panel
+// https://wiki.fysetc.com/Mini12864_Panel/
 //
 //#define FYSETC_MINI_12864_X_X    // Type C/D/E/F. No tunable RGB Backlight by default
 //#define FYSETC_MINI_12864_1_2    // Type C/D/E/F. Simple RGB Backlight (always on)
@@ -3462,7 +3414,7 @@
 
 //
 // PanelDue touch controller by Escher3D
-// https://escher3d.com/pages/order/products/product2.php
+// http://escher3d.com/pages/order/products/product2.php
 //
 //#define PANELDUE
 
@@ -3604,7 +3556,6 @@
    * NOTOSANS  - Default font with anti-aliasing. Supports Latin Extended and non-Latin characters.
    * UNIFONT   - Lightweight font, no anti-aliasing. Supports Latin Extended and non-Latin characters.
    * HELVETICA - Lightweight font, no anti-aliasing. Supports Basic Latin (0x0020-0x007F) and Latin-1 Supplement (0x0080-0x00FF) characters only.
-   * :['NOTOSANS', 'UNIFONT', 'HELVETICA']
    */
   #define TFT_FONT  NOTOSANS
 
@@ -3614,7 +3565,6 @@
    * BLUE_MARLIN  - Default theme with 'midnight blue' background
    * BLACK_MARLIN - Theme with 'black' background
    * ANET_BLACK   - Theme used for Anet ET4/5
-   * :['BLUE_MARLIN', 'BLACK_MARLIN', 'ANET_BLACK']
    */
   #define TFT_THEME BLACK_MARLIN
 
@@ -3651,11 +3601,6 @@
 //#define DWIN_CREALITY_LCD_JYERSUI   // Jyers UI by Jacob Myers
 //#define DWIN_MARLINUI_PORTRAIT      // MarlinUI (portrait orientation)
 //#define DWIN_MARLINUI_LANDSCAPE     // MarlinUI (landscape orientation)
-
-#if ENABLED(DWIN_CREALITY_LCD)
-  //#define USE_STRING_HEADINGS       // Use string headings for Creality UI instead of images
-  //#define USE_STRING_TITLES         // Use string titles for Creality UI instead of images
-#endif
 
 //
 // Touch Screen Settings
