@@ -123,12 +123,27 @@
   #define X_CS_PIN                          PC4
 #endif
 
-#define Y_STEP_PIN                          PG0   // MOTOR 1
-#define Y_DIR_PIN                           PG1
-#define Y_ENABLE_PIN                        PF15
+// #define Y_STEP_PIN                          PG0   // MOTOR 1
+// #define Y_DIR_PIN                           PG1
+// #define Y_ENABLE_PIN                        PF15
+// #ifndef Y_CS_PIN
+//   #define Y_CS_PIN                          PD11
+// #endif
+
+
+#define Y_STEP_PIN                         PG4   // was MOTOR 3, now Y stepper
+#define Y_DIR_PIN                          PC1
+#define Y_ENABLE_PIN                       PA0
 #ifndef Y_CS_PIN
-  #define Y_CS_PIN                          PD11
+  #define Y_CS_PIN                         PC7
 #endif
+
+
+
+
+
+
+
 
 #define Z_STEP_PIN                          PF11  // MOTOR 2
 #define Z_DIR_PIN                           PG3
@@ -137,12 +152,12 @@
   #define Z_CS_PIN                          PC6
 #endif
 
-#define Z2_STEP_PIN                         PG4   // MOTOR 3
-#define Z2_DIR_PIN                          PC1
-#define Z2_ENABLE_PIN                       PA0
-#ifndef Z2_CS_PIN
-  #define Z2_CS_PIN                         PC7
-#endif
+//#define Z2_STEP_PIN                         PG4   // MOTOR 3
+//#define Z2_DIR_PIN                          PC1
+//#define Z2_ENABLE_PIN                       PA0
+//#ifndef Z2_CS_PIN
+//  #define Z2_CS_PIN                         PC7
+//#endif
 
 #define E0_STEP_PIN                         PF9   // MOTOR 4
 #define E0_DIR_PIN                          PF10
@@ -426,7 +441,7 @@
       #elif ENABLED(FYSETC_MINI_12864_2_1)
         #define NEOPIXEL_PIN         EXP1_06_PIN
       #endif
-    #endif // FYSETC_MINI_12864
+    #endif // !FYSETC_MINI_12864
 
     #if IS_ULTIPANEL
       #define LCD_PINS_D5            EXP1_06_PIN
