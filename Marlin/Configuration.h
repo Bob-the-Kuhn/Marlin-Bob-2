@@ -80,7 +80,9 @@
   #define M672_MOD_PIN            PB3  // J74 - 5
   #define SMART_EFFECTOR_MOD_PIN  M672_MOD_PIN
   #define Z_MIN_PROBE_PIN         PA15  // J74 - 6
-  #define E0_AUTO_FAN_PIN         FAN4_PIN  // FAN1_PIN FET blown
+ //#define E0_AUTO_FAN_PIN         FAN4_PIN  // FAN1_PIN FET blown
+ #define E0_AUTO_FAN_PIN         PA9  // trying PWM fan with tach output
+
 
   #define DIAG_JUMPERS_REMOVED
 
@@ -1386,7 +1388,7 @@
  */
 // variables to calculate steps
 #define XYZ_FULL_STEPS_PER_ROTATION 400
-#define XYZ_MICROSTEPS 32
+#define XYZ_MICROSTEPS 64
 #define XYZ_BELT_PITCH 2
 #define XYZ_PULLEY_TEETH 20 // 12 tooth pully may not be engaging enough ribs on belt resulting in missed steps
 
@@ -1462,7 +1464,7 @@
  */
 #define CLASSIC_JERK
 #if ENABLED(CLASSIC_JERK)
-  #define DEFAULT_XJERK  0.75    // 1.0 too high, 0.2 works but is slow // 10.0  config default
+  #define DEFAULT_XJERK .45 //trying to keep Z sensor from firing when doing X/Y moves 0.75    // 1.0 too high, 0.2 works but is slow // 10.0  config default
   #define DEFAULT_YJERK DEFAULT_XJERK
   #define DEFAULT_ZJERK DEFAULT_XJERK // Must be same as XY for delta
   #define DEFAULT_EJERK  2.0 // 5.0  config default
@@ -1790,7 +1792,7 @@
 
 // X and Y axis travel speed between probes.
 // Leave undefined to use the average of the current XY homing feedrate.
-#define XY_PROBE_FEEDRATE     (750) // (mm/min)
+#define XY_PROBE_FEEDRATE     (250) // (mm/min)
 
 // Feedrate for the first approach when double-probing (MULTIPLE_PROBING == 2)
 #define Z_PROBE_FEEDRATE_FAST (750) // (mm/min)
