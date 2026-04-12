@@ -79,7 +79,7 @@
 
   #define M672_MOD_PIN            PB3  // J74 - 5
   #define SMART_EFFECTOR_MOD_PIN  M672_MOD_PIN
-  #define Z_MIN_PROBE_PIN         PA15  // J74 - 6
+
  //#define E0_AUTO_FAN_PIN         FAN4_PIN  // FAN1_PIN FET blown
  #define E0_AUTO_FAN_PIN         PA9  // trying PWM fan with tach output
 
@@ -98,6 +98,54 @@
 
  #define DEBUG_FLAGS_GCODE
  #define CAPABILITIES_REPORT
+
+ #define BD_SENSOR   // bed leveling sensor
+ #if ENABLED(BD_SENSOR)
+   #define BD_SENSOR_PROBE_NO_STOP // Probe bed without stopping at each probe point
+   #define Z_MIN_PROBE_PIN   PB7  // on BLtouch connector
+   #define I2C_BD_SDA_PIN    PB7   // Please change to the actual number which the SDA wire is connected to your mainboard
+   #define I2C_BD_SCL_PIN    PB6   // Please change to the actual number which the SLK wire is connected to your mainboard
+   #define I2C_BD_DELAY      20      // default value is 20, should be in the range [10,30].
+
+  // Feedrate for the first approach when double-probing (MULTIPLE_PROBING == 2)
+  #define Z_PROBE_FEEDRATE_FAST (4*60) // (mm/min)
+
+  // Feedrate for the "accurate" probe of each point
+  #define Z_PROBE_FEEDRATE_SLOW (Z_PROBE_FEEDRATE_FAST/16) // (mm/min)
+
+  // Delta printers always home to max so DO NOT use BD_SENSOR to home Z axis.
+  //#define HOMING_BUMP_MM      { 5, 5, 5 }       // (linear=mm, rotational=°) Backoff from endstops after first bump
+  //#define HOMING_BUMP_DIVISOR { 1, 1, 1 }    // Re-Bump Speed Divisor (Divides the Homing Feedrate)
+
+  #define Z_CLEARANCE_DEPLOY_PROBE   1 // (mm) Z Clearance for Deploy/Stow
+  #define Z_CLEARANCE_BETWEEN_PROBES 1 // (mm) Z Clearance between probe points
+  #define Z_CLEARANCE_MULTI_PROBE    1 // (mm) Z Clearance between multiple probes
+  #define Z_PROBE_ERROR_TOLERANCE    1 // (mm) Tolerance for early trigger (<= -probe.offset.z + ZPET)
+  #define Z_AFTER_PROBING            5 // (mm) Z position after probing is done
+
+  // #define NOZZLE_AS_PROBE
+  #define NOZZLE_TO_PROBE_OFFSET { 0, 22, 1 }
+
+ #else
+  // Duet Smart Effector settings
+
+    #define Z_MIN_PROBE_PIN         PA15  // J74 - 6
+
+    // Feedrate for the first approach when double-probing (MULTIPLE_PROBING == 2)
+    #define Z_PROBE_FEEDRATE_FAST (750) // (mm/min)  //
+
+    // Feedrate for the "accurate" probe of each point
+    #define Z_PROBE_FEEDRATE_SLOW (750) // (mm/min)
+                                                                                                                                                  xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+    #define Z_CLEARANCE_DEPLOY_PROBE   10 // (mm) Z Clearance for Deploy/Stow
+    #define Z_CLEARANCE_BETWEEN_PROBES 10 // (mm) Z Clearance between probe points
+    #define Z_CLEARANCE_MULTI_PROBE    10 // (mm) Z Clearance between multiple probes
+    #define Z_PROBE_ERROR_TOLERANCE     3 // (mm) Tolerance for early trigger (<= -probe.offset.z + ZPET)
+    #define Z_AFTER_PROBING           5 // (mm) Z position after probing is done
+
+    #define NOZZLE_AS_PROBE
+    #define NOZZLE_TO_PROBE_OFFSET { 0, 0, 0 }
+  #endif
 #endif
 
 // @section serial
@@ -1103,7 +1151,7 @@
   #define DELTA_DIAGONAL_ROD 400.35       // (mm)
 
   // Distance between bed and nozzle Z home position
-  #define DELTA_HEIGHT 485.18             // (mm) Get this value from G33 auto calibrate
+  #define DELTA_HEIGHT 486.38 // 485.18             // (mm) Get this value from G33 auto calibrate
 
   #define DELTA_ENDSTOP_ADJ {0,-0.4, -0.86} // {  -0.71 , +0.00, -0.67} // (mm) Get these values from G33 auto calibrate
 
@@ -1570,7 +1618,7 @@
  * Use the nozzle as the probe, as with a conductive
  * nozzle system or a piezo-electric smart effector.
  */
-#define NOZZLE_AS_PROBE
+//#define NOZZLE_AS_PROBE
 
 /**
  * Z Servo Probe, such as an endstop switch on a rotating arm.
@@ -1776,7 +1824,7 @@
  *     O-- FRONT --+
  */
 //#define NOZZLE_TO_PROBE_OFFSET { 20, -10, -1.05 } // (mm) X, Y, Z distance from Nozzle tip to
-#define NOZZLE_TO_PROBE_OFFSET { 0, 0, 0 }
+//#define NOZZLE_TO_PROBE_OFFSET { 0, 0, 0 }
 
 // Enable and set to use a specific tool for probing. Disable to allow any tool.
 #define PROBING_TOOL 0
@@ -1795,10 +1843,10 @@
 #define XY_PROBE_FEEDRATE     (250) // (mm/min)
 
 // Feedrate for the first approach when double-probing (MULTIPLE_PROBING == 2)
-#define Z_PROBE_FEEDRATE_FAST (750) // (mm/min)
+//#define Z_PROBE_FEEDRATE_FAST (750) // (mm/min)
 
 // Feedrate for the "accurate" probe of each point
-#define Z_PROBE_FEEDRATE_SLOW (750) // (mm/min)
+//#define Z_PROBE_FEEDRATE_SLOW (750) // (mm/min)
 
 /**
  * Probe Activation Switch
@@ -1864,11 +1912,11 @@
  * Example: 'M851 Z-5' with a CLEARANCE of 4  =>  9mm from bed to nozzle.
  *     But: 'M851 Z+1' with a CLEARANCE of 2  =>  2mm from bed to nozzle.
  */
-#define Z_CLEARANCE_DEPLOY_PROBE   10 // (mm) Z Clearance for Deploy/Stow
-#define Z_CLEARANCE_BETWEEN_PROBES 10 // (mm) Z Clearance between probe points
-#define Z_CLEARANCE_MULTI_PROBE    10 // (mm) Z Clearance between multiple probes
-#define Z_PROBE_ERROR_TOLERANCE     3 // (mm) Tolerance for early trigger (<= -probe.offset.z + ZPET)
-//#define Z_AFTER_PROBING           5 // (mm) Z position after probing is done
+// #define Z_CLEARANCE_DEPLOY_PROBE   10 // (mm) Z Clearance for Deploy/Stow
+// #define Z_CLEARANCE_BETWEEN_PROBES 10 // (mm) Z Clearance between probe points
+// #define Z_CLEARANCE_MULTI_PROBE    10 // (mm) Z Clearance between multiple probes
+// #define Z_PROBE_ERROR_TOLERANCE     3 // (mm) Tolerance for early trigger (<= -probe.offset.z + ZPET)
+// #define Z_AFTER_PROBING           5 // (mm) Z position after probing is done
 
 #define Z_PROBE_LOW_POINT          -40 // (mm) Farthest distance below the trigger-point to go before stopping
 
@@ -2245,7 +2293,7 @@
 //#define AUTO_BED_LEVELING_3POINT
 //#define AUTO_BED_LEVELING_LINEAR
 //#define AUTO_BED_LEVELING_BILINEAR
-#define AUTO_BED_LEVELING_UBL
+//#define AUTO_BED_LEVELING_UBL
 //#define MESH_BED_LEVELING
 
 /**

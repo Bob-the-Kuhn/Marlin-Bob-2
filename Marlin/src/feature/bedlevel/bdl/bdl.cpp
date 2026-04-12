@@ -41,7 +41,7 @@
 #include "bdl.h"
 BDS_Leveling bdl;
 
-//#define DEBUG_OUT_BD
+#define DEBUG_OUT_BD
 #define DEBUG_OUT ENABLED(DEBUG_OUT_BD)
 #include "../../../core/debug_out.h"
 
@@ -215,10 +215,12 @@ void BDS_Leveling::process() {
         motion.sync_plan_position();
         //safe_delay(1000);
 
-        while ((planner.get_axis_position_mm(Z_AXIS) - pos_zero_offset) > 0.00001f) {
-          safe_delay(200);
-          SERIAL_ECHOLNPGM("waiting cur_z:", planner.get_axis_position_mm(Z_AXIS));
-        }
+       // while ((planner.get_axis_position_mm(Z_AXIS) - pos_zero_offset) > 0.00001f) {
+       //   safe_delay(200);
+       //   SERIAL_ECHOLNPGM("waiting cur_z:", planner.get_axis_position_mm(Z_AXIS));
+       //   //SERIAL_ECHOPGM("  pos_zero_offset:", pos_zero_offset); // DEBUG
+       //   SERIAL_ECHOLNPGM("  DIF:", (planner.get_axis_position_mm(Z_AXIS) - pos_zero_offset)); // DEBUG
+       // }
         zpos = 0.00001f;
         safe_delay(100);
         BD_I2C_SENSOR.BD_i2c_write(CMD_START_CALIBRATE); // Begin calibrate
