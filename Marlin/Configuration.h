@@ -80,9 +80,16 @@
   #define M672_MOD_PIN            PB3  // J74 - 5
   #define SMART_EFFECTOR_MOD_PIN  M672_MOD_PIN
 
- //#define E0_AUTO_FAN_PIN         FAN4_PIN  // FAN1_PIN FET blown
- #define E0_AUTO_FAN_PIN         PA9  // trying PWM fan with tach output
+ //#define E0_PWM_FAN
 
+ #ifdef E0_PWM_FAN
+    #define E0_AUTO_FAN_PIN         PA9  // trying PWM fan with tach output
+    #define FOURWIRES_FANS      // Needed with AUTO_FAN when 4-wire PWM fans are installed
+    #define E0_FAN_TACHO_PIN PA10
+    #define E0_FAN_TACHO_PULLUP
+ #else  // standard 2 wire fan
+    #define E0_AUTO_FAN_PIN         FAN4_PIN  // FAN1_PIN FET blown
+ #endif
 
   #define DIAG_JUMPERS_REMOVED
 
@@ -99,7 +106,7 @@
  #define DEBUG_FLAGS_GCODE
  #define CAPABILITIES_REPORT
 
- #define BD_SENSOR   // bed leveling sensor
+ //#define BD_SENSOR   // bed leveling sensor
  #if ENABLED(BD_SENSOR)
    #define BD_SENSOR_PROBE_NO_STOP // Probe bed without stopping at each probe point
    #define Z_MIN_PROBE_PIN   PB7  // on BLtouch connector
@@ -136,7 +143,6 @@
 
     // Feedrate for the "accurate" probe of each point
     #define Z_PROBE_FEEDRATE_SLOW (750) // (mm/min)
-                                                                                                                                                  xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
     #define Z_CLEARANCE_DEPLOY_PROBE   10 // (mm) Z Clearance for Deploy/Stow
     #define Z_CLEARANCE_BETWEEN_PROBES 10 // (mm) Z Clearance between probe points
     #define Z_CLEARANCE_MULTI_PROBE    10 // (mm) Z Clearance between multiple probes
@@ -845,7 +851,7 @@
   //#define MPC_AUTOTUNE_MENU                         // Add MPC auto-tuning to the "Advanced Settings" menu. (~350 bytes of flash)
 
   #define MPC_MAX 255                                 // (0..255) Current to nozzle while MPC is active.
-  #define MPC_HEATER_POWER { 40.0f }                  // (W) Nominal heat cartridge powers.
+  #define MPC_HEATER_POWER { 60.0f }                  // (W) Nominal heat cartridge powers.
   //#define MPC_PTC                                   // Hotend power changes with temperature (e.g., PTC heat cartridges).
   #if ENABLED(MPC_PTC)
     #define MPC_HEATER_ALPHA { 0.0028f }              // Temperature coefficient of resistance of the heat cartridges.
@@ -2293,7 +2299,7 @@
 //#define AUTO_BED_LEVELING_3POINT
 //#define AUTO_BED_LEVELING_LINEAR
 //#define AUTO_BED_LEVELING_BILINEAR
-//#define AUTO_BED_LEVELING_UBL
+#define AUTO_BED_LEVELING_UBL
 //#define MESH_BED_LEVELING
 
 /**
