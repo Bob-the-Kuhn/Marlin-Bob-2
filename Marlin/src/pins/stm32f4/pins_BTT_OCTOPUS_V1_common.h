@@ -111,7 +111,10 @@
 //
 // Misc. Functions
 //
-#define LED_PIN                             PA13
+#define LED_PIN                             PD15    // FAN5 connector
+#ifndef LED_PIN
+  #define LED_PIN                           PA13  // Can't use this if wanting to do SWD debugging
+#endif
 
 //
 // Steppers
@@ -196,7 +199,9 @@
 #define FAN3_PIN                            PD13  // Fan3
 #define FAN4_PIN                            PD14  // Fan4
 #define FAN5_PIN                            PD15  // Fan5
-
+#if (LED_PIN == FAN5_PIN )   // see if hijacked FAN5 pin for LED_PIN so can do SWD debugging
+  #undef FAN5_PIN
+#endif
 //
 // SD Support
 //
