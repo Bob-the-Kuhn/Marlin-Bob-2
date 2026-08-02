@@ -140,18 +140,50 @@
   #define Z_CS_PIN                          PC6
 #endif
 
-#define Z2_STEP_PIN                         PG4   // MOTOR 3
-#define Z2_DIR_PIN                          PC1
-#define Z2_ENABLE_PIN                       PA0
-#ifndef Z2_CS_PIN
-  #define Z2_CS_PIN                         PC7
-#endif
 
-#define E0_STEP_PIN                         PF9   // MOTOR 4
-#define E0_DIR_PIN                          PF10
-#define E0_ENABLE_PIN                       PG2
-#ifndef E0_CS_PIN
-  #define E0_CS_PIN                         PF2
+//#define Z2_STEP_PIN                         PG4   // MOTOR 3
+//#define Z2_DIR_PIN                          PC1
+//#define Z2_ENABLE_PIN                       PA0
+//#ifndef Z2_CS_PIN
+//  #define Z2_CS_PIN                         PC7
+//#endif
+//
+//#define E0_STEP_PIN                         PF9   // MOTOR 4
+//#define E0_DIR_PIN                          PF10
+//#define E0_ENABLE_PIN                       PG2
+//#ifndef E0_CS_PIN
+//  #define E0_CS_PIN                         PF2
+//#endif
+
+
+#ifdef MOVE_E0  // swap E0 and Z2 sockets
+  #define E0_STEP_PIN                         PG4   // MOTOR 3  motor 4 socket may be bad - try using motor 3 socket for E0
+  #define E0_DIR_PIN                          PC1
+  #define E0_ENABLE_PIN                       PA0
+  #ifndef E0_CS_PIN
+    #define E0_CS_PIN                         PC7
+  #endif
+
+  #define Z2_STEP_PIN                         PF9   // MOTOR 4
+  #define Z2_DIR_PIN                          PF10
+  #define Z2_ENABLE_PIN                       PG2
+  #ifndef Z2_CS_PIN
+    #define Z2_CS_PIN                         PF2
+  #endif
+#else // use standard layout
+  #define Z2_STEP_PIN                         PG4   // MOTOR 3 standard layout
+  #define Z2_DIR_PIN                          PC1
+  #define Z2_ENABLE_PIN                       PA0
+  #ifndef Z2_CS_PIN
+    #define Z2_CS_PIN                         PC7
+  #endif
+
+  #define E0_STEP_PIN                         PF9   // MOTOR 4 standard layout
+  #define E0_DIR_PIN                          PF10
+  #define E0_ENABLE_PIN                       PG2
+  #ifndef E0_CS_PIN
+    #define E0_CS_PIN                         PF2
+  #endif
 #endif
 
 #define E1_STEP_PIN                         PC13  // MOTOR 5

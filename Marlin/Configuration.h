@@ -83,6 +83,7 @@
  //   #ifdef FAN5_PIN
  //     #undef FAN5_PIN
  //   #endif
+  #define MOVE_E0  swap E0 (motor 4) and Z2 (motor 3) sockets if motor 4 socket is bad
   #endif
 
   #if MOTHERBOARD == BOARD_BTT_SKR_E3_DIP
@@ -104,7 +105,7 @@
     #define E0_FAN_TACHO_PIN PA10
     #define E0_FAN_TACHO_PULLUP
  #else  // standard 2 wire fan
-    #define E0_AUTO_FAN_PIN         FAN2_PIN  // FAN1_PIN FET blown
+    #define E0_AUTO_FAN_PIN         FAN1_PIN
  #endif
 
   #define DIAG_JUMPERS_REMOVED
@@ -152,7 +153,7 @@
  #else
   // Duet Smart Effector settings
 
-    //#define Z_MIN_PROBE_PIN         PA15  // J74 - 6
+    #define Z_MIN_PROBE_PIN         PA15  // J74 - 6
 
     // Feedrate for the first approach when double-probing (MULTIPLE_PROBING == 2)
     #define Z_PROBE_FEEDRATE_FAST (750) // (mm/min)  //
@@ -680,7 +681,7 @@
  *   998 : Dummy Table that ALWAYS reads 25°C or the temperature defined below.
  *   999 : Dummy Table that ALWAYS reads 100°C or the temperature defined below.
  */
-#define TEMP_SENSOR_0 999
+#define TEMP_SENSOR_0 1047 // 4.7 k 1K platinum //1010 // 1.0k 1K platinum
 #define TEMP_SENSOR_1 0
 #define TEMP_SENSOR_2 0
 #define TEMP_SENSOR_3 0
@@ -688,7 +689,7 @@
 #define TEMP_SENSOR_5 0
 #define TEMP_SENSOR_6 0
 #define TEMP_SENSOR_7 0
-#define TEMP_SENSOR_BED 998
+#define TEMP_SENSOR_BED 1 // 998
 #define TEMP_SENSOR_PROBE 0
 #define TEMP_SENSOR_CHAMBER 0
 #define TEMP_SENSOR_COOLER 0
@@ -1161,7 +1162,7 @@
 
   // Print surface diameter/2 minus unreachable space (avoid collisions with vertical towers).
   #define PRINTABLE_RADIUS       140.0  // 165.0  // (mm)
-  #define PRINTABLE_RADIUS       140 // 165.0    // (mm)
+
   // Maximum reachable area
   #define DELTA_MAX_RADIUS       140.0    // (mm)
 
